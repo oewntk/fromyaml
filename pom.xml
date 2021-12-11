@@ -9,8 +9,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.github.x-englishwordnet</groupId>
-	<artifactId>yaml</artifactId>
+	<artifactId>fromyaml</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<name>from_yaml</name>
+	<description>Parse WordNet YAML files into model.</description>
+	<url>https://github.com/x-englishwordnet/fromyaml</url>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -52,8 +55,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>10</source>
-					<target>10</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 
@@ -79,11 +82,11 @@
 					<systemProperties>
 						<property>
 							<name>SOURCE</name>
-							<value>${env.EWNHOME}/src/yaml</value>
+							<value>${env.WNHOME31}</value>
 						</property>
 						<property>
 							<name>SOURCE2</name>
-							<value>${project.basedir}/yaml2</value>
+							<value>${project.basedir}/wndb2</value>
 						</property>
 						<property>
 							<name>SILENT</name>
@@ -105,7 +108,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<source>8</source>
+					<source>11</source>
 				</configuration>
 			</plugin>
 
@@ -187,14 +190,14 @@
 	</distributionManagement>
 
 	<scm>
-		<url>https://github.com/x-englishwordnet/yaml</url>
-		<connection>scm:git:git://github.com/x-englishwordnet/yaml.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:x-englishwordnet/yaml.git</developerConnection>
+		<url>https://github.com/x-englishwordnet/fromyaml</url>
+		<connection>scm:git:git://github.com/x-englishwordnet/fromyaml.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:x-englishwordnet/fromyaml.git</developerConnection>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/x-englishwordnet/yaml/issues</url>
+		<url>https://github.com/x-englishwordnet/fromyaml/issues</url>
 	</issueManagement>
 
 	<licenses>
