@@ -1,20 +1,18 @@
 /*
- * Copyright (c) 2021. Bernard Bou.
+ * Copyright (c) 2021-2021. Bernard Bou.
  */
 
-package org.oewntk.yaml;
+package org.oewntk.yaml.in;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oewntk.model.LibTestModelGroups;
 import org.oewntk.model.Model;
-import org.oewntk.yaml.in.Factory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Set;
 
 public class TestsYamlModelGroups
 {
@@ -29,10 +27,6 @@ public class TestsYamlModelGroups
 			//DO NOTHING
 		}
 	});
-
-	private static final boolean peekTestWords = false;
-
-	private static final Set<String> testWords = Set.of("baroque", "Baroque", "bass", "row");
 
 	private static Model model;
 

@@ -2,13 +2,12 @@
  * Copyright (c) 2021. Bernard Bou.
  */
 
-package org.oewntk.yaml;
+package org.oewntk.yaml.in;
 
-import org.oewntk.model.LibTestModel;
-import org.oewntk.model.Model;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oewntk.yaml.in.Factory;
+import org.oewntk.model.LibTestModel;
+import org.oewntk.model.Model;
 
 import java.io.File;
 import java.io.IOException;

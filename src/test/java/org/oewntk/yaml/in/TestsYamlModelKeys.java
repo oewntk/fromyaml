@@ -2,13 +2,12 @@
  * Copyright (c) 2021. Bernard Bou.
  */
 
-package org.oewntk.yaml;
+package org.oewntk.yaml.in;
 
-import org.oewntk.model.CoreModel;
-import org.oewntk.model.LibTestModelKeys;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oewntk.yaml.in.Factory;
+import org.oewntk.model.CoreModel;
+import org.oewntk.model.LibTestModelKeys;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,15 +60,27 @@ public class TestsYamlModelKeys
 	}
 
 	@Test
-	public void testBass()
+	public void testBassDeep()
 	{
-		LibTestModelKeys.testBass(model, ps);
+		LibTestModelKeys.testBassDeep(model, ps);
 	}
 
 	@Test
-	public void testRow()
+	public void testBassShallow()
 	{
-		LibTestModelKeys.testRow(model, ps);
+		LibTestModelKeys.testBassShallow(model, ps);
+	}
+
+	@Test
+	public void testRowDeep()
+	{
+		LibTestModelKeys.testRowDeep(model, ps);
+	}
+
+	@Test
+	public void testRowShallow()
+	{
+		LibTestModelKeys.testRowShallow(model, ps);
 	}
 
 	@Test
