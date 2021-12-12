@@ -36,7 +36,7 @@ public class TestsYamlModelKeys
 		File inDir = new File(source);
 		// File inDir2 = new File(source2);
 
-		model = Factory.makeCoreModel(inDir);
+		model = new CoreFactory(inDir).get();
 		System.err.println(model.info());
 		System.err.println(model.counts());
 	}

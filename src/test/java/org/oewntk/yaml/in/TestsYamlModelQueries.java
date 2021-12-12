@@ -36,7 +36,7 @@ public class TestsYamlModelQueries
 		File inDir = new File(source);
 		File inDir2 = new File(source2);
 
-		model = Factory.makeModel(inDir, inDir2);
+		model = new Factory(inDir, inDir2).get();
 		System.err.println(model.info());
 		System.err.println(model.counts());
 	}

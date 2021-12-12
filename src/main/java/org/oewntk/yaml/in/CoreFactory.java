@@ -8,42 +8,36 @@ import org.oewntk.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class Factory implements Supplier<Model>
+public class CoreFactory implements Supplier<CoreModel>
 {
 	private final File inDir;
 
-	private final File inDir2;
-
-	public Factory(final File inDir, final File inDir2)
+	public CoreFactory(final File inDir)
 	{
 		this.inDir = inDir;
-		this.inDir2 = inDir2;
 	}
 
 	@Override
-	public Model get()
+	public CoreModel get()
 	{
-		CoreModel coreModel = new CoreFactory(inDir).get();
-		if (coreModel == null)
-		{
-			return null;
-		}
-
 		try
 		{
-			// verb frames and templates
-			Map<String, VerbFrame> verbFramesById = new VerbFrameProcessor(inDir).process();
-			Map<Integer, VerbTemplate> verbTemplatesById = new VerbTemplateProcessor(inDir2).process();
-			Map<String, int[]> senseToVerbTemplates = new SenseToVerbTemplatesProcessor(inDir2).process();
+			// lexes + senses
+			LexProcessor lexProcessor = new LexProcessor(inDir);
+			Map<String, List<Lex>> lexesByLemma = lexProcessor.process();
+			Map<String, Sense> sensesById = lexProcessor.getSensesById();
 
-			// tag counts
-			Map<String, TagCount> senseToTagCounts = new SenseToTagCountsProcessor(inDir2).process();
+			// synsets
+			SynsetProcessor synsetProcessor = new SynsetProcessor(inDir);
+			Map<String, Synset> synsetsById = null;
+			synsetsById = synsetProcessor.process();
+			InverseRelationFactory.make(synsetsById);
 
-			return new Model(coreModel, verbFramesById, verbTemplatesById, senseToVerbTemplates, senseToTagCounts).setSources(inDir, inDir2);
+			return new CoreModel(lexesByLemma, sensesById, synsetsById).setSource(inDir);
 		}
 		catch (IOException ioe)
 		{
@@ -52,7 +46,7 @@ public class Factory implements Supplier<Model>
 		}
 	}
 
-	static public Model makeModel(String[] args) throws IOException
+	static public CoreModel makeCoreModel(String[] args) throws IOException
 	{
 		// Timing
 		final long startTime = System.currentTimeMillis();
@@ -71,10 +65,9 @@ public class Factory implements Supplier<Model>
 
 		// Args
 		File inDir = new File(args[0]);
-		File inDir2 = new File(args[1]);
 
 		// Make
-		Model model = new Factory(inDir, inDir2).get();
+		CoreModel model = new CoreFactory(inDir).get();
 
 		// Heap
 		if (traceHeap)
@@ -92,7 +85,7 @@ public class Factory implements Supplier<Model>
 
 	static public void main(String[] args) throws IOException
 	{
-		Model model = makeModel(args);
-		System.err.printf("model %s\n%s\n%s%n", Arrays.toString(model.getSources()), model.info(), model.counts());
+		CoreModel model = makeCoreModel(args);
+		System.err.printf("model %s\n%s\n%s%n", model.getSource(), model.info(), model.counts());
 	}
 }
