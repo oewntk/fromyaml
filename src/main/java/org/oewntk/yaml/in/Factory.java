@@ -36,63 +36,32 @@ public class Factory implements Supplier<Model>
 		try
 		{
 			// verb frames and templates
-			Map<String, VerbFrame> verbFramesById = new VerbFrameProcessor(inDir).process();
-			Map<Integer, VerbTemplate> verbTemplatesById = new VerbTemplateProcessor(inDir2).process();
-			Map<String, int[]> senseToVerbTemplates = new SenseToVerbTemplatesProcessor(inDir2).process();
+			Map<String, VerbFrame> verbFramesById = new VerbFrameProcessor(inDir).parse();
+			Map<Integer, VerbTemplate> verbTemplatesById = new VerbTemplateProcessor(inDir2).parse();
+			Map<String, int[]> senseToVerbTemplates = new SenseToVerbTemplatesProcessor(inDir2).parse();
 
 			// tag counts
-			Map<String, TagCount> senseToTagCounts = new SenseToTagCountsProcessor(inDir2).process();
+			Map<String, TagCount> senseToTagCounts = new SenseToTagCountsProcessor(inDir2).parse();
 
 			return new Model(coreModel, verbFramesById, verbTemplatesById, senseToVerbTemplates, senseToTagCounts).setSources(inDir, inDir2);
 		}
-		catch (IOException ioe)
+		catch (IOException e)
 		{
-			System.err.println(ioe.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
 
 	static public Model makeModel(String[] args) throws IOException
 	{
-		// Timing
-		final long startTime = System.currentTimeMillis();
-
-		// Heap
-		boolean traceHeap = true;
-		String traceHeapEnv = System.getenv("TRACEHEAP");
-		if (traceHeapEnv != null)
-		{
-			traceHeap = Boolean.parseBoolean(traceHeapEnv);
-		}
-		if (traceHeap)
-		{
-			System.err.println(Memory.heapInfo("before maps,", Memory.Unit.M));
-		}
-
-		// Args
 		File inDir = new File(args[0]);
 		File inDir2 = new File(args[1]);
-
-		// Make
-		Model model = new Factory(inDir, inDir2).get();
-
-		// Heap
-		if (traceHeap)
-		{
-			System.gc();
-			System.err.println(Memory.heapInfo("after maps,", Memory.Unit.M));
-		}
-
-		// Timing
-		final long endTime = System.currentTimeMillis();
-		System.err.println("[Time] " + (endTime - startTime) / 1000 + "s");
-
-		return model;
+		return new Factory(inDir, inDir2).get();
 	}
 
 	static public void main(String[] args) throws IOException
 	{
 		Model model = makeModel(args);
-		System.err.printf("model %s\n%s\n%s%n", Arrays.toString(model.getSources()), model.info(), model.counts());
+		System.out.printf("model %s\n%s\n%s%n", Arrays.toString(model.getSources()), model.info(), model.counts());
 	}
 }

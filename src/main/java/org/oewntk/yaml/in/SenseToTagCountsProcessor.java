@@ -48,7 +48,7 @@ public class SenseToTagCountsProcessor extends YamProcessor<TagCount, String, Ma
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<String, TagCount> map = new SenseToTagCountsProcessor(new File(arg)).process();
+		Map<String, TagCount> map = new SenseToTagCountsProcessor(new File(arg)).parse();
 		for (String id : new String[]{"abandon%1:07:00::", "abandon%2:31:00::", "abandon%2:31:01::", "abandon%2:38:00::", "abandon%2:40:00::", "abandon%2:40:01::"})
 		{
 			//System.out.printf("%s%n", id);

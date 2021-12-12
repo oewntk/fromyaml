@@ -42,7 +42,7 @@ public class VerbFrameProcessor extends YamProcessor<VerbFrame, String, String>
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<String, VerbFrame> map = new VerbFrameProcessor(new File(arg)).process();
+		Map<String, VerbFrame> map = new VerbFrameProcessor(new File(arg)).parse();
 		for (String id : new String[]{"via", "vtii-adj"})
 		{
 			//System.out.printf("%s%n", id);

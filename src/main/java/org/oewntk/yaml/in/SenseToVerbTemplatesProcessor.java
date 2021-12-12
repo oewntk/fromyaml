@@ -53,7 +53,7 @@ public class SenseToVerbTemplatesProcessor extends YamProcessor<int[], String, L
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<String, int[]> map = new SenseToVerbTemplatesProcessor(new File(arg)).process();
+		Map<String, int[]> map = new SenseToVerbTemplatesProcessor(new File(arg)).parse();
 		for (String id : new String[]{"abide%2:31:00::", "abominate%2:37:00::", "abound%2:42:01::", "pet%2:35:00::", "pet%2:99:00::"})
 		{
 			//System.out.printf("%s%n", id);

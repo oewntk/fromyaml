@@ -42,7 +42,7 @@ public class VerbTemplateProcessor extends YamProcessor<VerbTemplate, Integer, S
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<Integer, VerbTemplate> map = new VerbTemplateProcessor(new File(arg)).process();
+		Map<Integer, VerbTemplate> map = new VerbTemplateProcessor(new File(arg)).parse();
 		for (int id : new int[]{120, 124})
 		{
 			//System.out.printf("%s%n", id);

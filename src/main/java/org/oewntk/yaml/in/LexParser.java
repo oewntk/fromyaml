@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class LexProcessor extends YamProcessor<List<Lex>, String, Map<String, Object>>
+public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Object>>
 {
 	private static final String KEY_LEX_SENSE = "sense";
 	private static final String KEY_LEX_PRONUNCIATION = "pronunciation";
@@ -33,7 +33,7 @@ public class LexProcessor extends YamProcessor<List<Lex>, String, Map<String, Ob
 
 	private final Map<String, Sense> sensesById = new TreeMap<>();
 
-	public LexProcessor(final File dir)
+	public LexParser(final File dir)
 	{
 		super(dir);
 	}
@@ -153,7 +153,7 @@ public class LexProcessor extends YamProcessor<List<Lex>, String, Map<String, Ob
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<String, List<Lex>> map = new LexProcessor(new File(arg)).process();
+		Map<String, List<Lex>> map = new LexParser(new File(arg)).parse();
 		for (String lemma : new String[]{"critical", "bass", "baroque", "Baroque", "house"})
 		{
 			List<Lex> lexes = map.get(lemma);

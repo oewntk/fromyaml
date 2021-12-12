@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SynsetProcessor extends YamProcessor<Synset, String, Map<String, Object>>
+public class SynsetParser extends YamProcessor<Synset, String, Map<String, Object>>
 {
 	private static final String KEY_SYNSET_POS = "partOfSpeech";
 	private static final String KEY_SYNSET_DEFINITION = "definition";
@@ -71,7 +71,7 @@ public class SynsetProcessor extends YamProcessor<Synset, String, Map<String, Ob
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
-	public SynsetProcessor(final File dir)
+	public SynsetParser(final File dir)
 	{
 		super(dir);
 		this.dir = dir;
@@ -152,7 +152,7 @@ public class SynsetProcessor extends YamProcessor<Synset, String, Map<String, Ob
 	{
 		String arg = args[0];
 		System.out.println(arg);
-		Map<String, Synset> map = new SynsetProcessor(new File(arg)).process();
+		Map<String, Synset> map = new SynsetParser(new File(arg)).parse();
 		for (String id : new String[]{"02985568-a", "00650564-a", "00652608-a", "00907116-s", "03549540-n", "08076706-n", "08241501-n", "08239887-n", "08179924-n", "07987896-n", "00433104-n", "08703415-n", "08398027-n", "08094856-n", "04424944-n", "03550330-n"})
 		{
 			//System.out.printf("%s%n", id);

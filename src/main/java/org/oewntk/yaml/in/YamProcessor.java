@@ -28,7 +28,7 @@ public abstract class YamProcessor<T,K extends Comparable<K>,V>
 
 	abstract protected T processEntry(String source, Map.Entry<K, V> entry);
 
-	public Map <K,T> process() throws IOException
+	public Map <K,T> parse() throws IOException
 	{
 		Map <K,T> map = new TreeMap<>();
 		for (File file : getFiles())
