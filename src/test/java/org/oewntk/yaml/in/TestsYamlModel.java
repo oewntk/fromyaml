@@ -10,7 +10,6 @@ import org.oewntk.model.LibTestModel;
 import org.oewntk.model.Model;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Set;
