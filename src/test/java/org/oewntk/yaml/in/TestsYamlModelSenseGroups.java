@@ -6,7 +6,7 @@ package org.oewntk.yaml.in;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oewntk.model.LibTestModelGroups;
+import org.oewntk.model.LibTestModelSenseGroups;
 import org.oewntk.model.Model;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-public class TestsYamlModelGroups
+public class TestsYamlModelSenseGroups
 {
 	private static final String source = System.getProperty("SOURCE");
 
@@ -42,38 +42,32 @@ public class TestsYamlModelGroups
 	}
 
 	@Test
-	public void testCIMultipleAll()
+	public void testCISensesBaroque()
 	{
-		LibTestModelGroups.testCIMultipleAll(model, ps);
+		LibTestModelSenseGroups.testCISensesGroupingByLCLemma(model, "baroque", ps);
 	}
 
 	@Test
-	public void testCILemmas()
+	public void testCISensesBaroqueA()
 	{
-		LibTestModelGroups.testCILemmas(model, "battle of verdun", ps);
+		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(model, "baroque", 'a', ps);
 	}
 
 	@Test
-	public void testCICounts()
+	public void testCISensesCriticalA()
 	{
-		LibTestModelGroups.testCICounts(model, "battle of verdun", ps);
+		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(model, "critical", 'a', ps);
 	}
 
 	@Test
-	public void testCICountsFromMap()
+	public void testCISensesAiN()
 	{
-		LibTestModelGroups.testCICountsFromMap(model, "battle of verdun", ps);
+		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(model, "ai", 'n', ps);
 	}
 
 	@Test
-	public void testCIWest()
+	public void testCISensesAbsoluteA()
 	{
-		LibTestModelGroups.testCI(model, "west", ps);
-	}
-
-	@Test
-	public void testCIBaroque()
-	{
-		LibTestModelGroups.testCI(model, "baroque", ps);
+		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(model, "absolute", 'a', ps);
 	}
 }
