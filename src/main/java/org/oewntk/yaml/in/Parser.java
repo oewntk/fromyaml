@@ -11,8 +11,7 @@ import org.oewntk.model.Synset;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 
 public class Parser
 {
@@ -27,13 +26,13 @@ public class Parser
 	{
 		// lexes + senses
 		LexParser lexParser = new LexParser(inDir);
-		Map<String, List<Lex>> lexesByLemma = lexParser.parse();
-		Map<String, Sense> sensesById = lexParser.getSensesById();
+		Collection<Lex> lexes = lexParser.parse();
+		Collection<Sense> senses = lexParser.getSenses();
 
 		// synsets
 		SynsetParser synsetParser = new SynsetParser(inDir);
-		Map<String, Synset> synsetsById = synsetParser.parse();
+		Collection<Synset> synsets = synsetParser.parse();
 
-		return new CoreModel(lexesByLemma, sensesById, synsetsById);
+		return new CoreModel(lexes, senses, synsets);
 	}
 }

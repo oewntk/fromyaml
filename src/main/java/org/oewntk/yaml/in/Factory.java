@@ -9,7 +9,9 @@ import org.oewntk.model.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 public class Factory implements Supplier<Model>
@@ -36,14 +38,14 @@ public class Factory implements Supplier<Model>
 		try
 		{
 			// verb frames and templates
-			Map<String, VerbFrame> verbFramesById = new VerbFrameProcessor(inDir).parse();
-			Map<Integer, VerbTemplate> verbTemplatesById = new VerbTemplateProcessor(inDir2).parse();
-			Map<String, int[]> senseToVerbTemplates = new SenseToVerbTemplatesProcessor(inDir2).parse();
+			Collection<VerbFrame> verbFrames = new VerbFrameProcessor(inDir).parse();
+			Collection<VerbTemplate> verbTemplates = new VerbTemplateProcessor(inDir2).parse();
+			Collection<Entry<String, int[]>> sensesToVerbTemplates = new SenseToVerbTemplatesProcessor(inDir2).parse();
 
 			// tag counts
-			Map<String, TagCount> senseToTagCounts = new SenseToTagCountsProcessor(inDir2).parse();
+			Collection<Entry<String, TagCount>> sensesToTagCounts = new SenseToTagCountsProcessor(inDir2).parse();
 
-			return new Model(coreModel, verbFramesById, verbTemplatesById, senseToVerbTemplates, senseToTagCounts).setSources(inDir, inDir2);
+			return new Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts).setSources(inDir, inDir2);
 		}
 		catch (IOException e)
 		{

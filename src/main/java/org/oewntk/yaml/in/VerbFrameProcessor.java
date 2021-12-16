@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public class VerbFrameProcessor extends YamProcessor<VerbFrame, String, String>
+public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
 {
 	public VerbFrameProcessor(final File dir)
 	{
@@ -36,25 +36,5 @@ public class VerbFrameProcessor extends YamProcessor<VerbFrame, String, String>
 			System.out.println(id);
 		}
 		return new VerbFrame(id, v);
-	}
-
-	static public void main(String[] args) throws IOException
-	{
-		String arg = args[0];
-		System.out.println(arg);
-		Map<String, VerbFrame> map = new VerbFrameProcessor(new File(arg)).parse();
-		for (String id : new String[]{"via", "vtii-adj"})
-		{
-			//System.out.printf("%s%n", id);
-			VerbFrame verbFrame = map.get(id);
-			if (verbFrame != null)
-			{
-				System.out.printf("%s%n", verbFrame);
-			}
-			else
-			{
-				System.out.printf("%s not found%n", id);
-			}
-		}
 	}
 }

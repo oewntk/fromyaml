@@ -7,10 +7,9 @@ package org.oewntk.yaml.in;
 import org.oewntk.model.VerbTemplate;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
-public class VerbTemplateProcessor extends YamProcessor<VerbTemplate, Integer, String>
+public class VerbTemplateProcessor extends YamProcessor1<VerbTemplate, Integer, String>
 {
 	public VerbTemplateProcessor(final File dir)
 	{
@@ -36,25 +35,5 @@ public class VerbTemplateProcessor extends YamProcessor<VerbTemplate, Integer, S
 			System.out.println(id);
 		}
 		return new VerbTemplate(id, v);
-	}
-
-	static public void main(String[] args) throws IOException
-	{
-		String arg = args[0];
-		System.out.println(arg);
-		Map<Integer, VerbTemplate> map = new VerbTemplateProcessor(new File(arg)).parse();
-		for (int id : new int[]{120, 124})
-		{
-			//System.out.printf("%s%n", id);
-			VerbTemplate verbTemplate = map.get(id);
-			if (verbTemplate != null)
-			{
-				System.out.printf("%s%n", verbTemplate);
-			}
-			else
-			{
-				System.out.printf("%s not found%n", id);
-			}
-		}
 	}
 }

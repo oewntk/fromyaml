@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SynsetParser extends YamProcessor<Synset, String, Map<String, Object>>
+public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Object>>
 {
+	static private final boolean DUMP = false;
+
 	private static final String KEY_SYNSET_POS = "partOfSpeech";
 	private static final String KEY_SYNSET_DEFINITION = "definition";
 	private static final String KEY_SYNSET_EXAMPLE = "example";
@@ -90,7 +92,7 @@ public class SynsetParser extends YamProcessor<Synset, String, Map<String, Objec
 
 		String id = entry.getKey();
 		Map<String, Object> synsetMap = entry.getValue();
-		if (dump)
+		if (DUMP)
 		{
 			System.out.println(id);
 			YamlUtils.dumpMap("%s %s%n", synsetMap);
@@ -119,11 +121,11 @@ public class SynsetParser extends YamProcessor<Synset, String, Map<String, Objec
 			}
 		}
 
-		return new Synset(source, id, code.charAt(0), //
+		return new Synset(id, code.charAt(0), //
 				members == null ? null : members.toArray(VOID_STRING_ARRAY), //
 				definitions == null ? null : definitions.toArray(VOID_STRING_ARRAY),  //
 				examples == null ? null : examplesToArray(source, examples),  //
-				wikidata, relations);
+				wikidata, relations, source);
 	}
 
 	static public String[] examplesToArray(String source, List<Object> examples)
@@ -146,25 +148,5 @@ public class SynsetParser extends YamProcessor<Synset, String, Map<String, Objec
 			i++;
 		}
 		return array;
-	}
-
-	static public void main(String[] args) throws IOException
-	{
-		String arg = args[0];
-		System.out.println(arg);
-		Map<String, Synset> map = new SynsetParser(new File(arg)).parse();
-		for (String id : new String[]{"02985568-a", "00650564-a", "00652608-a", "00907116-s", "03549540-n", "08076706-n", "08241501-n", "08239887-n", "08179924-n", "07987896-n", "00433104-n", "08703415-n", "08398027-n", "08094856-n", "04424944-n", "03550330-n"})
-		{
-			//System.out.printf("%s%n", id);
-			Synset synset = map.get(id);
-			if (synset != null)
-			{
-				System.out.printf("%s%n", synset);
-			}
-			else
-			{
-				System.out.printf("%s not found%n", id);
-			}
-		}
 	}
 }

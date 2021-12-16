@@ -9,10 +9,9 @@ import org.oewntk.model.Pronunciation;
 import org.oewntk.model.Sense;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
-public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Object>>
+public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 {
 	private static final String KEY_LEX_SENSE = "sense";
 	private static final String KEY_LEX_PRONUNCIATION = "pronunciation";
@@ -31,7 +30,7 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
-	private final Map<String, Sense> sensesById = new TreeMap<>();
+	private final List<Sense> senses = new ArrayList<>();
 
 	public LexParser(final File dir)
 	{
@@ -45,7 +44,7 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 	}
 
 	@Override
-	protected List<Lex> processEntry(String source, Map.Entry<String, Map<String, Object>> lemmaEntry)
+	protected Collection<Lex> processEntry(String source, Map.Entry<String, Map<String, Object>> lemmaEntry)
 	{
 		List<Lex> lexes = new ArrayList<>();
 
@@ -65,7 +64,7 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 			}
 
 			// lex
-			Lex lex = new Lex(source, lemma, type);
+			Lex lex = new Lex(lemma, type, source);
 
 			// pronunciations
 			List<Map<String, Object>> pronunciationList = (List<Map<String, Object>>) lexMap.get(KEY_LEX_PRONUNCIATION);
@@ -98,7 +97,7 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 
 			// senses
 			List<Map<String, Object>> senseMaps = (List<Map<String, Object>>) lexMap.get(KEY_LEX_SENSE);
-			Sense[] senses = new Sense[senseMaps.size()];
+			Sense[] lexSenses = new Sense[senseMaps.size()];
 			int i = 0;
 			for (Map<String, Object> senseMap : senseMaps)
 			{
@@ -130,12 +129,12 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 				}
 
 				// sense
-				senses[i] = new Sense(senseId, lex, type.charAt(0), i, synsetId, verbFrames, adjPosition, relations);
-				sensesById.put(senseId, senses[i]);
+				lexSenses[i] = new Sense(senseId, lex, type.charAt(0), i, synsetId, verbFrames, adjPosition, relations);
+				senses.add(lexSenses[i]);
 
 				i++;
 			}
-			lex.setSenses(senses);
+			lex.setSenses(lexSenses);
 
 			// accumulate
 			lexes.add(lex);
@@ -144,23 +143,8 @@ public class LexParser extends YamProcessor<List<Lex>, String, Map<String, Objec
 		return lexes;
 	}
 
-	public Map<String, Sense> getSensesById()
+	public Collection<Sense> getSenses()
 	{
-		return this.sensesById;
-	}
-
-	static public void main(String[] args) throws IOException
-	{
-		String arg = args[0];
-		System.out.println(arg);
-		Map<String, List<Lex>> map = new LexParser(new File(arg)).parse();
-		for (String lemma : new String[]{"critical", "bass", "baroque", "Baroque", "house"})
-		{
-			List<Lex> lexes = map.get(lemma);
-			for (Lex lex : lexes)
-			{
-				System.out.printf("%s%n", lex.toString());
-			}
-		}
+		return this.senses;
 	}
 }

@@ -13,18 +13,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public abstract class YamProcessor<T, K extends Comparable<K>, V>
+public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 {
 	protected File dir;
 
-	public YamProcessor(final File dir)
+	public YamProcessor1(final File dir)
 	{
 		this.dir = dir;
 	}
 
 	abstract protected File[] getFiles();
 
-	abstract protected Collection<T> processEntry(String source, Map.Entry<K, V> entry);
+	abstract protected T processEntry(String source, Map.Entry<K, V> entry);
 
 	public Collection<T> parse() throws IOException
 	{
@@ -49,8 +49,8 @@ public abstract class YamProcessor<T, K extends Comparable<K>, V>
 			Map<K, V> top = yaml.load(inputStream);
 			for (Map.Entry<K, V> entry : top.entrySet())
 			{
-				Collection<T> t = processEntry(file.getName(), entry);
-				items.addAll(t);
+				T t = processEntry(file.getName(), entry);
+				items.add(t);
 			}
 		}
 	}
