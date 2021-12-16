@@ -50,7 +50,10 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 			for (Map.Entry<K, V> entry : top.entrySet())
 			{
 				T t = processEntry(file.getName(), entry);
-				items.add(t);
+				if (t != null)
+				{
+					items.add(t);
+				}
 			}
 		}
 	}

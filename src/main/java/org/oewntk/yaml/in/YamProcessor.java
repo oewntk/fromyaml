@@ -49,8 +49,11 @@ public abstract class YamProcessor<T, K extends Comparable<K>, V>
 			Map<K, V> top = yaml.load(inputStream);
 			for (Map.Entry<K, V> entry : top.entrySet())
 			{
-				Collection<T> t = processEntry(file.getName(), entry);
-				items.addAll(t);
+				Collection<T> ct = processEntry(file.getName(), entry);
+				if (ct != null)
+				{
+					items.addAll(ct);
+				}
 			}
 		}
 	}
