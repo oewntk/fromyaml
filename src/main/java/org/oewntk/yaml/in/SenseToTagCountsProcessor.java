@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 
 public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCount>, String, Map<String, Integer>>
 {
-	private static final boolean DUMP = false; //TODO
+	private static final boolean DUMP = false;
 
 	private static final String KEY_TAGCOUNT_SENSE_NUM = "num";
 
@@ -39,7 +39,7 @@ public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCo
 		YamlUtils.assertKeysIn(source, tagCntMap.keySet(), KEY_TAGCOUNT_SENSE_NUM, KEY_TAGCOUNT_COUNT);
 		if (DUMP)
 		{
-			System.out.println(sensekey);
+			Tracing.psInfo.println(sensekey);
 		}
 		int senseNum = tagCntMap.get(KEY_TAGCOUNT_SENSE_NUM);
 		int count = tagCntMap.get(KEY_TAGCOUNT_COUNT);

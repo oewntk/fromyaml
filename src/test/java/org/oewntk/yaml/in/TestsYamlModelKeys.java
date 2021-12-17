@@ -20,13 +20,7 @@ public class TestsYamlModelKeys
 
 	// private static final String source2 = System.getProperty("SOURCE2");
 
-	private static final PrintStream ps = !System.getProperties().containsKey("SILENT") ? System.out : new PrintStream(new OutputStream()
-	{
-		public void write(int b)
-		{
-			//DO NOTHING
-		}
-	});
+	private static final PrintStream ps = !System.getProperties().containsKey("SILENT") ? Tracing.psInfo : Tracing.psNull;
 
 	private static CoreModel model;
 

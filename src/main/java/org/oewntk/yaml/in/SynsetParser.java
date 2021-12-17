@@ -7,15 +7,11 @@ package org.oewntk.yaml.in;
 import org.oewntk.model.Synset;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Object>>
 {
-	static private final boolean DUMP = false;
+	private static final boolean DUMP = false;
 
 	private static final String KEY_SYNSET_POS = "partOfSpeech";
 	private static final String KEY_SYNSET_DEFINITION = "definition";
@@ -88,13 +84,12 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 	@Override
 	protected Synset processEntry(String source, Map.Entry<String, Map<String, Object>> entry)
 	{
-		boolean dump = false;
-
+		String domain = source.split("\\.")[1];
 		String id = entry.getKey();
 		Map<String, Object> synsetMap = entry.getValue();
 		if (DUMP)
 		{
-			System.out.println(id);
+			Tracing.psInfo.println(id);
 			YamlUtils.dumpMap("%s %s%n", synsetMap);
 		}
 		YamlUtils.assertKeysIn(source, synsetMap.keySet(), SYNSET_RELATIONS, KEY_SYNSET_POS, KEY_SYNSET_DEFINITION, KEY_SYNSET_EXAMPLE, KEY_SYNSET_MEMBERS, KEY_SYNSET_WIKIDATA, KEY_SYNSET_ILI, KEY_SYNSET_SOURCE);
@@ -106,7 +101,7 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 		String wikidata = (String) synsetMap.get(KEY_SYNSET_WIKIDATA);
 
 		// relations
-		Map<String, List<String>> relations = null;
+		Map<String, Set<String>> relations = null;
 		for (String relationKey : SYNSET_RELATIONS)
 		{
 			if (synsetMap.containsKey(relationKey))
@@ -117,15 +112,15 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 				{
 					relations = new TreeMap<>();
 				}
-				relations.computeIfAbsent(relationKey, (k) -> new ArrayList<>()).addAll(relationTargets);
+				relations.computeIfAbsent(relationKey, (k) -> new LinkedHashSet<>()).addAll(relationTargets);
 			}
 		}
 
-		return new Synset(id, code.charAt(0), //
+		return new Synset(id, code.charAt(0), domain, //
 				members == null ? null : members.toArray(VOID_STRING_ARRAY), //
 				definitions == null ? null : definitions.toArray(VOID_STRING_ARRAY),  //
 				examples == null ? null : examplesToArray(source, examples),  //
-				wikidata, relations, source);
+				wikidata, relations);
 	}
 
 	static public String[] examplesToArray(String source, List<Object> examples)

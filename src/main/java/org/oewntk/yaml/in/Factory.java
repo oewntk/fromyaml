@@ -64,6 +64,6 @@ public class Factory implements Supplier<Model>
 	static public void main(String[] args) throws IOException
 	{
 		Model model = makeModel(args);
-		System.out.printf("model %s\n%s\n%s%n", Arrays.toString(model.getSources()), model.info(), model.counts());
+		Tracing.psInfo.printf("[Model] %s\n%s\n%s%n", Arrays.toString(model.getSources()), model.info(), model.counts());
 	}
 }

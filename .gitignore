@@ -1,4 +1,6 @@
 /target/
-/yaml/
-/yaml
-/yaml2
+
+/yaml*/
+/yaml*
+**/_*/
+**/_*

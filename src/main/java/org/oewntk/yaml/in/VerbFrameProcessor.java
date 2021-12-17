@@ -7,11 +7,12 @@ package org.oewntk.yaml.in;
 import org.oewntk.model.VerbFrame;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
 {
+	private static final boolean DUMP = false;
+
 	public VerbFrameProcessor(final File dir)
 	{
 		super(dir);
@@ -27,13 +28,11 @@ public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
 	@Override
 	protected VerbFrame processEntry(String source, Map.Entry<String, String> entry)
 	{
-		boolean dump = false;
-
 		String id = entry.getKey();
 		String v = entry.getValue();
-		if (dump)
+		if (DUMP)
 		{
-			System.out.println(id);
+			Tracing.psInfo.println(id);
 		}
 		return new VerbFrame(id, v);
 	}

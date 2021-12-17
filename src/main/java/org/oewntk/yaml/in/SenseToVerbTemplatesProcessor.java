@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 public class SenseToVerbTemplatesProcessor extends YamProcessor1<Entry<String, int[]>, String, List<Integer>>
 {
-	static private final boolean DUMP = false;
+	private static final boolean DUMP = false;
 
 	public SenseToVerbTemplatesProcessor(final File dir)
 	{
@@ -33,7 +33,7 @@ public class SenseToVerbTemplatesProcessor extends YamProcessor1<Entry<String, i
 		List<Integer> v = entry.getValue();
 		if (DUMP)
 		{
-			System.out.println(sensekey);
+			Tracing.psInfo.println(sensekey);
 		}
 		int n = v.size();
 		if (n == 0)

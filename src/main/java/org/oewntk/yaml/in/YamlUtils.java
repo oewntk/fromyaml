@@ -57,8 +57,8 @@ class YamlUtils
 		{
 			String k = entry3.getKey();
 			Object v = entry3.getValue();
-			System.out.printf(format, k, v.toString());
+			Tracing.psInfo.printf(format, k, v.toString());
 		}
-		System.out.println();
+		Tracing.psInfo.println();
 	}
 }

@@ -26,7 +26,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 	private static final String KEY_PRONUNCIATION_VARIETY = "variety";
 	private static final String KEY_PRONUNCIATION_VALUE = "value";
 
-	private static final String[] SENSE_RELATIONS = new String[]{"antonym", "similar", "exemplifies", "derivation", "pertainym", "participle", "also", "domain_region", "domain_topic", "other"};
+	private static final String[] SENSE_RELATIONS = {"antonym", "similar", "exemplifies", "derivation", "pertainym", "participle", "also", "domain_region", "domain_topic", "other"};
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
