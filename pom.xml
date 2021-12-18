@@ -82,7 +82,7 @@
 					<systemProperties>
 						<property>
 							<name>SOURCE</name>
-							<value>${env.EWNHOME}/src/yaml</value>
+							<value>${project.basedir}/yaml</value>
 						</property>
 						<property>
 							<name>SOURCE2</name>
