@@ -92,7 +92,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 			List<String> forms = (List<String>) lexMap.get(KEY_LEX_FORM);
 			if (forms != null)
 			{
-				lex.setMorphs(forms.toArray(new String[0]));
+				lex.setForms(forms.toArray(new String[0]));
 			}
 
 			// senses
