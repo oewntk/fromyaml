@@ -21,7 +21,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 	private static final String KEY_SENSE_SYNSET = "synset";
 	private static final String KEY_SENSE_ADJPOSITION = "adjposition";
 	private static final String KEY_SENSE_VERBFRAMES = "subcat";
-	private static final String KEY_SENSE_SENT = "sent";
+	private static final String KEY_SENSE_EXAMPLES = "sent";
 
 	private static final String KEY_PRONUNCIATION_VARIETY = "variety";
 	private static final String KEY_PRONUNCIATION_VALUE = "value";
@@ -101,7 +101,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 			int i = 0;
 			for (Map<String, Object> senseMap : senseMaps)
 			{
-				YamlUtils.assertKeysIn(source, senseMap.keySet(), SENSE_RELATIONS, KEY_SENSE_ID, KEY_SENSE_SYNSET, KEY_SENSE_VERBFRAMES, KEY_SENSE_VERBFRAMES, KEY_SENSE_ADJPOSITION, KEY_SENSE_SENT);
+				YamlUtils.assertKeysIn(source, senseMap.keySet(), SENSE_RELATIONS, KEY_SENSE_ID, KEY_SENSE_SYNSET, KEY_SENSE_VERBFRAMES, KEY_SENSE_VERBFRAMES, KEY_SENSE_ADJPOSITION, KEY_SENSE_EXAMPLES);
 				if (dump)
 				{
 					YamlUtils.dumpMap("\t%s %s%n", senseMap);
@@ -109,7 +109,9 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 
 				String senseId = (String) senseMap.get(KEY_SENSE_ID);
 				String synsetId = (String) senseMap.get(KEY_SENSE_SYNSET);
+				List<String> examplesList = (List<String>) senseMap.get(KEY_SENSE_EXAMPLES);
 				List<String> verbFramesList = (List<String>) senseMap.get(KEY_SENSE_VERBFRAMES);
+				String[] examples = examplesList == null ? null : examplesList.toArray(VOID_STRING_ARRAY);
 				String[] verbFrames = verbFramesList == null ? null : verbFramesList.toArray(VOID_STRING_ARRAY);
 				String adjPosition = (String) senseMap.get(KEY_SENSE_ADJPOSITION);
 
@@ -129,7 +131,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 				}
 
 				// sense
-				lexSenses[i] = new Sense(senseId, lex, type.charAt(0), i, synsetId, verbFrames, adjPosition, relations);
+				lexSenses[i] = new Sense(senseId, lex, type.charAt(0), i, synsetId, examples, verbFrames, adjPosition, relations);
 				senses.add(lexSenses[i]);
 
 				i++;
