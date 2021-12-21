@@ -49,7 +49,7 @@ public class Factory implements Supplier<Model>
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			e.printStackTrace(Tracing.psErr);
 			return null;
 		}
 	}

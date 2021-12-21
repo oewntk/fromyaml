@@ -17,6 +17,6 @@ public class Serializer
 		File file = new File(args[2]);
 
 		final Model model = Factory.makeModel(args);
-		Serialize.serializeModel(model, file);
+		Serialize.serializeCoreModel(model, file);
 	}
 }

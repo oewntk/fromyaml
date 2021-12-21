@@ -31,7 +31,7 @@ public class CoreFactory implements Supplier<CoreModel>
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			e.printStackTrace(Tracing.psErr);
 			return null;
 		}
 	}
