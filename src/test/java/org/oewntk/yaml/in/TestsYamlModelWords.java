@@ -6,6 +6,7 @@ package org.oewntk.yaml.in;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oewntk.model.Lex;
 import org.oewntk.model.LibTestModel;
 
 import java.util.Set;
@@ -31,7 +32,7 @@ public class TestsYamlModelWords
 	@Test
 	public void testScanLexesForTestWordsSorted()
 	{
-		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model, LibTestModel::makeSortedIndexMap, testWords, peekTestWords, TestsYamlCommon.ps);
+		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model, LibTestModel::makeSortedIndexMapByKeyOEWN, testWords, peekTestWords, TestsYamlCommon.ps);
 	}
 
 	@Test
