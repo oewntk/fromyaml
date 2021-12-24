@@ -13,6 +13,8 @@ import java.util.*;
 
 public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 {
+	private static final boolean DUMP = false;
+
 	private static final String KEY_LEX_SENSE = "sense";
 	private static final String KEY_LEX_PRONUNCIATION = "pronunciation";
 	private static final String KEY_LEX_FORM = "form";
@@ -48,8 +50,6 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 	{
 		List<Lex> lexes = new ArrayList<>();
 
-		boolean dump = false;
-
 		String lemma = lemmaEntry.getKey();
 		Map<String, Object> lemmaMap = lemmaEntry.getValue();
 
@@ -58,7 +58,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 			String type = typeEntry.getKey();
 			Map<String, Object> lexMap = (Map<String, Object>) typeEntry.getValue();
 			YamlUtils.assertKeysIn(source, lexMap.keySet(), KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM);
-			if (dump)
+			if (DUMP)
 			{
 				YamlUtils.dumpMap("%s %s%n", lexMap);
 			}
@@ -76,7 +76,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 				for (Map<String, Object> pronunciationMap : pronunciationList)
 				{
 					YamlUtils.assertKeysIn(source, pronunciationMap.keySet(), KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE);
-					if (dump)
+					if (DUMP)
 					{
 						YamlUtils.dumpMap("\t%s %s%n", pronunciationMap);
 					}
@@ -102,7 +102,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 			for (Map<String, Object> senseMap : senseMaps)
 			{
 				YamlUtils.assertKeysIn(source, senseMap.keySet(), SENSE_RELATIONS, KEY_SENSE_ID, KEY_SENSE_SYNSET, KEY_SENSE_VERBFRAMES, KEY_SENSE_VERBFRAMES, KEY_SENSE_ADJPOSITION, KEY_SENSE_EXAMPLES);
-				if (dump)
+				if (DUMP)
 				{
 					YamlUtils.dumpMap("\t%s %s%n", senseMap);
 				}

@@ -8,12 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oewntk.model.LibTestModelDuplicates;
 
-import java.io.IOException;
-
 public class TestsYamlModelDuplicates
 {
 	@BeforeClass
-	public static void init() throws IOException
+	public static void init()
 	{
 		TestsYamlCommon.init();
 	}

@@ -7,7 +7,6 @@ package org.oewntk.yaml.in;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oewntk.model.Key;
-import org.oewntk.model.Lex;
 import org.oewntk.model.LibTestModel;
 
 import java.util.Set;

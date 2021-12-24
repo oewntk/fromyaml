@@ -8,8 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oewntk.model.LibTestModelKeys;
 
-import java.io.IOException;
-
 public class TestsYamlModelKeys
 {
 	@BeforeClass

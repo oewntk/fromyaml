@@ -15,7 +15,7 @@ import java.util.*;
 
 public abstract class YamProcessor<T, K extends Comparable<K>, V>
 {
-	protected File dir;
+	protected final File dir;
 
 	public YamProcessor(final File dir)
 	{
