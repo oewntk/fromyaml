@@ -26,13 +26,13 @@ public class TestsYamlModelWords
 	@Test
 	public void testScanLexesForTestWords()
 	{
-		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model, Key.OEWN::of, LibTestModel::makeIndexMap, testWords, peekTestWords, TestsYamlCommon.ps);
+		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model, Key.W_P_A::of_t, LibTestModel::makeIndexMap, testWords, peekTestWords, TestsYamlCommon.ps);
 	}
 
 	@Test
 	public void testScanLexesForTestWordsSorted()
 	{
-		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model,  Key.OEWN::of, LibTestModel::makeSortedIndexMap, testWords, peekTestWords, TestsYamlCommon.ps);
+		LibTestModel.testScanLexesForTestWords(TestsYamlCommon.model,  Key.W_P_A::of_t, LibTestModel::makeSortedIndexMap, testWords, peekTestWords, TestsYamlCommon.ps);
 	}
 
 	@Test
