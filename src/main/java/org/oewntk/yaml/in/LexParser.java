@@ -138,7 +138,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 				String adjPosition = (String) senseMap.get(KEY_SENSE_ADJPOSITION);
 
 				// relations
-				Map<String, List<String>> relations = null;
+				Map<String, Set<String>> relations = null;
 				for (String relationKey : SENSE_RELATIONS)
 				{
 					if (senseMap.containsKey(relationKey))
@@ -146,9 +146,9 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 						List<String> relationTargets = (List<String>) senseMap.get(relationKey);
 						if (relations == null)
 						{
-							relations = new HashMap<>();
+							relations = new TreeMap<>();
 						}
-						relations.put(relationKey, relationTargets);
+						relations.computeIfAbsent(relationKey, (k) -> new LinkedHashSet<>()).addAll(relationTargets);
 					}
 				}
 
