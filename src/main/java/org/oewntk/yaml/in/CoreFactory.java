@@ -45,6 +45,6 @@ public class CoreFactory implements Supplier<CoreModel>
 	static public void main(String[] args)
 	{
 		CoreModel model = makeCoreModel(args);
-		Tracing.psInfo.printf("[CoreModel] %s\n%s\n%s%n", model.getSource(), model.info(), model.counts());
+		Tracing.psInfo.printf("[CoreModel] %s%n%s%n%s%n", model.getSource(), model.info(), model.counts());
 	}
 }

@@ -28,7 +28,29 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 	private static final String KEY_PRONUNCIATION_VARIETY = "variety";
 	private static final String KEY_PRONUNCIATION_VALUE = "value";
 
-	private static final String[] SENSE_RELATIONS = {"antonym", "similar", "exemplifies", "derivation", "pertainym", "participle", "also", "domain_region", "domain_topic", "other"};
+	private static final String[] VALID_SENSE_RELATIONS = { //
+			"antonym", //
+			"similar",  //
+			"exemplifies",  //
+			"derivation",  //
+			"pertainym",  //
+			"participle",  //
+			"also",  //
+			"domain_region",  //
+			"domain_topic",  //
+			"other"};
+
+	private static final String[] SENSE_RELATIONS = { //
+			"antonym", //
+			"similar",  //
+			"exemplifies", "is_exemplified_by", //
+			"derivation",  //
+			"pertainym",  //
+			"participle",  //
+			"also",  //
+			"domain_region", "has_domain_region", //
+			"domain_topic", "has_domain_topic", //
+			"other"};
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
@@ -101,7 +123,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 			int i = 0;
 			for (Map<String, Object> senseMap : senseMaps)
 			{
-				YamlUtils.assertKeysIn(source, senseMap.keySet(), SENSE_RELATIONS, KEY_SENSE_ID, KEY_SENSE_SYNSET, KEY_SENSE_VERBFRAMES, KEY_SENSE_VERBFRAMES, KEY_SENSE_ADJPOSITION, KEY_SENSE_EXAMPLES);
+				YamlUtils.assertKeysIn(source, senseMap.keySet(), VALID_SENSE_RELATIONS, KEY_SENSE_ID, KEY_SENSE_SYNSET, KEY_SENSE_VERBFRAMES, KEY_SENSE_VERBFRAMES, KEY_SENSE_ADJPOSITION, KEY_SENSE_EXAMPLES);
 				if (DUMP)
 				{
 					YamlUtils.dumpMap("\t%s %s%n", senseMap);

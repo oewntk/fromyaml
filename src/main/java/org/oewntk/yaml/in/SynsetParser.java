@@ -24,7 +24,7 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 	private static final String KEY_EXAMPLE_SOURCE = "source";
 	private static final String KEY_EXAMPLE_TEXT = "text";
 
-	private static final String[] SYNSET_RELATIONS = new String[]{ //
+	private static final String[] VALID_SYNSET_RELATIONS = new String[]{ //
 			"hypernym", // "hyponym",
 			"instance_hypernym", // "instance_hyponym",
 			"mero_part", // "holo_part",
@@ -35,7 +35,22 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 			"exemplifies", // "is_exemplified_by",
 			"domain_topic", // "has_domain_topic"
 			"domain_region", // "has_domain_region"
+			"attribute", //
+			"similar", //
+			"also", //
+	};
 
+	private static final String[] SYNSET_RELATIONS = new String[]{ //
+			"hypernym", "hyponym", //
+			"instance_hypernym", "instance_hyponym", //
+			"mero_part", "holo_part", //
+			"mero_member", "holo_member", //
+			"mero_substance", "holo_substance", //
+			"causes", "is_caused_by", //
+			"entails", "is_entailed_by", //
+			"exemplifies", "is_exemplified_by", //
+			"domain_topic", "has_domain_topic", //
+			"domain_region", "has_domain_region", //
 			"attribute", //
 			"similar", //
 			"also", //
@@ -92,7 +107,7 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 			Tracing.psInfo.println(id);
 			YamlUtils.dumpMap("%s %s%n", synsetMap);
 		}
-		YamlUtils.assertKeysIn(source, synsetMap.keySet(), SYNSET_RELATIONS, KEY_SYNSET_POS, KEY_SYNSET_DEFINITION, KEY_SYNSET_EXAMPLE, KEY_SYNSET_MEMBERS, KEY_SYNSET_WIKIDATA, KEY_SYNSET_ILI, KEY_SYNSET_SOURCE);
+		YamlUtils.assertKeysIn(source, synsetMap.keySet(), VALID_SYNSET_RELATIONS, KEY_SYNSET_POS, KEY_SYNSET_DEFINITION, KEY_SYNSET_EXAMPLE, KEY_SYNSET_MEMBERS, KEY_SYNSET_WIKIDATA, KEY_SYNSET_ILI, KEY_SYNSET_SOURCE);
 
 		String code = (String) synsetMap.get(KEY_SYNSET_POS);
 		List<String> definitions = (List<String>) synsetMap.get(KEY_SYNSET_DEFINITION);
