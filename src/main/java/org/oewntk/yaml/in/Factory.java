@@ -53,11 +53,16 @@ public class Factory implements Supplier<Model>
 		}
 	}
 
+	static public Model makeModel(File inDir, File inDir2)
+	{
+		return new Factory(inDir, inDir2).get();
+	}
+
 	static public Model makeModel(String[] args)
 	{
 		File inDir = new File(args[0]);
 		File inDir2 = new File(args[1]);
-		return new Factory(inDir, inDir2).get();
+		return makeModel(inDir, inDir2);
 	}
 
 	static public void main(String[] args)
