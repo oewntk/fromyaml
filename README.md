@@ -9,7 +9,7 @@
 
 This reads a model from YAML files.
 
-Project [fromyaml](https://github.com/x-englishwordnet/fromyaml)
+Project [fromyaml](https://github.com/oewntk/fromyaml)
 
 ## Dataflow
 
@@ -17,6 +17,6 @@ Project [fromyaml](https://github.com/x-englishwordnet/fromyaml)
 
 ## Maven Central
 
-		<groupId>io.github.x-englishwordnet</groupId>
+		<groupId>io.github.oewntk</groupId>
 		<artifactId>fromyaml</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
