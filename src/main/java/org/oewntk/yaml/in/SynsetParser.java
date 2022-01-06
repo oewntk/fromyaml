@@ -8,7 +8,11 @@ import org.oewntk.model.Synset;
 
 import java.io.File;
 import java.util.*;
+import java.util.Map.Entry;
 
+/**
+ * Synset parser
+ */
 public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Object>>
 {
 	private static final boolean DUMP = false;
@@ -84,6 +88,11 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
+	/**
+	 * Synset YAML parser
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public SynsetParser(final File dir)
 	{
 		super(dir);
@@ -97,7 +106,7 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 	}
 
 	@Override
-	protected Synset processEntry(String source, Map.Entry<String, Map<String, Object>> entry)
+	protected Synset processEntry(final String source, final Entry<String, Map<String, Object>> entry)
 	{
 		String domain = source.split("\\.")[1];
 		String id = entry.getKey();
@@ -138,7 +147,14 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 				wikidata, relations);
 	}
 
-	static public String[] examplesToArray(String source, List<Object> examples)
+	/**
+	 * Examples to array
+	 *
+	 * @param source   source
+	 * @param examples examples
+	 * @return array of examples
+	 */
+	static public String[] examplesToArray(final String source, final List<Object> examples)
 	{
 		int n = examples.size();
 		String[] array = new String[n];

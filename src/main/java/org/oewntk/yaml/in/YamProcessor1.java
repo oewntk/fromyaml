@@ -13,19 +13,49 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+/**
+ * Abstract YAML processor, entry produces one item only of type T
+ *
+ * @param <T> type of elements to parse
+ * @param <K> type of key
+ * @param <V> type of value
+ */
 public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 {
 	protected File dir;
 
+	/**
+	 * Constructor
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public YamProcessor1(final File dir)
 	{
 		this.dir = dir;
 	}
 
+	/**
+	 * Files to process
+	 *
+	 * @return YAML files to process
+	 */
 	abstract protected File[] getFiles();
 
+	/**
+	 * Process entry
+	 *
+	 * @param source entry source
+	 * @param entry  key-value pair
+	 * @return item of type T
+	 */
 	abstract protected T processEntry(String source, Map.Entry<K, V> entry);
 
+	/**
+	 * Parse
+	 *
+	 * @return collection of objects of type T
+	 * @throws IOException io exception
+	 */
 	public Collection<T> parse() throws IOException
 	{
 		Collection<T> items = new ArrayList<>();
@@ -36,12 +66,27 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 		return Collections.unmodifiableCollection(items);
 	}
 
+	/**
+	 * Load from file
+	 *
+	 * @param file  YAML file
+	 * @param items accumulated items
+	 * @throws IOException io exception
+	 */
 	private void loadClass(File file, Collection<T> items) throws IOException
 	{
 		Yaml yaml = new Yaml(new Constructor(TreeMap.class));
 		load(file, yaml, items);
 	}
 
+	/**
+	 * Load from file
+	 *
+	 * @param file  YAML file
+	 * @param yaml  Yaml
+	 * @param items accumulated items
+	 * @throws IOException io exception
+	 */
 	private void load(File file, Yaml yaml, Collection<T> items) throws IOException
 	{
 		try (InputStream inputStream = new FileInputStream(file))

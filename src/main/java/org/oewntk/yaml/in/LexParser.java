@@ -10,7 +10,11 @@ import org.oewntk.model.Sense;
 
 import java.io.File;
 import java.util.*;
+import java.util.Map.Entry;
 
+/**
+ * Lex parser
+ */
 public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 {
 	private static final boolean DUMP = false;
@@ -54,8 +58,16 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
+	/**
+	 * Accumulated senses as lexes are processed
+	 */
 	private final List<Sense> senses = new ArrayList<>();
 
+	/**
+	 * Lex YAML parser
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public LexParser(final File dir)
 	{
 		super(dir);
@@ -68,7 +80,7 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 	}
 
 	@Override
-	protected Collection<Lex> processEntry(String source, Map.Entry<String, Map<String, Object>> lemmaEntry)
+	protected Collection<Lex> processEntry(final String source, final Entry<String, Map<String, Object>> lemmaEntry)
 	{
 		List<Lex> lexes = new ArrayList<>();
 
@@ -167,6 +179,11 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
 		return lexes;
 	}
 
+	/**
+	 * Get senses that was also accumulated
+	 *
+	 * @return accumulated senses
+	 */
 	public Collection<Sense> getSenses()
 	{
 		return this.senses;

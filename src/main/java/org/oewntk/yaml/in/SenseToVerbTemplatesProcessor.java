@@ -7,13 +7,20 @@ package org.oewntk.yaml.in;
 import java.io.File;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Sense-to-verb-templates processor
+ */
 public class SenseToVerbTemplatesProcessor extends YamProcessor1<Entry<String, int[]>, String, List<Integer>>
 {
 	private static final boolean DUMP = false;
 
+	/**
+	 * Constructor
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public SenseToVerbTemplatesProcessor(final File dir)
 	{
 		super(dir);
@@ -27,7 +34,7 @@ public class SenseToVerbTemplatesProcessor extends YamProcessor1<Entry<String, i
 	}
 
 	@Override
-	protected Entry<String, int[]> processEntry(String source, Map.Entry<String, List<Integer>> entry)
+	protected Entry<String, int[]> processEntry(final String source, final Entry<String, List<Integer>> entry)
 	{
 		String sensekey = entry.getKey();
 		List<Integer> v = entry.getValue();

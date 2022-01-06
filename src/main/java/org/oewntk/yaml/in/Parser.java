@@ -13,15 +13,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * YAML parser that supplies model
+ */
 public class Parser
 {
 	private final File inDir;
 
-	public Parser(File inDir)
+	/**
+	 * Constructor
+	 *
+	 * @param inDir dir containing YAML files
+	 */
+	public Parser(final File inDir)
 	{
 		this.inDir = inDir;
 	}
 
+	/**
+	 * Parse
+	 *
+	 * @return core model
+	 * @throws IOException io exception
+	 */
 	public CoreModel parse() throws IOException
 	{
 		// lexes + senses

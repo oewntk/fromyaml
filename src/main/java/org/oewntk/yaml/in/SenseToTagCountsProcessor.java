@@ -11,6 +11,9 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Sense-to-tag-count processor
+ */
 public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCount>, String, Map<String, Integer>>
 {
 	private static final boolean DUMP = false;
@@ -19,6 +22,11 @@ public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCo
 
 	private static final String KEY_TAGCOUNT_COUNT = "cnt";
 
+	/**
+	 * Constructor
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public SenseToTagCountsProcessor(final File dir)
 	{
 		super(dir);
@@ -32,7 +40,7 @@ public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCo
 	}
 
 	@Override
-	protected Entry<String, TagCount> processEntry(String source, Map.Entry<String, Map<String, Integer>> entry)
+	protected Entry<String, TagCount> processEntry(final String source, final Entry<String, Map<String, Integer>> entry)
 	{
 		String sensekey = entry.getKey();
 		Map<String, Integer> tagCntMap = entry.getValue();

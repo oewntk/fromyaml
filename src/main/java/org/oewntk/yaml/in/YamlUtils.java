@@ -16,12 +16,29 @@ class YamlUtils
 	private YamlUtils()
 	{
 	}
+
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
+	/**
+	 * Assert keys are in set of valid keys
+	 *
+	 * @param source    source
+	 * @param keys      bunch of valid keys
+	 * @param validKeys array of extra valid keys
+	 */
 	static void assertKeysIn(String source, Set<String> keys, String... validKeys)
 	{
 		assertKeysIn(source, keys, VOID_STRING_ARRAY, validKeys);
 	}
+
+	/**
+	 * Assert keys are in set of valid keys
+	 *
+	 * @param source     source
+	 * @param keys       bunch of valid keys
+	 * @param validKeys1 array of extra valid keys
+	 * @param validKeys2 array of extra valid keys
+	 */
 	static void assertKeysIn(String source, Set<String> keys, String[] validKeys1, String... validKeys2)
 	{
 		List<String> validKeys = new ArrayList<>();

@@ -7,12 +7,19 @@ package org.oewntk.yaml.in;
 import org.oewntk.model.VerbFrame;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Map.Entry;
 
+/**
+ * Verb frames parser
+ */
 public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
 {
 	private static final boolean DUMP = false;
 
+	/**
+	 * Constructor
+	 * @param dir dir containing YAML files
+	 */
 	public VerbFrameProcessor(final File dir)
 	{
 		super(dir);
@@ -26,7 +33,7 @@ public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
 	}
 
 	@Override
-	protected VerbFrame processEntry(String source, Map.Entry<String, String> entry)
+	protected VerbFrame processEntry(final String source, final Entry<String, String> entry)
 	{
 		String id = entry.getKey();
 		String v = entry.getValue();

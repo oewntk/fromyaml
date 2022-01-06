@@ -7,12 +7,17 @@ package org.oewntk.yaml.in;
 import org.oewntk.model.VerbTemplate;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Map.Entry;
 
 public class VerbTemplateProcessor extends YamProcessor1<VerbTemplate, Integer, String>
 {
 	private static final boolean DUMP = false;
 
+	/**
+	 * Constructor
+	 *
+	 * @param dir dir containing YAML files
+	 */
 	public VerbTemplateProcessor(final File dir)
 	{
 		super(dir);
@@ -26,7 +31,7 @@ public class VerbTemplateProcessor extends YamProcessor1<VerbTemplate, Integer, 
 	}
 
 	@Override
-	protected VerbTemplate processEntry(String source, Map.Entry<Integer, String> entry)
+	protected VerbTemplate processEntry(final String source, final Entry<Integer, String> entry)
 	{
 		Integer id = entry.getKey();
 		String v = entry.getValue();

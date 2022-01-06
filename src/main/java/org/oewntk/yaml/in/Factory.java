@@ -13,12 +13,21 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
+/**
+ * Model factory
+ */
 public class Factory implements Supplier<Model>
 {
 	private final File inDir;
 
 	private final File inDir2;
 
+	/**
+	 * Constructor
+	 *
+	 * @param inDir  dir containing release YAML files
+	 * @param inDir2 dir containing extra YAML files
+	 */
 	public Factory(final File inDir, final File inDir2)
 	{
 		this.inDir = inDir;
@@ -53,11 +62,24 @@ public class Factory implements Supplier<Model>
 		}
 	}
 
+	/**
+	 * Make model
+	 *
+	 * @param inDir  dir containing release YAML files
+	 * @param inDir2 dir containing extra YAML files
+	 * @return model
+	 */
 	static public Model makeModel(File inDir, File inDir2)
 	{
 		return new Factory(inDir, inDir2).get();
 	}
 
+	/**
+	 * Make core model from YAML files
+	 *
+	 * @param args cmd-line args
+	 * @return core model
+	 */
 	static public Model makeModel(String[] args)
 	{
 		File inDir = new File(args[0]);
@@ -65,6 +87,11 @@ public class Factory implements Supplier<Model>
 		return makeModel(inDir, inDir2);
 	}
 
+	/**
+	 * Main
+	 *
+	 * @param args cmd-line args
+	 */
 	static public void main(String[] args)
 	{
 		Model model = makeModel(args);

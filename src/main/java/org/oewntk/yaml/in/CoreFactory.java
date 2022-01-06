@@ -10,10 +10,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+/**
+ * Core model factory
+ */
 public class CoreFactory implements Supplier<CoreModel>
 {
 	private final File inDir;
 
+	/**
+	 * Constructor
+	 *
+	 * @param inDir dir containing YAML files
+	 */
 	public CoreFactory(final File inDir)
 	{
 		this.inDir = inDir;
@@ -36,12 +44,23 @@ public class CoreFactory implements Supplier<CoreModel>
 		}
 	}
 
+	/**
+	 * Make core model from YAML files
+	 *
+	 * @param args cmd-line args
+	 * @return core model
+	 */
 	static public CoreModel makeCoreModel(String[] args)
 	{
 		File inDir = new File(args[0]);
 		return new CoreFactory(inDir).get();
 	}
 
+	/**
+	 * Main
+	 *
+	 * @param args cmd-line args
+	 */
 	static public void main(String[] args)
 	{
 		CoreModel model = makeCoreModel(args);
