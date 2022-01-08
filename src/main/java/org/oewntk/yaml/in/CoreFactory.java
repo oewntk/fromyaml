@@ -47,7 +47,7 @@ public class CoreFactory implements Supplier<CoreModel>
 	/**
 	 * Make core model from YAML files
 	 *
-	 * @param args cmd-line args
+	 * @param args command-line arguments
 	 * @return core model
 	 */
 	static public CoreModel makeCoreModel(String[] args)
@@ -59,7 +59,7 @@ public class CoreFactory implements Supplier<CoreModel>
 	/**
 	 * Main
 	 *
-	 * @param args cmd-line args
+	 * @param args command-line arguments
 	 */
 	static public void main(String[] args)
 	{
