@@ -72,13 +72,13 @@ public class TestsYamlModelKeys
 		assertEquals(2, r[2]);
 		assertEquals(2, r[3]);
 		assertEquals(1, r[4]);
-		assertEquals(2, r[5]);
-		assertEquals(3, r[6]);
-		assertEquals(3, r[7]);
+		assertEquals(1, r[5]); // <2> before s,a merging (p-request for s)
+		assertEquals(2, r[6]); // <3> before s,a merging (p-request for s)
+		assertEquals(2, r[7]); // <3> before s,a merging (p-request for s)
 		assertEquals(0, r[8]);
-		assertEquals(1, r[9]);
-		assertEquals(1, r[10]);
-		assertEquals(1, r[11]);
+		assertEquals(0, r[9]); // <1> before s,a merging (t-request or s)
+		assertEquals(0, r[10]); // <1> before s,a merging (t-request or s)
+		assertEquals(0, r[11]); // <1> before s,a merging (t-request or s)
 		assertEquals(0, r[12]);
 		assertEquals(0, r[13]);
 		assertEquals(0, r[14]);
@@ -99,9 +99,9 @@ public class TestsYamlModelKeys
 		assertEquals(1, r[6]);
 		assertEquals(1, r[7]);
 		assertEquals(0, r[8]);
-		assertEquals(1, r[9]);
-		assertEquals(1, r[10]);
-		assertEquals(1, r[11]);
+		assertEquals(0, r[9]);  // <1> before s,a merging (t-request for s)
+		assertEquals(0, r[10]); // <1> before s,a merging (t-request for s)
+		assertEquals(0, r[11]); // <1> before s,a merging (t-request for s)
 		assertEquals(0, r[12]);
 		assertEquals(0, r[13]);
 		assertEquals(0, r[14]);
@@ -114,8 +114,8 @@ public class TestsYamlModelKeys
 	{
 		int[] r = LibTestModelKeys.testCriticalMulti(TestsYamlCommon.model, TestsYamlCommon.ps);
 		assertEquals(1, r[0]);
-		assertEquals(2, r[1]);
-		assertEquals(1, r[2]);
+		assertEquals(1, r[1]); // <2> before a,s merging (p-request for a)
+		assertEquals(0, r[2]); // <1> before a,s merging (t-request for s)
 		assertEquals(0, r[3]);
 		assertEquals(4, r.length);
 	}
@@ -126,7 +126,7 @@ public class TestsYamlModelKeys
 		int[] r = LibTestModelKeys.testCriticalMono(TestsYamlCommon.model, TestsYamlCommon.ps);
 		assertEquals(1, r[0]);
 		assertEquals(1, r[1]);
-		assertEquals(1, r[2]);
+		assertEquals(0, r[2]);  // <2> before s,a merging (t-request for s)
 		assertEquals(0, r[3]);
 		assertEquals(4, r.length);
 	}
