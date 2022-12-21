@@ -4,6 +4,7 @@
 
 package org.oewntk.yaml.in;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -29,13 +30,13 @@ class YamlUtils
 	 */
 	static Yaml newYaml()
 	{
-		return new Yaml(new Constructor(TreeMap.class));
+		//return new Yaml(new Constructor(TreeMap.class));
 
-		//LoaderOptions options = new LoaderOptions();
-		//options.setCodePointLimit(CODEPOINT_LIMIT);
-		//int limit = options.getCodePointLimit();
-		//System.out.println("codePointLimit=" + limit);
-		//return new Yaml(options);
+		LoaderOptions options = new LoaderOptions();
+		options.setCodePointLimit(CODEPOINT_LIMIT);
+		// int limit = options.getCodePointLimit();
+		// System.out.println("codePointLimit=" + limit);
+		return new Yaml(options);
 	}
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
