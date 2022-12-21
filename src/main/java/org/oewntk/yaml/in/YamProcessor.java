@@ -5,13 +5,15 @@
 package org.oewntk.yaml.in;
 
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -76,7 +78,7 @@ public abstract class YamProcessor<T, K extends Comparable<K>, V>
 	 */
 	private void loadClass(final File file, final Collection<T> items) throws IOException
 	{
-		Yaml yaml = new Yaml(new Constructor(TreeMap.class));
+		Yaml yaml = YamlUtils.newYaml();
 		load(file, yaml, items);
 	}
 

@@ -4,6 +4,9 @@
 
 package org.oewntk.yaml.in;
 
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
 import java.util.*;
 
 /**
@@ -15,6 +18,24 @@ class YamlUtils
 {
 	private YamlUtils()
 	{
+	}
+
+	static private final int CODEPOINT_LIMIT = 0x8000000;
+
+	/**
+	 * Build Yaml
+	 *
+	 * @return yaml
+	 */
+	static Yaml newYaml()
+	{
+		return new Yaml(new Constructor(TreeMap.class));
+
+		//LoaderOptions options = new LoaderOptions();
+		//options.setCodePointLimit(CODEPOINT_LIMIT);
+		//int limit = options.getCodePointLimit();
+		//System.out.println("codePointLimit=" + limit);
+		//return new Yaml(options);
 	}
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
