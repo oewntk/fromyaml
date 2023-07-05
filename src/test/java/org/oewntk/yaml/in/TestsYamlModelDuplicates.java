@@ -22,7 +22,7 @@ public class TestsYamlModelDuplicates
 		LibTestModelDuplicates.testDuplicatesForKeyOEWN(TestsYamlCommon.model, TestsYamlCommon.ps);
 	}
 
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testKeyPos()
 	{
 		LibTestModelDuplicates.testDuplicatesForKeyPos(TestsYamlCommon.model, TestsYamlCommon.ps);
