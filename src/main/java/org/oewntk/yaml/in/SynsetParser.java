@@ -124,6 +124,11 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 		List<String> members = (List<String>) synsetMap.get(KEY_SYNSET_MEMBERS);
 		String wikidata = (String) synsetMap.get(KEY_SYNSET_WIKIDATA);
 
+		// provision for no duplicates in members
+		// members = members.stream().distinct().collect(Collectors.toList());
+		assert members != null;
+		assert members.stream().noneMatch(m -> Collections.frequency(members, m) > 1);
+
 		// relations
 		Map<String, Set<String>> relations = null;
 		for (String relationKey : SYNSET_RELATIONS)
@@ -141,7 +146,7 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 		}
 
 		return new Synset(id, code.charAt(0), domain, //
-				members == null ? null : members.toArray(VOID_STRING_ARRAY), //
+				members.toArray(VOID_STRING_ARRAY), //
 				definitions == null ? null : definitions.toArray(VOID_STRING_ARRAY),  //
 				examples == null ? null : examplesToArray(source, examples),  //
 				wikidata, relations);
