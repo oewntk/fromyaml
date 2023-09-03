@@ -79,7 +79,8 @@ class YamlUtils
 			}
 			if (!valid)
 			{
-				throw new IllegalArgumentException(key + " " + source);
+				//  System.out.println("\"" + key + "\" in " + source);
+				throw new IllegalArgumentException("'" + key + "' in " + source);
 			}
 		}
 	}
