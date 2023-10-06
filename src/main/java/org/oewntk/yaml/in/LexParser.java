@@ -89,6 +89,40 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
             "other"
     };
 
+    /*
+    ignored
+      // antonym|
+      // also|
+      // participle|
+      // pertainym|
+      // derivation|
+      // domain_topic|
+      // has_domain_topic|
+      // domain_region|
+      // has_domain_region|
+      // exemplifies|
+      // is_exemplified_by|
+      // similar|
+      // other|
+      simple_aspect_ip|
+      secondary_aspect_ip|
+      simple_aspect_pi|
+      secondary_aspect_pi|
+      feminine|
+      has_feminine|
+      masculine|
+      has_masculine|
+      young|
+      has_young|
+      diminutive|
+      has_diminutive|
+      augmentative|
+      has_augmentative|
+      anto_gradable|
+      anto_simple|
+      anto_converse
+     */
+
     private static final String[] VOID_STRING_ARRAY = new String[0];
 
     /**

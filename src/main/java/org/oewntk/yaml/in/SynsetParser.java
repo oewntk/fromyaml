@@ -62,29 +62,92 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
 
 	/*
 	ignored
-		HOLONYM,
-		HOLO_LOCATION,
-		HOLO_PORTION,
-		INVOLVED,
-		STATE_OF,
-		IS_SUBEVENT_OF,
-		IN_MANNER,
-		RESTRICTED_BY,
-		CLASSIFIED_BY,
-		INVOLVED_AGENT,
-		INVOLVED_PATIENT,
-		INVOLVED_RESULT,
-		INVOLVED_INSTRUMENT,
-		INVOLVED_LOCATION,
-		INVOLVED_DIRECTION,
-		INVOLVED_TARGET_DIRECTION,
-		INVOLVED_SOURCE_DIRECTION,
-		CO_PATIENT_AGENT,
-		CO_INSTRUMENT_AGENT,
-		CO_RESULT_AGENT,
-		CO_INSTRUMENT_PATIENT,
-		CO_INSTRUMENT_RESULT]
-	*/
+	  agent|
+      // also|
+      // attribute|
+      be_in_state|
+      // causes|
+      classified_by|
+      classifies|
+      co_agent_instrument|
+      co_agent_patient|
+      co_agent_result|
+      co_instrument_agent|
+      co_instrument_patient|
+      co_instrument_result|
+      co_patient_agent|
+      co_patient_instrument|
+      co_result_agent|
+      co_result_instrument|
+      co_role|
+      direction|
+      // domain_region|
+      // domain_topic|
+      // exemplifies|
+      // entails|
+      eq_synonym|
+      // has_domain_region|
+      // has_domain_topic|
+      // is_exemplified_by|
+      holo_location|
+      // holo_member|
+      // holo_part|
+      holo_portion|
+      // holo_substance|
+      holonym|
+      // hypernym|
+      // hyponym|
+      in_manner|
+      // instance_hypernym|
+      // instance_hyponym|
+      instrument|
+      involved|
+      involved_agent|
+      involved_direction|
+      involved_instrument|
+      involved_location|
+      involved_patient|
+      involved_result|
+      involved_source_direction|
+      involved_target_direction|
+      // is_caused_by|
+      // is_entailed_by|
+      location|
+      manner_of|
+      mero_location|
+      // mero_member|
+      // mero_part|
+      mero_portion|
+      // mero_substance|
+      meronym|
+      // similar|
+      // other|
+      patient|
+      restricted_by|
+      restricts|
+      result|
+      role|
+      source_direction|
+      state_of|
+      target_direction|
+      subevent|
+      is_subevent_of|
+      // antonym|
+      feminine|
+      has_feminine|
+      masculine|
+      has_masculine|
+      young|
+      has_young|
+      diminutive|
+      has_diminutive|
+      augmentative|
+      has_augmentative|
+      anto_gradable|
+      anto_simple|
+      anto_converse|
+      ir_synonym
+ 	*/
 
 	private static final String[] VOID_STRING_ARRAY = new String[0];
 
