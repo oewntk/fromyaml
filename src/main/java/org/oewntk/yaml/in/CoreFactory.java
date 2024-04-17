@@ -35,7 +35,7 @@ public class CoreFactory implements Supplier<CoreModel>
 			return new Parser(inDir) //
 					.parse() //
 					.generateInverseRelations() //
-					.setSource(inDir);
+					.setModelSource(inDir);
 		}
 		catch (IOException e)
 		{
