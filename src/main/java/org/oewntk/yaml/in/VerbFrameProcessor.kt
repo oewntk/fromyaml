@@ -1,46 +1,35 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.oewntk.model.VerbFrame;
-
-import java.io.File;
-import java.util.Map.Entry;
+import org.oewntk.model.VerbFrame
+import java.io.File
 
 /**
- * Verb frames parser
+ * Verb frames processor
+ *
+ * @param dir dir containing YAML files
  */
-public class VerbFrameProcessor extends YamProcessor1<VerbFrame, String, String>
-{
-	private static final boolean DUMP = false;
+class VerbFrameProcessor(dir: File) : YamProcessor1<VerbFrame, String, String>(dir) {
 
-	/**
-	 * Constructor
-	 * @param dir dir containing YAML files
-	 */
-	public VerbFrameProcessor(final File dir)
-	{
-		super(dir);
-		this.dir = dir;
+	init {
+		this.dir = dir
 	}
 
-	@Override
-	protected File[] getFiles()
-	{
-		return dir.listFiles((f) -> f.getName().matches("frames.yaml"));
-	}
+	override val files: Array<File>
+		get() = dir.listFiles { f: File -> f.name.matches("frames.yaml".toRegex()) }!!
 
-	@Override
-	protected VerbFrame processEntry(final String source, final Entry<String, String> entry)
-	{
-		String id = entry.getKey();
-		String v = entry.getValue();
-		if (DUMP)
-		{
-			Tracing.psInfo.println(id);
+	override fun processEntry(source: String?, entry: Map.Entry<String, String>): VerbFrame {
+		val id = entry.key
+		val v = entry.value
+		if (DUMP) {
+			Tracing.psInfo.println(id)
 		}
-		return new VerbFrame(id, v);
+		return VerbFrame(id, v)
+	}
+
+	companion object {
+		private const val DUMP = false
 	}
 }

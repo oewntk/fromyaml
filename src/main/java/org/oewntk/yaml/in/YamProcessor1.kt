@@ -1,47 +1,29 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import org.yaml.snakeyaml.Yaml
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.util.*
 
 /**
  * Abstract YAML processor, entry produces one item only of type T
  *
- * @param <T> type of elements to parse
- * @param <K> type of key
- * @param <V> type of value
+ * @param dir dir containing YAML files
+ *
+ * @param T type of elements to parse
+ * @param K type of key
+ * @param V type of value
  */
-public abstract class YamProcessor1<T, K extends Comparable<K>, V>
-{
-	protected File dir;
+abstract class YamProcessor1<T, K : Comparable<K>?, V>(@JvmField protected var dir: File) {
 
 	/**
-	 * Constructor
-	 *
-	 * @param dir dir containing YAML files
+	 * YAML files to process
 	 */
-	public YamProcessor1(final File dir)
-	{
-		this.dir = dir;
-	}
-
-	/**
-	 * Files to process
-	 *
-	 * @return YAML files to process
-	 */
-	abstract protected File[] getFiles();
+	protected abstract val files: Array<File>
 
 	/**
 	 * Process entry
@@ -50,7 +32,7 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 	 * @param entry  key-value pair
 	 * @return item of type T
 	 */
-	abstract protected T processEntry(String source, Map.Entry<K, V> entry);
+	protected abstract fun processEntry(source: String?, entry: Map.Entry<K, V>): T
 
 	/**
 	 * Parse
@@ -58,14 +40,13 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 	 * @return collection of objects of type T
 	 * @throws IOException io exception
 	 */
-	public Collection<T> parse() throws IOException
-	{
-		Collection<T> items = new ArrayList<>();
-		for (File file : getFiles())
-		{
-			loadClass(file, items);
+	@Throws(IOException::class)
+	fun parse(): Collection<T> {
+		val items: MutableCollection<T> = ArrayList()
+		for (file in files) {
+			loadClass(file, items)
 		}
-		return Collections.unmodifiableCollection(items);
+		return Collections.unmodifiableCollection(items)
 	}
 
 	/**
@@ -75,10 +56,10 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 	 * @param items accumulated items
 	 * @throws IOException io exception
 	 */
-	private void loadClass(File file, Collection<T> items) throws IOException
-	{
-		Yaml yaml = YamlUtils.newYaml();
-		load(file, yaml, items);
+	@Throws(IOException::class)
+	private fun loadClass(file: File, items: MutableCollection<T>) {
+		val yaml = YamlUtils.newYaml()
+		load(file, yaml, items)
 	}
 
 	/**
@@ -89,17 +70,14 @@ public abstract class YamProcessor1<T, K extends Comparable<K>, V>
 	 * @param items accumulated items
 	 * @throws IOException io exception
 	 */
-	private void load(File file, Yaml yaml, Collection<T> items) throws IOException
-	{
-		try (InputStream inputStream = new FileInputStream(file))
-		{
-			Map<K, V> top = yaml.load(inputStream);
-			for (Map.Entry<K, V> entry : top.entrySet())
-			{
-				T t = processEntry(file.getName(), entry);
-				if (t != null)
-				{
-					items.add(t);
+	@Throws(IOException::class)
+	private fun load(file: File, yaml: Yaml, items: MutableCollection<T>) {
+		FileInputStream(file).use { inputStream ->
+			val top: Map<K, V> = yaml.load<Map<K, V>>(inputStream)
+			for (entry in top.entries) {
+				val t: T? = processEntry(file.name, entry)
+				if (t != null) {
+					items.add(t)
 				}
 			}
 		}

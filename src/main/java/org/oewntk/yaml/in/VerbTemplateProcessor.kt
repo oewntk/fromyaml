@@ -1,44 +1,36 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.oewntk.model.VerbTemplate
+import java.io.File
 
-import org.oewntk.model.VerbTemplate;
+/**
+ * Verb Templates processor
+ *
+ * @property dir dir containing YAML files
+ */
+class VerbTemplateProcessor(dir: File) : YamProcessor1<VerbTemplate, Int, String>(dir) {
 
-import java.io.File;
-import java.util.Map.Entry;
-
-public class VerbTemplateProcessor extends YamProcessor1<VerbTemplate, Integer, String>
-{
-	private static final boolean DUMP = false;
-
-	/**
-	 * Constructor
-	 *
-	 * @param dir dir containing YAML files
-	 */
-	public VerbTemplateProcessor(final File dir)
-	{
-		super(dir);
-		this.dir = dir;
+	init {
+		this.dir = dir
 	}
 
-	@Override
-	protected File[] getFiles()
-	{
-		return dir.listFiles((f) -> f.getName().matches("verbTemplates.yaml"));
-	}
+	override val files: Array<File>
+		get() = dir.listFiles { f -> f.name.matches("verbTemplates.yaml".toRegex()) }!!
 
-	@Override
-	protected VerbTemplate processEntry(final String source, final Entry<Integer, String> entry)
-	{
-		Integer id = entry.getKey();
-		String v = entry.getValue();
-		if (DUMP)
-		{
-			Tracing.psInfo.println(id);
+	override fun processEntry(source: String?, entry: Map.Entry<Int, String>): VerbTemplate {
+		val id = entry.key
+		val v = entry.value
+		if (DUMP) {
+			Tracing.psInfo.println(id)
 		}
-		return new VerbTemplate(id, v);
+		return VerbTemplate(id, v)
+	}
+
+	companion object {
+		private const val DUMP = false
 	}
 }
+

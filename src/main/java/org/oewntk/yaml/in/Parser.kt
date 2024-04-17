@@ -1,34 +1,18 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.oewntk.model.CoreModel;
-import org.oewntk.model.Lex;
-import org.oewntk.model.Sense;
-import org.oewntk.model.Synset;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
+import org.oewntk.model.CoreModel
+import java.io.File
+import java.io.IOException
 
 /**
  * YAML parser that supplies model
+ *
+ * @property inDir dir containing YAML files
  */
-public class Parser
-{
-	private final File inDir;
-
-	/**
-	 * Constructor
-	 *
-	 * @param inDir dir containing YAML files
-	 */
-	public Parser(final File inDir)
-	{
-		this.inDir = inDir;
-	}
+class Parser(private val inDir: File) {
 
 	/**
 	 * Parse
@@ -36,17 +20,18 @@ public class Parser
 	 * @return core model
 	 * @throws IOException io exception
 	 */
-	public CoreModel parse() throws IOException
-	{
+	@Throws(IOException::class)
+	fun parse(): CoreModel {
+
 		// lexes + senses
-		LexParser lexParser = new LexParser(inDir);
-		Collection<Lex> lexes = lexParser.parse();
-		Collection<Sense> senses = lexParser.getSenses();
+		val lexParser = LexParser(inDir)
+		val lexes = lexParser.parse()
+		val senses = lexParser.senses
 
 		// synsets
-		SynsetParser synsetParser = new SynsetParser(inDir);
-		Collection<Synset> synsets = synsetParser.parse();
+		val synsetParser = SynsetParser(inDir)
+		val synsets = synsetParser.parse()
 
-		return new CoreModel(lexes, senses, synsets);
+		return CoreModel(lexes, senses, synsets)
 	}
 }

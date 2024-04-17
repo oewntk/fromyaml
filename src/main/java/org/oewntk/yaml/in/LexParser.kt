@@ -1,95 +1,208 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.oewntk.model.Lex;
-import org.oewntk.model.Pronunciation;
-import org.oewntk.model.Sense;
-
-import java.io.File;
-import java.util.*;
-import java.util.Map.Entry;
+import org.oewntk.model.Lex
+import org.oewntk.model.Pronunciation
+import org.oewntk.model.Sense
+import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
+import org.oewntk.yaml.`in`.YamlUtils.dumpMap
+import java.io.File
+import java.util.*
 
 /**
  * Lex parser
+ *
+ * @property dir dir containing YAML files
  */
-public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
-{
-    private static final boolean DUMP = false;
+class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>?>(dir) {
 
-    private static final String KEY_LEX_SENSE = "sense";
-    private static final String KEY_LEX_PRONUNCIATION = "pronunciation";
-    private static final String KEY_LEX_FORM = "form";
+	/**
+	 * Accumulated senses as lexes are processed
+	 */
+	private val senses: MutableList<Sense> = ArrayList()
 
-    private static final String KEY_SENSE_ID = "id";
-    private static final String KEY_SENSE_SYNSET = "synset";
-    private static final String KEY_SENSE_ADJPOSITION = "adjposition";
-    private static final String KEY_SENSE_VERBFRAMES = "subcat";
-    private static final String KEY_SENSE_EXAMPLES = "sent";
+	override val files: Array<File>
+		get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
 
-    private static final String KEY_PRONUNCIATION_VARIETY = "variety";
-    private static final String KEY_PRONUNCIATION_VALUE = "value";
+	override fun processEntry(source: String?, entry: Map.Entry<String, Map<String, *>?>?): Collection<Lex> {
+		val lexes: MutableList<Lex> = ArrayList<Lex>()
 
-    private static final String[] VALID_SENSE_RELATIONS = { //
-            "antonym", //
-            "similar",  //
-            "exemplifies",  //
-            "derivation",  //
-            "pertainym",  //
-            "participle",  //
-            "also",  //
-            "domain_region",  //
-            "domain_topic",  //
+		val lemma = entry!!.key
+		val lemmaMap = entry.value
+		if (lemmaMap != null) {
+			for ((type, value1) in lemmaMap) {
+				val lexMap = value1 as Map<String, Any>
+				assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
+				if (DUMP) {
+					dumpMap("%s %s%n", lexMap)
+				}
 
-            "state",
-            "result",
-            "event",
-            "property",
-            "location",
-            "destination",
-            "agent",
-            "undergoer",
-            "uses",
-            "instrument",
-             "by_means_of",
-            "material",
-            "vehicle",
-            "body_part",
+				// lex
+				val lex = Lex(lemma, type, source)
 
-            "other"};
+				// pronunciations
+				val pronunciationList = lexMap[KEY_LEX_PRONUNCIATION] as List<Map<String, *>>?
+				var pronunciations: Array<Pronunciation>? = null
+				if (pronunciationList != null) {
+					pronunciations = Array(pronunciationList.size) {
+						val pronunciationMap = pronunciationList[it]
+						assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+						if (DUMP) {
+							dumpMap("\t%s %s%n", pronunciationMap)
+						}
+						val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String
+						val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
+						Pronunciation(value, variety)
+					}
+				}
+				lex.setPronunciations(pronunciations)
 
-    private static final String[] SENSE_RELATIONS = { //
-            "antonym", //
-            "similar",  //
-            "exemplifies", "is_exemplified_by", //
-            "derivation",  //
-            "pertainym",  //
-            "participle",  //
-            "also",  //
-            "domain_region", "has_domain_region", //
-            "domain_topic", "has_domain_topic", //
+				// forms
+				val forms = lexMap[KEY_LEX_FORM] as List<String>?
+				if (forms != null) {
+					lex.setForms(*forms.toTypedArray<String>())
+				}
 
-            "agent",
-            "material",
-            "event",
-            "instrument",
-            "location",
-            "by_means_of",
-            "undergoer",
-            "property",
-            "result",
-            "state",
-            "uses",
-            "destination",
-            "body_part",
-            "vehicle",
+				// senses
+				val senseMaps = lexMap[KEY_LEX_SENSE] as List<Map<String, Any>>?
+				val lexSenses = Array(senseMaps!!.size) {
+					val senseMap = senseMaps[it]
+					assertKeysIn(
+						source, senseMap.keys,
+						VALID_SENSE_RELATIONS,  //
+						KEY_SENSE_ID,  //
+						KEY_SENSE_SYNSET,  //
+						KEY_SENSE_VERBFRAMES,  //
+						KEY_SENSE_VERBFRAMES,  //
+						KEY_SENSE_ADJPOSITION,
+						KEY_SENSE_EXAMPLES //
+					)
+					if (DUMP) {
+						dumpMap("\t%s %s%n", senseMap)
+					}
 
-            "other"
-    };
+					val senseId = senseMap[KEY_SENSE_ID] as String?
+					val synsetId = senseMap[KEY_SENSE_SYNSET] as String?
+					val examplesList = senseMap[KEY_SENSE_EXAMPLES] as List<String>?
+					val verbFramesList = senseMap[KEY_SENSE_VERBFRAMES] as List<String>?
+					val examples = examplesList?.toTypedArray()
+					val verbFrames = verbFramesList?.toTypedArray()
+					val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
-    /*
+					// relations
+					var relations: MutableMap<String, MutableSet<String>>? = null
+					for (relationKey in SENSE_RELATIONS) {
+						if (senseMap.containsKey(relationKey)) {
+							val relationTargets = senseMap[relationKey] as List<String>?
+							if (relations == null) {
+								relations = TreeMap()
+							}
+							relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets!!)
+						}
+					}
+
+					// sense
+					val lexSense =
+						Sense(senseId, lex, type[0], it, synsetId, examples!!, verbFrames!!, adjPosition!!, relations)
+					senses.add(lexSense)
+					lexSense
+				}
+				lex.setSenses(lexSenses)
+
+				// accumulate
+				lexes.add(lex)
+			}
+		}
+
+		return lexes
+	}
+
+	/**
+	 * Get senses that was also accumulated
+	 *
+	 * @return accumulated senses
+	 */
+	fun getSenses(): Collection<Sense?> {
+		return this.senses
+	}
+
+	companion object {
+		private const val DUMP = false
+
+		private const val KEY_LEX_SENSE = "sense"
+		private const val KEY_LEX_PRONUNCIATION = "pronunciation"
+		private const val KEY_LEX_FORM = "form"
+
+		private const val KEY_SENSE_ID = "id"
+		private const val KEY_SENSE_SYNSET = "synset"
+		private const val KEY_SENSE_ADJPOSITION = "adjposition"
+		private const val KEY_SENSE_VERBFRAMES = "subcat"
+		private const val KEY_SENSE_EXAMPLES = "sent"
+
+		private const val KEY_PRONUNCIATION_VARIETY = "variety"
+		private const val KEY_PRONUNCIATION_VALUE = "value"
+
+		private val VALID_SENSE_RELATIONS = arrayOf( //
+			"antonym",  //
+			"similar",  //
+			"exemplifies",  //
+			"derivation",  //
+			"pertainym",  //
+			"participle",  //
+			"also",  //
+			"domain_region",  //
+			"domain_topic",  //
+
+			"state",
+			"result",
+			"event",
+			"property",
+			"location",
+			"destination",
+			"agent",
+			"undergoer",
+			"uses",
+			"instrument",
+			"by_means_of",
+			"material",
+			"vehicle",
+			"body_part",
+
+			"other"
+		)
+
+		private val SENSE_RELATIONS = arrayOf( //
+			"antonym",  //
+			"similar",  //
+			"exemplifies", "is_exemplified_by",  //
+			"derivation",  //
+			"pertainym",  //
+			"participle",  //
+			"also",  //
+			"domain_region", "has_domain_region",  //
+			"domain_topic", "has_domain_topic",  //
+
+			"agent",
+			"material",
+			"event",
+			"instrument",
+			"location",
+			"by_means_of",
+			"undergoer",
+			"property",
+			"result",
+			"state",
+			"uses",
+			"destination",
+			"body_part",
+			"vehicle",
+
+			"other"
+		)
+
+		/*
     ignored
       // antonym|
       // also|
@@ -122,145 +235,5 @@ public class LexParser extends YamProcessor<Lex, String, Map<String, Object>>
       anto_simple|
       anto_converse
      */
-
-    private static final String[] VOID_STRING_ARRAY = new String[0];
-
-    /**
-     * Accumulated senses as lexes are processed
-     */
-    private final List<Sense> senses = new ArrayList<>();
-
-    /**
-     * Lex YAML parser
-     *
-     * @param dir dir containing YAML files
-     */
-    public LexParser(final File dir)
-    {
-        super(dir);
-    }
-
-    @Override
-    protected File[] getFiles()
-    {
-        return dir.listFiles((f) -> f.getName().matches("entries.*\\.yaml"));
-    }
-
-    @Override
-    protected Collection<Lex> processEntry(final String source, final Entry<String, Map<String, Object>> lemmaEntry)
-    {
-        List<Lex> lexes = new ArrayList<>();
-
-        String lemma = lemmaEntry.getKey();
-        Map<String, Object> lemmaMap = lemmaEntry.getValue();
-
-        for (Map.Entry<String, Object> typeEntry : lemmaMap.entrySet())
-        {
-            String type = typeEntry.getKey();
-            Map<String, Object> lexMap = (Map<String, Object>) typeEntry.getValue();
-            YamlUtils.assertKeysIn(source, lexMap.keySet(), KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM);
-            if (DUMP)
-            {
-                YamlUtils.dumpMap("%s %s%n", lexMap);
-            }
-
-            // lex
-            Lex lex = new Lex(lemma, type, source);
-
-            // pronunciations
-            List<Map<String, Object>> pronunciationList = (List<Map<String, Object>>) lexMap.get(KEY_LEX_PRONUNCIATION);
-            Pronunciation[] pronunciations = null;
-            if (pronunciationList != null)
-            {
-                pronunciations = new Pronunciation[pronunciationList.size()];
-                int p = 0;
-                for (Map<String, Object> pronunciationMap : pronunciationList)
-                {
-                    YamlUtils.assertKeysIn(source, pronunciationMap.keySet(), KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE);
-                    if (DUMP)
-                    {
-                        YamlUtils.dumpMap("\t%s %s%n", pronunciationMap);
-                    }
-                    String variety = (String) pronunciationMap.get(KEY_PRONUNCIATION_VARIETY);
-                    String value = (String) pronunciationMap.get(KEY_PRONUNCIATION_VALUE);
-                    pronunciations[p] = new Pronunciation(value, variety);
-                    p++;
-                }
-            }
-            lex.setPronunciations(pronunciations);
-
-            // forms
-            List<String> forms = (List<String>) lexMap.get(KEY_LEX_FORM);
-            if (forms != null)
-            {
-                lex.setForms(forms.toArray(new String[0]));
-            }
-
-            // senses
-            List<Map<String, Object>> senseMaps = (List<Map<String, Object>>) lexMap.get(KEY_LEX_SENSE);
-            Sense[] lexSenses = new Sense[senseMaps.size()];
-            int i = 0;
-            for (Map<String, Object> senseMap : senseMaps)
-            {
-                YamlUtils.assertKeysIn(source, senseMap.keySet(),
-                        VALID_SENSE_RELATIONS, //
-                        KEY_SENSE_ID, //
-                        KEY_SENSE_SYNSET, //
-                        KEY_SENSE_VERBFRAMES, //
-                        KEY_SENSE_VERBFRAMES, //
-                        KEY_SENSE_ADJPOSITION,
-                        KEY_SENSE_EXAMPLES //
-                );
-                if (DUMP)
-                {
-                    YamlUtils.dumpMap("\t%s %s%n", senseMap);
-                }
-
-                String senseId = (String) senseMap.get(KEY_SENSE_ID);
-                String synsetId = (String) senseMap.get(KEY_SENSE_SYNSET);
-                List<String> examplesList = (List<String>) senseMap.get(KEY_SENSE_EXAMPLES);
-                List<String> verbFramesList = (List<String>) senseMap.get(KEY_SENSE_VERBFRAMES);
-                String[] examples = examplesList == null ? null : examplesList.toArray(VOID_STRING_ARRAY);
-                String[] verbFrames = verbFramesList == null ? null : verbFramesList.toArray(VOID_STRING_ARRAY);
-                String adjPosition = (String) senseMap.get(KEY_SENSE_ADJPOSITION);
-
-                // relations
-                Map<String, Set<String>> relations = null;
-                for (String relationKey : SENSE_RELATIONS)
-                {
-                    if (senseMap.containsKey(relationKey))
-                    {
-                        List<String> relationTargets = (List<String>) senseMap.get(relationKey);
-                        if (relations == null)
-                        {
-                            relations = new TreeMap<>();
-                        }
-                        relations.computeIfAbsent(relationKey, (k) -> new LinkedHashSet<>()).addAll(relationTargets);
-                    }
-                }
-
-                // sense
-                lexSenses[i] = new Sense(senseId, lex, type.charAt(0), i, synsetId, examples, verbFrames, adjPosition, relations);
-                senses.add(lexSenses[i]);
-
-                i++;
-            }
-            lex.setSenses(lexSenses);
-
-            // accumulate
-            lexes.add(lex);
-        }
-
-        return lexes;
-    }
-
-    /**
-     * Get senses that was also accumulated
-     *
-     * @return accumulated senses
-     */
-    public Collection<Sense> getSenses()
-    {
-        return this.senses;
-    }
+	}
 }
