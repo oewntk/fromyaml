@@ -24,11 +24,11 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 	override val files: Array<File>
 		get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Map.Entry<String, Map<String, *>>): Collection<Lex> {
+	override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
 		val lexes: MutableList<Lex> = ArrayList<Lex>()
 
-		val lemma = entry.key
-		val lemmaMap = entry.value
+		val lemma = entry.first
+		val lemmaMap = entry.second
 		for ((type, value1) in lemmaMap) {
 			val lexMap = value1 as Map<String, *>
 			assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)

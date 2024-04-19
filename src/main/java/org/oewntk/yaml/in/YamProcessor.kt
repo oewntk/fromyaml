@@ -28,7 +28,7 @@ abstract class YamProcessor<T, K : Comparable<K>?, V>(@JvmField protected val di
 	 * @param entry  key-value pair
 	 * @return collection if items of type T
 	 */
-	protected abstract fun processEntry(source: String?, entry: Map.Entry<K, V>): Collection<T>?
+	protected abstract fun processEntry(source: String?, entry: Pair<K, V>): Collection<T>?
 
 	/**
 	 * Parse
@@ -71,7 +71,7 @@ abstract class YamProcessor<T, K : Comparable<K>?, V>(@JvmField protected val di
 		FileInputStream(file).use { inputStream ->
 			val top: Map<K, V> = yaml.load(inputStream)
 			for (entry in top.entries) {
-				val processedItems = processEntry(file.name, entry)
+				val processedItems = processEntry(file.name, entry.key to entry.value)
 				if (processedItems != null) {
 					items.addAll(processedItems)
 				}
