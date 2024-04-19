@@ -3,7 +3,9 @@
  */
 package org.oewntk.yaml.`in`
 
+import org.oewntk.model.SenseKey
 import org.oewntk.model.VerbFrame
+import org.oewntk.model.VerbFrameType
 import java.io.File
 
 /**
@@ -20,9 +22,9 @@ class VerbFrameProcessor(dir: File) : YamProcessor1<VerbFrame, String, String>(d
 	override val files: Array<File>
 		get() = dir.listFiles { f: File -> f.name.matches("frames.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Map.Entry<String, String>): VerbFrame {
-		val id = entry.key
-		val v = entry.value
+	override fun processEntry(source: String?, entry: Pair<SenseKey, VerbFrameType>): VerbFrame {
+		val id = entry.first
+		val v = entry.second
 		if (DUMP) {
 			Tracing.psInfo.println(id)
 		}

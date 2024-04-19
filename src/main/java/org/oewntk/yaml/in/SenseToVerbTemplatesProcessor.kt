@@ -1,58 +1,37 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import java.io.File;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.List;
-import java.util.Map.Entry;
+import org.oewntk.model.SenseKey
+import org.oewntk.model.VerbTemplateType
+import java.io.File
 
 /**
  * Sense-to-verb-templates processor
+ *
+ * @param dir dir containing YAML files
  */
-public class SenseToVerbTemplatesProcessor extends YamProcessor1<Entry<String, int[]>, String, List<Integer>>
-{
-	private static final boolean DUMP = false;
+class SenseToVerbTemplatesProcessor(dir: File) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateType>>, String, List<VerbTemplateType>>(dir) {
 
-	/**
-	 * Constructor
-	 *
-	 * @param dir dir containing YAML files
-	 */
-	public SenseToVerbTemplatesProcessor(final File dir)
-	{
-		super(dir);
-		this.dir = dir;
+	override val files: Array<File>
+		get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.yaml".toRegex()) }!!
+
+	override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateType>>): Pair<String, Array<VerbTemplateType>>? {
+		val sensekey = entry.first
+		val v = entry.second
+		if (DUMP) {
+			Tracing.psInfo.println(sensekey)
+		}
+		val n = v.size
+		if (n == 0) {
+			return null
+		}
+		val templateIds = Array(n) { v[it] }
+		return sensekey to templateIds
 	}
 
-	@Override
-	protected File[] getFiles()
-	{
-		return dir.listFiles((f) -> f.getName().matches("senseToVerbTemplates.yaml"));
-	}
-
-	@Override
-	protected Entry<String, int[]> processEntry(final String source, final Entry<String, List<Integer>> entry)
-	{
-		String sensekey = entry.getKey();
-		List<Integer> v = entry.getValue();
-		if (DUMP)
-		{
-			Tracing.psInfo.println(sensekey);
-		}
-		int n = v.size();
-		if (n == 0)
-		{
-			return null;
-		}
-		int[] templateIds = new int[n];
-		int i = 0;
-		for (Integer templateId : v)
-		{
-			templateIds[i++] = templateId;
-		}
-		return new SimpleEntry<>(sensekey, templateIds);
+	companion object {
+		private const val DUMP = false
 	}
 }

@@ -32,7 +32,7 @@ abstract class YamProcessor1<T, K : Comparable<K>?, V>(@JvmField protected var d
 	 * @param entry  key-value pair
 	 * @return item of type T
 	 */
-	protected abstract fun processEntry(source: String?, entry: Map.Entry<K, V>): T
+	protected abstract fun processEntry(source: String?, entry: Pair<K, V>): T?
 
 	/**
 	 * Parse
@@ -73,9 +73,9 @@ abstract class YamProcessor1<T, K : Comparable<K>?, V>(@JvmField protected var d
 	@Throws(IOException::class)
 	private fun load(file: File, yaml: Yaml, items: MutableCollection<T>) {
 		FileInputStream(file).use { inputStream ->
-			val top: Map<K, V> = yaml.load<Map<K, V>>(inputStream)
+			val top: Map<K, V> = yaml.load(inputStream)
 			for (entry in top.entries) {
-				val t: T? = processEntry(file.name, entry)
+				val t: T? = processEntry(file.name, entry.key to entry.value)
 				if (t != null) {
 					items.add(t)
 				}

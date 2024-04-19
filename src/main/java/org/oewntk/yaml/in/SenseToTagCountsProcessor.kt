@@ -1,56 +1,42 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.oewntk.model.TagCount;
-
-import java.io.File;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.oewntk.model.SenseKey
+import org.oewntk.model.TagCount
+import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
+import java.io.File
+import java.util.*
 
 /**
  * Sense-to-tag-count processor
+ *
+ * @param dir dir containing YAML files
  */
-public class SenseToTagCountsProcessor extends YamProcessor1<Entry<String, TagCount>, String, Map<String, Integer>>
-{
-	private static final boolean DUMP = false;
+class SenseToTagCountsProcessor(dir: File) : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir) {
 
-	private static final String KEY_TAGCOUNT_SENSE_NUM = "num";
+	override val files: Array<File>
+		get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.yaml".toRegex()) }!!
 
-	private static final String KEY_TAGCOUNT_COUNT = "cnt";
+	override fun processEntry(source: String?, entry: Pair<SenseKey, Map<String, Int>>): Pair<SenseKey, TagCount> {
 
-	/**
-	 * Constructor
-	 *
-	 * @param dir dir containing YAML files
-	 */
-	public SenseToTagCountsProcessor(final File dir)
-	{
-		super(dir);
-		this.dir = dir;
-	}
-
-	@Override
-	protected File[] getFiles()
-	{
-		return dir.listFiles((f) -> f.getName().matches("senseToTagCounts.yaml"));
-	}
-
-	@Override
-	protected Entry<String, TagCount> processEntry(final String source, final Entry<String, Map<String, Integer>> entry)
-	{
-		String sensekey = entry.getKey();
-		Map<String, Integer> tagCntMap = entry.getValue();
-		YamlUtils.assertKeysIn(source, tagCntMap.keySet(), KEY_TAGCOUNT_SENSE_NUM, KEY_TAGCOUNT_COUNT);
-		if (DUMP)
-		{
-			Tracing.psInfo.println(sensekey);
+		val sensekey = entry.first
+		val tagCntMap = entry.second
+		assertKeysIn(source!!, tagCntMap.keys, KEY_TAGCOUNT_SENSE_NUM, KEY_TAGCOUNT_COUNT)
+		if (DUMP) {
+			Tracing.psInfo.println(sensekey)
 		}
-		int senseNum = tagCntMap.get(KEY_TAGCOUNT_SENSE_NUM);
-		int count = tagCntMap.get(KEY_TAGCOUNT_COUNT);
-		return new SimpleEntry<>(sensekey, new TagCount(senseNum, count));
+		val senseNum = tagCntMap[KEY_TAGCOUNT_SENSE_NUM]!!
+		val count = tagCntMap[KEY_TAGCOUNT_COUNT]!!
+		return sensekey to TagCount(senseNum, count)
+	}
+
+	companion object {
+		private const val DUMP = false
+
+		private const val KEY_TAGCOUNT_SENSE_NUM = "num"
+
+		private const val KEY_TAGCOUNT_COUNT = "cnt"
 	}
 }

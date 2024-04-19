@@ -28,7 +28,7 @@ abstract class YamProcessor<T, K : Comparable<K>?, V>(@JvmField protected val di
 	 * @param entry  key-value pair
 	 * @return collection if items of type T
 	 */
-	protected abstract fun processEntry(source: String?, entry: Map.Entry<K, V>?): Collection<T>?
+	protected abstract fun processEntry(source: String?, entry: Map.Entry<K, V>): Collection<T>?
 
 	/**
 	 * Parse

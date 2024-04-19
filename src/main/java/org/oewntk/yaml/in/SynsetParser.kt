@@ -1,66 +1,127 @@
 /*
  * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
-
-import org.oewntk.model.Synset;
-
-import java.io.File;
-import java.util.*;
-import java.util.Map.Entry;
+import org.oewntk.model.Synset
+import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
+import org.oewntk.yaml.`in`.YamlUtils.dumpMap
+import org.yaml.snakeyaml.error.YAMLException
+import java.io.File
+import java.util.*
 
 /**
- * Synset parser
+ * Synset YAML parser
+ *
+ * @param dir dir containing YAML files
  */
-public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Object>>
-{
-	private static final boolean DUMP = false;
+class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(dir) {
 
-	private static final String KEY_SYNSET_POS = "partOfSpeech";
-	private static final String KEY_SYNSET_DEFINITION = "definition";
-	private static final String KEY_SYNSET_EXAMPLE = "example";
-	private static final String KEY_SYNSET_MEMBERS = "members";
-	private static final String KEY_SYNSET_ILI = "ili";
-	private static final String KEY_SYNSET_WIKIDATA = "wikidata";
-	private static final String KEY_SYNSET_SOURCE = "source";
+	override val files: Array<File>
+		get() = dir.listFiles { f: File -> f.name.matches("(noun|verb|adj|adv).*\\.yaml".toRegex()) }!!
 
-	private static final String KEY_EXAMPLE_SOURCE = "source";
-	private static final String KEY_EXAMPLE_TEXT = "text";
+	override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Synset {
+		val domain = source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+		val id = entry.first
+		val synsetMap = entry.second
+		if (DUMP) {
+			Tracing.psInfo.println(id)
+			dumpMap("%s %s%n", synsetMap)
+		}
+		assertKeysIn(
+			source,
+			synsetMap.keys,
+			VALID_SYNSET_RELATIONS,
+			KEY_SYNSET_POS,
+			KEY_SYNSET_DEFINITION,
+			KEY_SYNSET_EXAMPLE,
+			KEY_SYNSET_MEMBERS,
+			KEY_SYNSET_WIKIDATA,
+			KEY_SYNSET_ILI,
+			KEY_SYNSET_SOURCE
+		)
 
-	private static final String[] VALID_SYNSET_RELATIONS = new String[]{ //
-			"hypernym", // "hyponym",
-			"instance_hypernym", // "instance_hyponym",
-			"mero_part", // "holo_part",
-			"mero_member", // "holo_member",
-			"mero_substance", // "holo_substance",
-			"causes", // "is_caused_by",
-			"entails", // "is_entailed_by",
-			"exemplifies", // "is_exemplified_by",
-			"domain_topic", // "has_domain_topic"
-			"domain_region", // "has_domain_region"
-			"attribute", //
-			"similar", //
-			"also", //
-	};
+		val code = synsetMap[KEY_SYNSET_POS] as String?
+		val definitions = synsetMap[KEY_SYNSET_DEFINITION] as List<String>
+		val examples = synsetMap[KEY_SYNSET_EXAMPLE] as List<*>?
+		val members = synsetMap[KEY_SYNSET_MEMBERS] as List<String>?
+		val wikidata = synsetMap[KEY_SYNSET_WIKIDATA] as String?
 
-	private static final String[] SYNSET_RELATIONS = new String[]{ //
-			"hypernym", "hyponym", //
-			"instance_hypernym", "instance_hyponym", //
-			"mero_part", "holo_part", //
-			"mero_member", "holo_member", //
-			"mero_substance", "holo_substance", //
-			"causes", "is_caused_by", //
-			"entails", "is_entailed_by", //
-			"exemplifies", "is_exemplified_by", //
-			"domain_topic", "has_domain_topic", //
-			"domain_region", "has_domain_region", //
-			"attribute", //
-			"similar", //
-			"also", //
-	};
+		// provision for no duplicates in members
+		// members = members.stream().distinct().collect(Collectors.toList());
+		checkNotNull(members)
+		assert(members.stream().noneMatch { m: String? -> Collections.frequency(members, m) > 1 })
 
-	/*
+		// relations
+		var relations: MutableMap<String, MutableSet<String>>? = null
+		for (relationKey in SYNSET_RELATIONS) {
+			if (synsetMap.containsKey(relationKey)) {
+				val relationTargets = checkNotNull(synsetMap[relationKey] as List<String>?)
+				if (relations == null) {
+					relations = TreeMap()
+				}
+				relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
+			}
+		}
+
+		return Synset(
+			id, code!![0], domain,  //
+			members.toTypedArray(),  //
+			definitions.toTypedArray(),  //
+			if (examples == null) null else examplesToArray(source, examples),  //
+			wikidata, relations
+		)
+	}
+
+	companion object {
+		private const val DUMP = false
+
+		private const val KEY_SYNSET_POS = "partOfSpeech"
+		private const val KEY_SYNSET_DEFINITION = "definition"
+		private const val KEY_SYNSET_EXAMPLE = "example"
+		private const val KEY_SYNSET_MEMBERS = "members"
+		private const val KEY_SYNSET_ILI = "ili"
+		private const val KEY_SYNSET_WIKIDATA = "wikidata"
+		private const val KEY_SYNSET_SOURCE = "source"
+
+		private const val KEY_EXAMPLE_SOURCE = "source"
+		private const val KEY_EXAMPLE_TEXT = "text"
+
+		private val VALID_SYNSET_RELATIONS = arrayOf(
+			//
+			"hypernym",  // "hyponym",
+			"instance_hypernym",  // "instance_hyponym",
+			"mero_part",  // "holo_part",
+			"mero_member",  // "holo_member",
+			"mero_substance",  // "holo_substance",
+			"causes",  // "is_caused_by",
+			"entails",  // "is_entailed_by",
+			"exemplifies",  // "is_exemplified_by",
+			"domain_topic",  // "has_domain_topic"
+			"domain_region",  // "has_domain_region"
+			"attribute",  //
+			"similar",  //
+			"also",  //
+		)
+
+		private val SYNSET_RELATIONS = arrayOf(
+			//
+			"hypernym", "hyponym",  //
+			"instance_hypernym", "instance_hyponym",  //
+			"mero_part", "holo_part",  //
+			"mero_member", "holo_member",  //
+			"mero_substance", "holo_substance",  //
+			"causes", "is_caused_by",  //
+			"entails", "is_entailed_by",  //
+			"exemplifies", "is_exemplified_by",  //
+			"domain_topic", "has_domain_topic",  //
+			"domain_region", "has_domain_region",  //
+			"attribute",  //
+			"similar",  //
+			"also",  //
+		)
+
+		/*
 	ignored
 	  agent|
       // also|
@@ -149,98 +210,26 @@ public class SynsetParser extends YamProcessor1<Synset, String, Map<String, Obje
       ir_synonym
  	*/
 
-	private static final String[] VOID_STRING_ARRAY = new String[0];
+		/**
+		 * Examples to array
+		 *
+		 * @param source   source
+		 * @param examples examples
+		 * @return array of examples
+		 */
+		fun examplesToArray(source: String?, examples: List<*>): Array<String> {
+			return Array(examples.size) {
+				when (examples[it]) {
+					is String -> examples[it] as String
+					is Map<*, *> -> {
+						val exampleMap = examples[it] as Map<String, *>
+						assertKeysIn(source!!, exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
+						(examples[it] as Map<String, *>)[KEY_EXAMPLE_TEXT].toString()
+					}
 
-	/**
-	 * Synset YAML parser
-	 *
-	 * @param dir dir containing YAML files
-	 */
-	public SynsetParser(final File dir)
-	{
-		super(dir);
-		this.dir = dir;
-	}
-
-	@Override
-	protected File[] getFiles()
-	{
-		return dir.listFiles((f) -> f.getName().matches("(noun|verb|adj|adv).*\\.yaml"));
-	}
-
-	@Override
-	protected Synset processEntry(final String source, final Entry<String, Map<String, Object>> entry)
-	{
-		String domain = source.split("\\.")[1];
-		String id = entry.getKey();
-		Map<String, Object> synsetMap = entry.getValue();
-		if (DUMP)
-		{
-			Tracing.psInfo.println(id);
-			YamlUtils.dumpMap("%s %s%n", synsetMap);
-		}
-		YamlUtils.assertKeysIn(source, synsetMap.keySet(), VALID_SYNSET_RELATIONS, KEY_SYNSET_POS, KEY_SYNSET_DEFINITION, KEY_SYNSET_EXAMPLE, KEY_SYNSET_MEMBERS, KEY_SYNSET_WIKIDATA, KEY_SYNSET_ILI, KEY_SYNSET_SOURCE);
-
-		String code = (String) synsetMap.get(KEY_SYNSET_POS);
-		List<String> definitions = (List<String>) synsetMap.get(KEY_SYNSET_DEFINITION);
-		List<Object> examples = (List<Object>) synsetMap.get(KEY_SYNSET_EXAMPLE);
-		List<String> members = (List<String>) synsetMap.get(KEY_SYNSET_MEMBERS);
-		String wikidata = (String) synsetMap.get(KEY_SYNSET_WIKIDATA);
-
-		// provision for no duplicates in members
-		// members = members.stream().distinct().collect(Collectors.toList());
-		assert members != null;
-		assert members.stream().noneMatch(m -> Collections.frequency(members, m) > 1);
-
-		// relations
-		Map<String, Set<String>> relations = null;
-		for (String relationKey : SYNSET_RELATIONS)
-		{
-			if (synsetMap.containsKey(relationKey))
-			{
-				List<String> relationTargets = (List<String>) synsetMap.get(relationKey);
-				assert relationTargets != null;
-				if (relations == null)
-				{
-					relations = new TreeMap<>();
+					else -> throw YAMLException(examples[it].toString())
 				}
-				relations.computeIfAbsent(relationKey, (k) -> new LinkedHashSet<>()).addAll(relationTargets);
 			}
 		}
-
-		return new Synset(id, code.charAt(0), domain, //
-				members.toArray(VOID_STRING_ARRAY), //
-				definitions == null ? null : definitions.toArray(VOID_STRING_ARRAY),  //
-				examples == null ? null : examplesToArray(source, examples),  //
-				wikidata, relations);
-	}
-
-	/**
-	 * Examples to array
-	 *
-	 * @param source   source
-	 * @param examples examples
-	 * @return array of examples
-	 */
-	static public String[] examplesToArray(final String source, final List<Object> examples)
-	{
-		int n = examples.size();
-		String[] array = new String[n];
-		int i = 0;
-		for (Object example : examples)
-		{
-			if (example instanceof String)
-			{
-				array[i] = (String) example;
-			}
-			else if (example instanceof Map)
-			{
-				Map<String, Object> exampleMap = (Map<String, Object>) example;
-				YamlUtils.assertKeysIn(source, exampleMap.keySet(), KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT);
-				array[i] = ((Map<String, Object>) example).get(KEY_EXAMPLE_TEXT).toString();
-			}
-			i++;
-		}
-		return array;
 	}
 }

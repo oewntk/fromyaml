@@ -23,21 +23,14 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
 		try {
 			// verb frames and templates
 			val verbFrames = VerbFrameProcessor(inDir).parse()
-			val verbTemplates = VerbTemplateProcessor(
-				inDir2
-			).parse()
-			val sensesToVerbTemplates = SenseToVerbTemplatesProcessor(
-				inDir2
-			).parse()
+			val verbTemplates = VerbTemplateProcessor(inDir2).parse()
+			val sensesToVerbTemplates = SenseToVerbTemplatesProcessor(inDir2).parse()
 
 			// tag counts
-			val sensesToTagCounts: Collection<Map.Entry<String, TagCount>> = SenseToTagCountsProcessor(
-				inDir2
-			).parse()
+			val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsProcessor(inDir2).parse()
 
-			return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts).setSources(
-				inDir, inDir2
-			)
+			return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
+				.setSources(inDir, inDir2)
 		} catch (e: IOException) {
 			e.printStackTrace(Tracing.psErr)
 			return null
