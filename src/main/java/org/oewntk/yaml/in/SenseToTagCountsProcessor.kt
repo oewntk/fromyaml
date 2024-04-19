@@ -7,7 +7,6 @@ import org.oewntk.model.SenseKey
 import org.oewntk.model.TagCount
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import java.io.File
-import java.util.*
 
 /**
  * Sense-to-tag-count processor

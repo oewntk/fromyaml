@@ -35,7 +35,7 @@ class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
 		 * @param args command-line arguments
 		 * @return core model
 		 */
-		fun makeCoreModel(args: Array<String>): CoreModel? {
+		private fun makeCoreModel(args: Array<String>): CoreModel? {
 			val inDir = File(args[0])
 			return CoreFactory(inDir).get()
 		}
