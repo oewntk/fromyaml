@@ -101,7 +101,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 				}
 
 				// sense
-				val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples!!, verbFrames!!, adjPosition!!, relations)
+				val lexSense =
+					Sense(senseId, lex, type[0], it, synsetId, examples!!, verbFrames!!, adjPosition!!, relations)
 				senses.add(lexSense)
 				lexSense
 			}
