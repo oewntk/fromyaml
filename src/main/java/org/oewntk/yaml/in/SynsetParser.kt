@@ -48,9 +48,8 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 		val wikidata = synsetMap[KEY_SYNSET_WIKIDATA] as String?
 
 		// provision for no duplicates in members
-		// members = members.stream().distinct().collect(Collectors.toList());
 		checkNotNull(members)
-		assert(members.stream().noneMatch { m: String? -> Collections.frequency(members, m) > 1 })
+		assert(members.none { Collections.frequency(members, it) > 1 })
 
 		// relations
 		var relations: MutableMap<String, MutableSet<String>>? = null
