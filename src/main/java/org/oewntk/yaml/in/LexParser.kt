@@ -59,7 +59,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 			// forms
 			val forms = lexMap[KEY_LEX_FORM] as List<String>?
 			if (forms != null) {
-				lex.setForms(*forms.toTypedArray<String>())
+				lex.setForms(forms.toTypedArray())
 			}
 
 			// senses
