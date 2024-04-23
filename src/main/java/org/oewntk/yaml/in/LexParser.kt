@@ -49,22 +49,22 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 					if (DUMP) {
 						dumpMap("\t%s %s%n", pronunciationMap)
 					}
-					val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String
+					val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
 					val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
 					Pronunciation(value, variety)
 				}
 			}
-			lex.setPronunciations(pronunciations)
+			lex.pronunciations = pronunciations
 
 			// forms
 			val forms = lexMap[KEY_LEX_FORM] as List<String>?
 			if (forms != null) {
-				lex.setForms(forms.toTypedArray())
+				lex.forms = forms.toTypedArray()
 			}
 
 			// senses
 			val senseMaps = lexMap[KEY_LEX_SENSE] as List<Map<String, *>>?
-			val lexSenses = Array(senseMaps!!.size) {
+			val lexSenses = MutableList(senseMaps!!.size) {
 				val senseMap = senseMaps[it]
 				assertKeysIn(
 					source, senseMap.keys,
@@ -101,12 +101,11 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 				}
 
 				// sense
-				val lexSense =
-					Sense(senseId, lex, type[0], it, synsetId, examples!!, verbFrames!!, adjPosition!!, relations)
+				val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples, verbFrames, adjPosition, relations)
 				senses.add(lexSense)
 				lexSense
 			}
-			lex.setSenses(lexSenses)
+			lex.senses = lexSenses
 
 			// accumulate
 			lexes.add(lex)
