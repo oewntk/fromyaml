@@ -15,7 +15,7 @@ public class TestsYamlModelWords
 {
 	private static final boolean peekTestWords = false;
 
-	private static final Set<String> testWords = Set.of("baroque", "Baroque", "allied", "Allied", "earth", "Earth", "bass", "row", "critical");
+	private static final Set<String> testWords = Set.of("baroque", "Baroque", "allied", "Allied", "earth", "Earth", "bass", "row", "critical", "centre");
 
 	@BeforeClass
 	public static void init()
@@ -45,6 +45,12 @@ public class TestsYamlModelWords
 	public void testRow()
 	{
 		LibTestModel.testWord("row", TestsYamlCommon.model, TestsYamlCommon.ps);
+	}
+
+	@Test
+	public void testCentre()
+	{
+		LibTestModel.testWord("centre", TestsYamlCommon.model, TestsYamlCommon.ps);
 	}
 
 	@Test
