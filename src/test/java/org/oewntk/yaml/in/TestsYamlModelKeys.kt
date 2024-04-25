@@ -1,173 +1,175 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.junit.Assert.assertEquals
+import org.junit.BeforeClass
+import org.junit.Test
+import org.oewntk.model.LibTestModelKeys.testBaroqueMono
+import org.oewntk.model.LibTestModelKeys.testBaroqueMulti
+import org.oewntk.model.LibTestModelKeys.testBassDeep
+import org.oewntk.model.LibTestModelKeys.testBassShallow
+import org.oewntk.model.LibTestModelKeys.testCriticalMono
+import org.oewntk.model.LibTestModelKeys.testCriticalMulti
+import org.oewntk.model.LibTestModelKeys.testEarthMono
+import org.oewntk.model.LibTestModelKeys.testEarthMulti
+import org.oewntk.model.LibTestModelKeys.testMobile
+import org.oewntk.model.LibTestModelKeys.testMobileNoPronunciation
+import org.oewntk.model.LibTestModelKeys.testRowDeep
+import org.oewntk.model.LibTestModelKeys.testRowShallow
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.oewntk.model.LibTestModelKeys;
+class TestsYamlModelKeys {
 
-import static org.junit.Assert.assertEquals;
-
-public class TestsYamlModelKeys
-{
-	@BeforeClass
-	public static void init()
-	{
-		TestsYamlCommon.init();
+	@Test
+	fun testMobile() {
+		val r = testMobile(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(1, r[2].toLong())
+		assertEquals(2, r[3].toLong())
+		assertEquals(2, r[4].toLong())
+		assertEquals(5, r.size.toLong())
 	}
 
 	@Test
-	public void testMobile()
-	{
-		int[] r = LibTestModelKeys.testMobile(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(1, r[2]);
-		assertEquals(2, r[3]);
-		assertEquals(2, r[4]);
-		assertEquals(5, r.length);
+	fun testMobileNoPronunciation() {
+		val r = testMobileNoPronunciation(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(2, r[3].toLong())
+		assertEquals(4, r.size.toLong())
 	}
 
 	@Test
-	public void testMobileNoPronunciation()
-	{
-		int[] r = LibTestModelKeys.testMobileNoPronunciation(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(2, r[3]);
-		assertEquals(4, r.length);
+	fun testEarthMulti() {
+		val r = testEarthMulti(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(2, r[3].toLong())
+		assertEquals(4, r.size.toLong())
 	}
 
 	@Test
-	public void testEarthMulti()
-	{
-		int[] r = LibTestModelKeys.testEarthMulti(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(2, r[3]);
-		assertEquals(4, r.length);
+	fun testEarthMono() {
+		val r = testEarthMono(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(1, r[2].toLong())
+		assertEquals(1, r[3].toLong())
+		assertEquals(4, r.size.toLong())
 	}
 
 	@Test
-	public void testEarthMono()
-	{
-		int[] r = LibTestModelKeys.testEarthMono(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(1, r[2]);
-		assertEquals(1, r[3]);
-		assertEquals(4, r.length);
+	fun testBaroqueMulti() {
+		val r = testBaroqueMulti(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(2, r[3].toLong())
+		assertEquals(1, r[4].toLong())
+		assertEquals(1, r[5].toLong()) // <2> before s,a merging (p-request for s)
+		assertEquals(2, r[6].toLong()) // <3> before s,a merging (p-request for s)
+		assertEquals(2, r[7].toLong()) // <3> before s,a merging (p-request for s)
+		assertEquals(0, r[8].toLong())
+		assertEquals(0, r[9].toLong()) // <1> before s,a merging (t-request or s)
+		assertEquals(0, r[10].toLong()) // <1> before s,a merging (t-request or s)
+		assertEquals(0, r[11].toLong()) // <1> before s,a merging (t-request or s)
+		assertEquals(0, r[12].toLong())
+		assertEquals(0, r[13].toLong())
+		assertEquals(0, r[14].toLong())
+		assertEquals(0, r[14].toLong())
+		assertEquals(16, r.size.toLong())
 	}
 
 	@Test
-	public void testBaroqueMulti()
-	{
-		int[] r = LibTestModelKeys.testBaroqueMulti(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(2, r[3]);
-		assertEquals(1, r[4]);
-		assertEquals(1, r[5]); // <2> before s,a merging (p-request for s)
-		assertEquals(2, r[6]); // <3> before s,a merging (p-request for s)
-		assertEquals(2, r[7]); // <3> before s,a merging (p-request for s)
-		assertEquals(0, r[8]);
-		assertEquals(0, r[9]); // <1> before s,a merging (t-request or s)
-		assertEquals(0, r[10]); // <1> before s,a merging (t-request or s)
-		assertEquals(0, r[11]); // <1> before s,a merging (t-request or s)
-		assertEquals(0, r[12]);
-		assertEquals(0, r[13]);
-		assertEquals(0, r[14]);
-		assertEquals(0, r[14]);
-		assertEquals(16, r.length);
+	fun testBaroqueMono() {
+		val r = testBaroqueMono(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(1, r[2].toLong())
+		assertEquals(1, r[3].toLong())
+		assertEquals(1, r[4].toLong())
+		assertEquals(1, r[5].toLong())
+		assertEquals(1, r[6].toLong())
+		assertEquals(1, r[7].toLong())
+		assertEquals(0, r[8].toLong())
+		assertEquals(0, r[9].toLong()) // <1> before s,a merging (t-request for s)
+		assertEquals(0, r[10].toLong()) // <1> before s,a merging (t-request for s)
+		assertEquals(0, r[11].toLong()) // <1> before s,a merging (t-request for s)
+		assertEquals(0, r[12].toLong())
+		assertEquals(0, r[13].toLong())
+		assertEquals(0, r[14].toLong())
+		assertEquals(0, r[14].toLong())
+		assertEquals(16, r.size.toLong())
 	}
 
 	@Test
-	public void testBaroqueMono()
-	{
-		int[] r = LibTestModelKeys.testBaroqueMono(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(1, r[2]);
-		assertEquals(1, r[3]);
-		assertEquals(1, r[4]);
-		assertEquals(1, r[5]);
-		assertEquals(1, r[6]);
-		assertEquals(1, r[7]);
-		assertEquals(0, r[8]);
-		assertEquals(0, r[9]);  // <1> before s,a merging (t-request for s)
-		assertEquals(0, r[10]); // <1> before s,a merging (t-request for s)
-		assertEquals(0, r[11]); // <1> before s,a merging (t-request for s)
-		assertEquals(0, r[12]);
-		assertEquals(0, r[13]);
-		assertEquals(0, r[14]);
-		assertEquals(0, r[14]);
-		assertEquals(16, r.length);
+	fun testCriticalMulti() {
+		val r = testCriticalMulti(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong()) // <2> before a,s merging (p-request for a)
+		assertEquals(0, r[2].toLong()) // <1> before a,s merging (t-request for s)
+		assertEquals(0, r[3].toLong())
+		assertEquals(4, r.size.toLong())
 	}
 
 	@Test
-	public void testCriticalMulti()
-	{
-		int[] r = LibTestModelKeys.testCriticalMulti(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]); // <2> before a,s merging (p-request for a)
-		assertEquals(0, r[2]); // <1> before a,s merging (t-request for s)
-		assertEquals(0, r[3]);
-		assertEquals(4, r.length);
+	fun testCriticalMono() {
+		val r = testCriticalMono(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(0, r[2].toLong()) // <2> before s,a merging (t-request for s)
+		assertEquals(0, r[3].toLong())
+		assertEquals(4, r.size.toLong())
 	}
 
 	@Test
-	public void testCriticalMono()
-	{
-		int[] r = LibTestModelKeys.testCriticalMono(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(0, r[2]);  // <2> before s,a merging (t-request for s)
-		assertEquals(0, r[3]);
-		assertEquals(4, r.length);
+	fun testBassDeep() {
+		val r = testBassDeep(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(3, r.size.toLong())
 	}
 
 	@Test
-	public void testBassDeep()
-	{
-		int[] r = LibTestModelKeys.testBassDeep(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(3, r.length);
+	fun testBassShallow() {
+		val r = testBassShallow(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(3, r.size.toLong())
 	}
 
 	@Test
-	public void testBassShallow()
-	{
-		int[] r = LibTestModelKeys.testBassShallow(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(3, r.length);
+	fun testRowDeep() {
+		val r = testRowDeep(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(3, r.size.toLong())
 	}
 
 	@Test
-	public void testRowDeep()
-	{
-		int[] r = LibTestModelKeys.testRowDeep(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(3, r.length);
+	fun testRowShallow() {
+		val r = testRowShallow(model!!, ps)
+		assertEquals(1, r[0].toLong())
+		assertEquals(1, r[1].toLong())
+		assertEquals(2, r[2].toLong())
+		assertEquals(3, r.size.toLong())
 	}
 
-	@Test
-	public void testRowShallow()
-	{
-		int[] r = LibTestModelKeys.testRowShallow(TestsYamlCommon.model, TestsYamlCommon.ps);
-		assertEquals(1, r[0]);
-		assertEquals(1, r[1]);
-		assertEquals(2, r[2]);
-		assertEquals(3, r.length);
+	companion object {
+		@JvmStatic
+		@BeforeClass
+		fun init() {
+			LibTestsYamlCommon.init()
+			checkNotNull(model)
+		}
 	}
 }

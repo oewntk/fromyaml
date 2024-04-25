@@ -1,48 +1,48 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.junit.BeforeClass
+import org.junit.Test
+import org.oewntk.model.LibTestModelSenseGroups.testCISensesGroupingByLCLemma
+import org.oewntk.model.LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.oewntk.model.LibTestModelSenseGroups;
+class TestsYamlModelSenseGroups {
 
-public class TestsYamlModelSenseGroups
-{
-	@BeforeClass
-	public static void init()
-	{
-		TestsYamlCommon.init();
+	@Test
+	fun testCISensesBaroque() {
+		testCISensesGroupingByLCLemma(model!!, "baroque", ps)
 	}
 
 	@Test
-	public void testCISensesBaroque()
-	{
-		LibTestModelSenseGroups.testCISensesGroupingByLCLemma(TestsYamlCommon.model, "baroque", TestsYamlCommon.ps);
+	fun testCISensesBaroqueA() {
+		testCISensesGroupingByLCLemmaAndPos(model!!, "baroque", 'a', ps)
 	}
 
 	@Test
-	public void testCISensesBaroqueA()
-	{
-		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(TestsYamlCommon.model, "baroque", 'a', TestsYamlCommon.ps);
+	fun testCISensesCriticalA() {
+		testCISensesGroupingByLCLemmaAndPos(model!!, "critical", 'a', ps)
 	}
 
 	@Test
-	public void testCISensesCriticalA()
-	{
-		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(TestsYamlCommon.model, "critical", 'a', TestsYamlCommon.ps);
+	fun testCISensesAiN() {
+		testCISensesGroupingByLCLemmaAndPos(model!!, "ai", 'n', ps)
 	}
 
 	@Test
-	public void testCISensesAiN()
-	{
-		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(TestsYamlCommon.model, "ai", 'n', TestsYamlCommon.ps);
+	fun testCISensesAbsoluteA() {
+		testCISensesGroupingByLCLemmaAndPos(model!!, "absolute", 'a', ps)
 	}
 
-	@Test
-	public void testCISensesAbsoluteA()
-	{
-		LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos(TestsYamlCommon.model, "absolute", 'a', TestsYamlCommon.ps);
+	companion object {
+		@JvmStatic
+		@BeforeClass
+		fun init() {
+			LibTestsYamlCommon.init()
+			checkNotNull(model)
+		}
 	}
 }

@@ -1,78 +1,73 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.junit.BeforeClass
+import org.junit.Test
+import org.oewntk.model.LibTestModelQueries.testWordByType
+import org.oewntk.model.LibTestModelQueries.testWordByTypeAndPronunciation
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.oewntk.model.LibTestModelQueries;
+class TestsYamlModelQueries {
 
-public class TestsYamlModelQueries
-{
-	@BeforeClass
-	public static void init()
-	{
-		TestsYamlCommon.init();
+	@Test
+	fun testRowByType() {
+		testWordByType(model!!, "row", ps)
 	}
 
 	@Test
-	public void testRowByType()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "row", TestsYamlCommon.ps);
+	fun testRowByPos() {
+		testWordByType(model!!, "row", ps)
 	}
 
 	@Test
-	public void testRowByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "row", TestsYamlCommon.ps);
+	fun testRowByTypeAndPronunciation() {
+		testWordByTypeAndPronunciation(model!!, "row", ps)
 	}
 
 	@Test
-	public void testRowByTypeAndPronunciation()
-	{
-		LibTestModelQueries.testWordByTypeAndPronunciation(TestsYamlCommon.model, "row", TestsYamlCommon.ps);
+	fun testRowByPosAndPronunciation() {
+		testWordByTypeAndPronunciation(model!!, "row", ps)
 	}
 
 	@Test
-	public void testRowByPosAndPronunciation()
-	{
-		LibTestModelQueries.testWordByTypeAndPronunciation(TestsYamlCommon.model, "row", TestsYamlCommon.ps);
+	fun testCriticalByType() {
+		testWordByType(model!!, "critical", ps)
 	}
 
 	@Test
-	public void testCriticalByType()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "critical", TestsYamlCommon.ps);
+	fun testCriticalByPos() {
+		testWordByType(model!!, "critical", ps)
 	}
 
 	@Test
-	public void testCriticalByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "critical", TestsYamlCommon.ps);
+	fun testBassByPos() {
+		testWordByType(model!!, "bass", ps)
 	}
 
 	@Test
-	public void testBassByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "bass", TestsYamlCommon.ps);
+	fun testBaroqueByPos() {
+		testWordByType(model!!, "baroque", ps)
 	}
 
 	@Test
-	public void testBaroqueByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "baroque", TestsYamlCommon.ps);
+	fun testBaroqueCSByPos() {
+		testWordByType(model!!, "Baroque", ps)
 	}
 
 	@Test
-	public void testBaroqueCSByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "Baroque", TestsYamlCommon.ps);
+	fun testGaloreByPos() {
+		testWordByType(model!!, "galore", ps)
 	}
 
-	@Test
-	public void testGaloreByPos()
-	{
-		LibTestModelQueries.testWordByType(TestsYamlCommon.model, "galore", TestsYamlCommon.ps);
+	companion object {
+		@JvmStatic
+		@BeforeClass
+		fun init() {
+			LibTestsYamlCommon.init()
+			checkNotNull(model)
+		}
 	}
 }

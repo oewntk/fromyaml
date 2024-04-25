@@ -1,90 +1,88 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.junit.BeforeClass
+import org.junit.Test
+import org.oewntk.model.LibTestModelLexGroups.testCICounts
+import org.oewntk.model.LibTestModelLexGroups.testCICountsFromMap
+import org.oewntk.model.LibTestModelLexGroups.testCIHypermap3
+import org.oewntk.model.LibTestModelLexGroups.testCILemmas
+import org.oewntk.model.LibTestModelLexGroups.testCILexesFor
+import org.oewntk.model.LibTestModelLexGroups.testCILexesFor3
+import org.oewntk.model.LibTestModelLexGroups.testCIMultipleAll
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.oewntk.model.LibTestModelLexGroups;
+class TestsYamlModelLexGroups {
 
-public class TestsYamlModelLexGroups
-{
-	@BeforeClass
-	public static void init()
-	{
-		TestsYamlCommon.init();
+	@Test
+	fun testCIMultipleAll() {
+		testCIMultipleAll(model!!, ps)
 	}
 
 	@Test
-	public void testCIMultipleAll()
-	{
-		LibTestModelLexGroups.testCIMultipleAll(TestsYamlCommon.model, TestsYamlCommon.ps);
+	fun testCILemmas() {
+		testCILemmas(model!!, "battle of verdun", ps)
 	}
 
 	@Test
-	public void testCILemmas()
-	{
-		LibTestModelLexGroups.testCILemmas(TestsYamlCommon.model, "battle of verdun", TestsYamlCommon.ps);
+	fun testCICounts() {
+		testCICounts(model!!, "battle of verdun", ps)
 	}
 
 	@Test
-	public void testCICounts()
-	{
-		LibTestModelLexGroups.testCICounts(TestsYamlCommon.model, "battle of verdun", TestsYamlCommon.ps);
+	fun testCICountsFromMap() {
+		testCICountsFromMap(model!!, "battle of verdun", ps)
 	}
 
 	@Test
-	public void testCICountsFromMap()
-	{
-		LibTestModelLexGroups.testCICountsFromMap(TestsYamlCommon.model, "battle of verdun", TestsYamlCommon.ps);
+	fun testCIHypermapWest() {
+		testCIHypermap3(model!!, "West", ps)
 	}
 
 	@Test
-	public void testCIHypermapWest()
-	{
-		LibTestModelLexGroups.testCIHypermap3(TestsYamlCommon.model, "West", TestsYamlCommon.ps);
+	fun testCIHypermapBaroque() {
+		testCIHypermap3(model!!, "Baroque", ps)
 	}
 
 	@Test
-	public void testCIHypermapBaroque()
-	{
-		LibTestModelLexGroups.testCIHypermap3(TestsYamlCommon.model, "Baroque", TestsYamlCommon.ps);
+	fun testCIAi() {
+		testCILexesFor(model!!, "ai", ps)
 	}
 
 	@Test
-	public void testCIAi()
-	{
-		LibTestModelLexGroups.testCILexesFor(TestsYamlCommon.model, "ai", TestsYamlCommon.ps);
+	fun testCIBaroque() {
+		testCILexesFor(model!!, "baroque", ps)
 	}
 
 	@Test
-	public void testCIBaroque()
-	{
-		LibTestModelLexGroups.testCILexesFor(TestsYamlCommon.model, "baroque", TestsYamlCommon.ps);
+	fun testCIWest3() {
+		testCILexesFor3(model!!, "West", ps)
 	}
 
 	@Test
-	public void testCIWest3()
-	{
-		LibTestModelLexGroups.testCILexesFor3(TestsYamlCommon.model, "West", TestsYamlCommon.ps);
+	fun testCIBaroque3() {
+		testCILexesFor3(model!!, "Baroque", ps)
 	}
 
 	@Test
-	public void testCIBaroque3()
-	{
-		LibTestModelLexGroups.testCILexesFor3(TestsYamlCommon.model, "Baroque", TestsYamlCommon.ps);
+	fun testCIAi3() {
+		testCILexesFor3(model!!, "Ai", ps)
 	}
 
 	@Test
-	public void testCIAi3()
-	{
-		LibTestModelLexGroups.testCILexesFor3(TestsYamlCommon.model, "Ai", TestsYamlCommon.ps);
+	fun testCIAbsolute3() {
+		testCILexesFor3(model!!, "Absolute", ps)
 	}
 
-	@Test
-	public void testCIAbsolute3()
-	{
-		LibTestModelLexGroups.testCILexesFor3(TestsYamlCommon.model, "Absolute", TestsYamlCommon.ps);
+	companion object {
+		@JvmStatic
+		@BeforeClass
+		fun init() {
+			LibTestsYamlCommon.init()
+			checkNotNull(model)
+		}
 	}
 }

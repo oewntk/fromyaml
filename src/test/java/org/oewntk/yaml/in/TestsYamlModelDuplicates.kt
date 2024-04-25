@@ -1,42 +1,43 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.yaml.`in`
 
-package org.oewntk.yaml.in;
+import org.junit.BeforeClass
+import org.junit.Test
+import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyIC
+import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyOEWN
+import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyPWN
+import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyPos
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.oewntk.model.LibTestModelDuplicates;
-
-public class TestsYamlModelDuplicates
-{
-	@BeforeClass
-	public static void init()
-	{
-		TestsYamlCommon.init();
+class TestsYamlModelDuplicates {
+	@Test
+	fun testKeyOEWN() {
+		testDuplicatesForKeyOEWN(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
 	}
 
 	@Test
-	public void testKeyOEWN()
-	{
-		LibTestModelDuplicates.testDuplicatesForKeyOEWN(TestsYamlCommon.model, TestsYamlCommon.ps);
+	fun testKeyPos() {
+		testDuplicatesForKeyPos(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
 	}
 
 	@Test
-	public void testKeyPos()
-	{
-		LibTestModelDuplicates.testDuplicatesForKeyPos(TestsYamlCommon.model, TestsYamlCommon.ps);
+	fun testKeyIC() {
+		testDuplicatesForKeyIC(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
 	}
 
 	@Test
-	public void testKeyIC()
-	{
-		LibTestModelDuplicates.testDuplicatesForKeyIC(TestsYamlCommon.model, TestsYamlCommon.ps);
+	fun testKeyPWN() {
+		testDuplicatesForKeyPWN(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
 	}
 
-	@Test
-	public void testKeyPWN()
-	{
-		LibTestModelDuplicates.testDuplicatesForKeyPWN(TestsYamlCommon.model, TestsYamlCommon.ps);
+	companion object {
+		@JvmStatic
+		@BeforeClass
+		fun init() {
+			LibTestsYamlCommon.init()
+			checkNotNull(model)
+		}
 	}
 }
