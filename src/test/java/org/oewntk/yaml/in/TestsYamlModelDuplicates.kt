@@ -10,26 +10,28 @@ import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyOEWN
 import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyPWN
 import org.oewntk.model.LibTestModelDuplicates.testDuplicatesForKeyPos
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
+import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
 class TestsYamlModelDuplicates {
+
 	@Test
 	fun testKeyOEWN() {
-		testDuplicatesForKeyOEWN(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
+		testDuplicatesForKeyOEWN(model!!, ps)
 	}
 
 	@Test
 	fun testKeyPos() {
-		testDuplicatesForKeyPos(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
+		testDuplicatesForKeyPos(model!!, ps)
 	}
 
 	@Test
 	fun testKeyIC() {
-		testDuplicatesForKeyIC(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
+		testDuplicatesForKeyIC(model!!, ps)
 	}
 
 	@Test
 	fun testKeyPWN() {
-		testDuplicatesForKeyPWN(LibTestsYamlCommon.model!!, LibTestsYamlCommon.ps)
+		testDuplicatesForKeyPWN(model!!, ps)
 	}
 
 	companion object {

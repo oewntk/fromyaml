@@ -19,12 +19,12 @@ class TestsYamlModelWords {
 
 	@Test
 	fun testScanLexesForTestWords() {
-		testScanLexesForTestWords(model!!, { lex: Lex -> Key.W_P_A.of_t(lex) }, { seq: Sequence<Key> -> makeIndexMap(seq) }, testWords, TES_WORDS, ps)
+		testScanLexesForTestWords(model!!, { lex: Lex -> Key.W_P_A.of_t(lex) }, { seq: Sequence<Key> -> makeIndexMap(seq) }, testWords, PRINT_TEST_WORDS, ps)
 	}
 
 	@Test
 	fun testScanLexesForTestWordsSorted() {
-		testScanLexesForTestWords(model!!, { lex: Lex -> Key.W_P_A.of_t(lex) }, { seq: Sequence<Key> -> makeSortedIndexMap(seq) }, testWords, TES_WORDS, ps)
+		testScanLexesForTestWords(model!!, { lex: Lex -> Key.W_P_A.of_t(lex) }, { seq: Sequence<Key> -> makeSortedIndexMap(seq) }, testWords, PRINT_TEST_WORDS, ps)
 	}
 
 	@Test
@@ -93,7 +93,7 @@ class TestsYamlModelWords {
 	}
 
 	companion object {
-		private const val TES_WORDS = false
+		private const val PRINT_TEST_WORDS = false
 
 		private val testWords = setOf("baroque", "Baroque", "allied", "Allied", "earth", "Earth", "bass", "row", "critical", "centre")
 

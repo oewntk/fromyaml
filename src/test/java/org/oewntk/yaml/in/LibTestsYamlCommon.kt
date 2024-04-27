@@ -32,7 +32,6 @@ object LibTestsYamlCommon {
 				Tracing.psErr.println("Define YAML source dir that exists")
 				Assert.fail()
 			}
-
 			model = CoreFactory(inDir).get()
 		}
 		checkNotNull(model)
