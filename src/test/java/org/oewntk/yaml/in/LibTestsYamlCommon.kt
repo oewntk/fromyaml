@@ -22,7 +22,7 @@ object LibTestsYamlCommon {
 	fun init() {
 		if (model == null) {
 			if (source == null) {
-				Tracing.psErr.println("Define YAML source dir with -DSOURCE=path%n")
+				Tracing.psErr.println("Define YAML source dir with -DSOURCE=path")
 				Tracing.psErr.println("When running Maven tests, define the yaml directory as child to the project directory.")
 				Assert.fail()
 			}
