@@ -14,24 +14,25 @@ import java.io.File
  */
 class SenseToVerbTemplatesProcessor(dir: File) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateType>>, String, List<VerbTemplateType>>(dir) {
 
-	override val files: Array<File>
-		get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.yaml".toRegex()) }!!
+    override val files: Array<File>
+        get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateType>>): Pair<String, Array<VerbTemplateType>>? {
-		val sensekey = entry.first
-		val v = entry.second
-		if (DUMP) {
-			Tracing.psInfo.println(sensekey)
-		}
-		val n = v.size
-		if (n == 0) {
-			return null
-		}
-		val templateIds = Array(n) { v[it] }
-		return sensekey to templateIds
-	}
+    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateType>>): Pair<String, Array<VerbTemplateType>>? {
+        val sensekey = entry.first
+        val v = entry.second
+        if (DUMP) {
+            Tracing.psInfo.println(sensekey)
+        }
+        val n = v.size
+        if (n == 0) {
+            return null
+        }
+        val templateIds = Array(n) { v[it] }
+        return sensekey to templateIds
+    }
 
-	companion object {
-		private const val DUMP = false
-	}
+    companion object {
+
+        private const val DUMP = false
+    }
 }

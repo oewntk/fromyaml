@@ -12,38 +12,38 @@ import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
 class TestsYamlModelSenseGroups {
 
-	@Test
-	fun testCISensesBaroque() {
-		testCISensesGroupingByLCLemma(model!!, "baroque", ps)
-	}
+    @Test
+    fun testCISensesBaroque() {
+        testCISensesGroupingByLCLemma(model!!, "baroque", ps)
+    }
 
-	@Test
-	fun testCISensesBaroqueA() {
-		testCISensesGroupingByLCLemmaAndPos(model!!, "baroque", 'a', ps)
-	}
+    @Test
+    fun testCISensesBaroqueA() {
+        testCISensesGroupingByLCLemmaAndPos(model!!, "baroque", 'a', ps)
+    }
 
-	@Test
-	fun testCISensesCriticalA() {
-		testCISensesGroupingByLCLemmaAndPos(model!!, "critical", 'a', ps)
-	}
+    @Test
+    fun testCISensesCriticalA() {
+        testCISensesGroupingByLCLemmaAndPos(model!!, "critical", 'a', ps)
+    }
 
-	@Test
-	fun testCISensesAiN() {
-		testCISensesGroupingByLCLemmaAndPos(model!!, "ai", 'n', ps)
-	}
+    @Test
+    fun testCISensesAiN() {
+        testCISensesGroupingByLCLemmaAndPos(model!!, "ai", 'n', ps)
+    }
 
-	@Test
-	fun testCISensesAbsoluteA() {
-		testCISensesGroupingByLCLemmaAndPos(model!!, "absolute", 'a', ps)
-	}
+    @Test
+    fun testCISensesAbsoluteA() {
+        testCISensesGroupingByLCLemmaAndPos(model!!, "absolute", 'a', ps)
+    }
 
-	companion object {
+    companion object {
 
-		@JvmStatic
-		@BeforeClass
-		fun init() {
-			LibTestsYamlCommon.init()
-			checkNotNull(model)
-		}
-	}
+        @JvmStatic
+        @BeforeClass
+        fun init() {
+            LibTestsYamlCommon.init()
+            checkNotNull(model)
+        }
+    }
 }

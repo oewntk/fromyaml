@@ -14,24 +14,25 @@ import java.io.File
  */
 class VerbTemplateProcessor(dir: File) : YamProcessor1<VerbTemplate, Int, String>(dir) {
 
-	init {
-		this.dir = dir
-	}
+    init {
+        this.dir = dir
+    }
 
-	override val files: Array<File>
-		get() = dir.listFiles { f -> f.name.matches("verbTemplates.yaml".toRegex()) }!!
+    override val files: Array<File>
+        get() = dir.listFiles { f -> f.name.matches("verbTemplates.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Pair<VerbTemplateType, String>): VerbTemplate {
-		val id = entry.first
-		val v = entry.second
-		if (DUMP) {
-			Tracing.psInfo.println(id)
-		}
-		return VerbTemplate(id, v)
-	}
+    override fun processEntry(source: String?, entry: Pair<VerbTemplateType, String>): VerbTemplate {
+        val id = entry.first
+        val v = entry.second
+        if (DUMP) {
+            Tracing.psInfo.println(id)
+        }
+        return VerbTemplate(id, v)
+    }
 
-	companion object {
-		private const val DUMP = false
-	}
+    companion object {
+
+        private const val DUMP = false
+    }
 }
 

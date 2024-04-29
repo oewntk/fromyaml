@@ -17,73 +17,73 @@ import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
 class TestsYamlModelLexGroups {
 
-	@Test
-	fun testCIMultipleAll() {
-		testCIMultipleAll(model!!, ps)
-	}
+    @Test
+    fun testCIMultipleAll() {
+        testCIMultipleAll(model!!, ps)
+    }
 
-	@Test
-	fun testCILemmas() {
-		testCILemmas(model!!, "battle of verdun", ps)
-	}
+    @Test
+    fun testCILemmas() {
+        testCILemmas(model!!, "battle of verdun", ps)
+    }
 
-	@Test
-	fun testCICounts() {
-		testCICounts(model!!, "battle of verdun", ps)
-	}
+    @Test
+    fun testCICounts() {
+        testCICounts(model!!, "battle of verdun", ps)
+    }
 
-	@Test
-	fun testCICountsFromMap() {
-		testCICountsFromMap(model!!, "battle of verdun", ps)
-	}
+    @Test
+    fun testCICountsFromMap() {
+        testCICountsFromMap(model!!, "battle of verdun", ps)
+    }
 
-	@Test
-	fun testCIHypermapWest() {
-		testCIHypermap3(model!!, "West", ps)
-	}
+    @Test
+    fun testCIHypermapWest() {
+        testCIHypermap3(model!!, "West", ps)
+    }
 
-	@Test
-	fun testCIHypermapBaroque() {
-		testCIHypermap3(model!!, "Baroque", ps)
-	}
+    @Test
+    fun testCIHypermapBaroque() {
+        testCIHypermap3(model!!, "Baroque", ps)
+    }
 
-	@Test
-	fun testCIAi() {
-		testCILexesFor(model!!, "ai", ps)
-	}
+    @Test
+    fun testCIAi() {
+        testCILexesFor(model!!, "ai", ps)
+    }
 
-	@Test
-	fun testCIBaroque() {
-		testCILexesFor(model!!, "baroque", ps)
-	}
+    @Test
+    fun testCIBaroque() {
+        testCILexesFor(model!!, "baroque", ps)
+    }
 
-	@Test
-	fun testCIWest3() {
-		testCILexesFor3(model!!, "West", ps)
-	}
+    @Test
+    fun testCIWest3() {
+        testCILexesFor3(model!!, "West", ps)
+    }
 
-	@Test
-	fun testCIBaroque3() {
-		testCILexesFor3(model!!, "Baroque", ps)
-	}
+    @Test
+    fun testCIBaroque3() {
+        testCILexesFor3(model!!, "Baroque", ps)
+    }
 
-	@Test
-	fun testCIAi3() {
-		testCILexesFor3(model!!, "Ai", ps)
-	}
+    @Test
+    fun testCIAi3() {
+        testCILexesFor3(model!!, "Ai", ps)
+    }
 
-	@Test
-	fun testCIAbsolute3() {
-		testCILexesFor3(model!!, "Absolute", ps)
-	}
+    @Test
+    fun testCIAbsolute3() {
+        testCILexesFor3(model!!, "Absolute", ps)
+    }
 
-	companion object {
+    companion object {
 
-		@JvmStatic
-		@BeforeClass
-		fun init() {
-			LibTestsYamlCommon.init()
-			checkNotNull(model)
-		}
-	}
+        @JvmStatic
+        @BeforeClass
+        fun init() {
+            LibTestsYamlCommon.init()
+            checkNotNull(model)
+        }
+    }
 }

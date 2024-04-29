@@ -15,23 +15,24 @@ import java.io.File
  */
 class VerbFrameProcessor(dir: File) : YamProcessor1<VerbFrame, String, String>(dir) {
 
-	init {
-		this.dir = dir
-	}
+    init {
+        this.dir = dir
+    }
 
-	override val files: Array<File>
-		get() = dir.listFiles { f: File -> f.name.matches("frames.yaml".toRegex()) }!!
+    override val files: Array<File>
+        get() = dir.listFiles { f: File -> f.name.matches("frames.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Pair<SenseKey, VerbFrameType>): VerbFrame {
-		val id = entry.first
-		val v = entry.second
-		if (DUMP) {
-			Tracing.psInfo.println(id)
-		}
-		return VerbFrame(id, v)
-	}
+    override fun processEntry(source: String?, entry: Pair<SenseKey, VerbFrameType>): VerbFrame {
+        val id = entry.first
+        val v = entry.second
+        if (DUMP) {
+            Tracing.psInfo.println(id)
+        }
+        return VerbFrame(id, v)
+    }
 
-	companion object {
-		private const val DUMP = false
-	}
+    companion object {
+
+        private const val DUMP = false
+    }
 }

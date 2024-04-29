@@ -18,178 +18,179 @@ import java.util.*
  */
 class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
-	/**
-	 * Accumulated senses as lexes are processed
-	 */
-	val senses: MutableList<Sense> = ArrayList()
+    /**
+     * Accumulated senses as lexes are processed
+     */
+    val senses: MutableList<Sense> = ArrayList()
 
-	override val files: Array<File>
-		get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
+    override val files: Array<File>
+        get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
 
-	override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
-		val lexes: MutableList<Lex> = ArrayList<Lex>()
+    override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
+        val lexes: MutableList<Lex> = ArrayList<Lex>()
 
-		val lemma = entry.first
-		val lemmaMap = entry.second
-		for ((type, value1) in lemmaMap) {
-			val lexMap: Map<String, *> = safeCast(value1!!)
-			assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
-			if (DUMP) {
-				dumpMap("%s %s%n", lexMap)
-			}
+        val lemma = entry.first
+        val lemmaMap = entry.second
+        for ((type, value1) in lemmaMap) {
+            val lexMap: Map<String, *> = safeCast(value1!!)
+            assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
+            if (DUMP) {
+                dumpMap("%s %s%n", lexMap)
+            }
 
-			// lex
-			val lex = Lex(lemma, type, source)
+            // lex
+            val lex = Lex(lemma, type, source)
 
-			// pronunciations
-			val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
-			var pronunciations: Array<Pronunciation>? = null
-			if (pronunciationList != null) {
-				pronunciations = Array(pronunciationList.size) {
-					val pronunciationMap = pronunciationList[it]
-					assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
-					if (DUMP) {
-						dumpMap("\t%s %s%n", pronunciationMap)
-					}
-					val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
-					val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
-					Pronunciation(value, variety)
-				}
-			}
-			lex.pronunciations = pronunciations
+            // pronunciations
+            val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
+            var pronunciations: Array<Pronunciation>? = null
+            if (pronunciationList != null) {
+                pronunciations = Array(pronunciationList.size) {
+                    val pronunciationMap = pronunciationList[it]
+                    assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+                    if (DUMP) {
+                        dumpMap("\t%s %s%n", pronunciationMap)
+                    }
+                    val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
+                    val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
+                    Pronunciation(value, variety)
+                }
+            }
+            lex.pronunciations = pronunciations
 
-			// forms
-			val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
-			if (forms != null) {
-				lex.forms = forms.toTypedArray()
-			}
+            // forms
+            val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
+            if (forms != null) {
+                lex.forms = forms.toTypedArray()
+            }
 
-			// senses
-			val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
-			val lexSenses = MutableList(senseMaps.size) {
-				val senseMap = senseMaps[it]
-				assertKeysIn(
-					source, senseMap.keys,
-					VALID_SENSE_RELATIONS,  //
-					KEY_SENSE_ID,  //
-					KEY_SENSE_SYNSET,  //
-					KEY_SENSE_VERBFRAMES,  //
-					KEY_SENSE_VERBFRAMES,  //
-					KEY_SENSE_ADJPOSITION,
-					KEY_SENSE_EXAMPLES //
-				)
-				if (DUMP) {
-					dumpMap("\t%s %s%n", senseMap)
-				}
+            // senses
+            val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
+            val lexSenses = MutableList(senseMaps.size) {
+                val senseMap = senseMaps[it]
+                assertKeysIn(
+                    source, senseMap.keys,
+                    VALID_SENSE_RELATIONS,  //
+                    KEY_SENSE_ID,  //
+                    KEY_SENSE_SYNSET,  //
+                    KEY_SENSE_VERBFRAMES,  //
+                    KEY_SENSE_VERBFRAMES,  //
+                    KEY_SENSE_ADJPOSITION,
+                    KEY_SENSE_EXAMPLES //
+                )
+                if (DUMP) {
+                    dumpMap("\t%s %s%n", senseMap)
+                }
 
-				val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
-				val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-				val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
-				val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
-				val examples = examplesList?.toTypedArray()
-				val verbFrames = verbFramesList?.toTypedArray()
-				val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
+                val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
+                val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
+                val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
+                val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
+                val examples = examplesList?.toTypedArray()
+                val verbFrames = verbFramesList?.toTypedArray()
+                val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
-				// relations
-				var relations: MutableMap<String, MutableSet<String>>? = null
-				for (relationKey in SENSE_RELATIONS) {
-					if (senseMap.containsKey(relationKey)) {
-						val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
-						if (relations == null) {
-							relations = TreeMap()
-						}
-						relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
-					}
-				}
+                // relations
+                var relations: MutableMap<String, MutableSet<String>>? = null
+                for (relationKey in SENSE_RELATIONS) {
+                    if (senseMap.containsKey(relationKey)) {
+                        val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
+                        if (relations == null) {
+                            relations = TreeMap()
+                        }
+                        relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
+                    }
+                }
 
-				// sense
-				val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples, verbFrames, adjPosition, relations)
-				senses.add(lexSense)
-				lexSense
-			}
-			lex.senses = lexSenses
+                // sense
+                val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples, verbFrames, adjPosition, relations)
+                senses.add(lexSense)
+                lexSense
+            }
+            lex.senses = lexSenses
 
-			// accumulate
-			lexes.add(lex)
-		}
-		return lexes
-	}
+            // accumulate
+            lexes.add(lex)
+        }
+        return lexes
+    }
 
-	companion object {
-		private const val DUMP = false
+    companion object {
 
-		private const val KEY_LEX_SENSE = "sense"
-		private const val KEY_LEX_PRONUNCIATION = "pronunciation"
-		private const val KEY_LEX_FORM = "form"
+        private const val DUMP = false
 
-		private const val KEY_SENSE_ID = "id"
-		private const val KEY_SENSE_SYNSET = "synset"
-		private const val KEY_SENSE_ADJPOSITION = "adjposition"
-		private const val KEY_SENSE_VERBFRAMES = "subcat"
-		private const val KEY_SENSE_EXAMPLES = "sent"
+        private const val KEY_LEX_SENSE = "sense"
+        private const val KEY_LEX_PRONUNCIATION = "pronunciation"
+        private const val KEY_LEX_FORM = "form"
 
-		private const val KEY_PRONUNCIATION_VARIETY = "variety"
-		private const val KEY_PRONUNCIATION_VALUE = "value"
+        private const val KEY_SENSE_ID = "id"
+        private const val KEY_SENSE_SYNSET = "synset"
+        private const val KEY_SENSE_ADJPOSITION = "adjposition"
+        private const val KEY_SENSE_VERBFRAMES = "subcat"
+        private const val KEY_SENSE_EXAMPLES = "sent"
 
-		private val VALID_SENSE_RELATIONS = arrayOf( //
-			"antonym",  //
-			"similar",  //
-			"exemplifies",  //
-			"derivation",  //
-			"pertainym",  //
-			"participle",  //
-			"also",  //
-			"domain_region",  //
-			"domain_topic",  //
+        private const val KEY_PRONUNCIATION_VARIETY = "variety"
+        private const val KEY_PRONUNCIATION_VALUE = "value"
 
-			"state",
-			"result",
-			"event",
-			"property",
-			"location",
-			"destination",
-			"agent",
-			"undergoer",
-			"uses",
-			"instrument",
-			"by_means_of",
-			"material",
-			"vehicle",
-			"body_part",
+        private val VALID_SENSE_RELATIONS = arrayOf( //
+            "antonym",  //
+            "similar",  //
+            "exemplifies",  //
+            "derivation",  //
+            "pertainym",  //
+            "participle",  //
+            "also",  //
+            "domain_region",  //
+            "domain_topic",  //
 
-			"other"
-		)
+            "state",
+            "result",
+            "event",
+            "property",
+            "location",
+            "destination",
+            "agent",
+            "undergoer",
+            "uses",
+            "instrument",
+            "by_means_of",
+            "material",
+            "vehicle",
+            "body_part",
 
-		private val SENSE_RELATIONS = arrayOf( //
-			"antonym",  //
-			"similar",  //
-			"exemplifies", "is_exemplified_by",  //
-			"derivation",  //
-			"pertainym",  //
-			"participle",  //
-			"also",  //
-			"domain_region", "has_domain_region",  //
-			"domain_topic", "has_domain_topic",  //
+            "other"
+        )
 
-			"agent",
-			"material",
-			"event",
-			"instrument",
-			"location",
-			"by_means_of",
-			"undergoer",
-			"property",
-			"result",
-			"state",
-			"uses",
-			"destination",
-			"body_part",
-			"vehicle",
+        private val SENSE_RELATIONS = arrayOf( //
+            "antonym",  //
+            "similar",  //
+            "exemplifies", "is_exemplified_by",  //
+            "derivation",  //
+            "pertainym",  //
+            "participle",  //
+            "also",  //
+            "domain_region", "has_domain_region",  //
+            "domain_topic", "has_domain_topic",  //
 
-			"other"
-		)
+            "agent",
+            "material",
+            "event",
+            "instrument",
+            "location",
+            "by_means_of",
+            "undergoer",
+            "property",
+            "result",
+            "state",
+            "uses",
+            "destination",
+            "body_part",
+            "vehicle",
 
-		/*
+            "other"
+        )
+
+        /*
     ignored
       // antonym|
       // also|
@@ -222,5 +223,5 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
       anto_simple|
       anto_converse
      */
-	}
+    }
 }

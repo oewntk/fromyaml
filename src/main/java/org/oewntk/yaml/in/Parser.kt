@@ -14,24 +14,24 @@ import java.io.IOException
  */
 class Parser(private val inDir: File) {
 
-	/**
-	 * Parse
-	 *
-	 * @return core model
-	 * @throws IOException io exception
-	 */
-	@Throws(IOException::class)
-	fun parse(): CoreModel {
+    /**
+     * Parse
+     *
+     * @return core model
+     * @throws IOException io exception
+     */
+    @Throws(IOException::class)
+    fun parse(): CoreModel {
 
-		// lexes + senses
-		val lexParser = LexParser(inDir)
-		val lexes = lexParser.parse()
-		val senses = lexParser.senses
+        // lexes + senses
+        val lexParser = LexParser(inDir)
+        val lexes = lexParser.parse()
+        val senses = lexParser.senses
 
-		// synsets
-		val synsetParser = SynsetParser(inDir)
-		val synsets = synsetParser.parse()
+        // synsets
+        val synsetParser = SynsetParser(inDir)
+        val synsets = synsetParser.parse()
 
-		return CoreModel(lexes, senses, synsets)
-	}
+        return CoreModel(lexes, senses, synsets)
+    }
 }

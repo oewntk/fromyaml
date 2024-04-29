@@ -15,40 +15,40 @@ import java.util.function.Supplier
  */
 class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
 
-	override fun get(): CoreModel? {
-		try {
-			return Parser(inDir) //
-				.parse() //
-				.generateInverseRelations() //
-				.setModelSource(inDir)
-		} catch (e: IOException) {
-			e.printStackTrace(Tracing.psErr)
-			return null
-		}
-	}
+    override fun get(): CoreModel? {
+        try {
+            return Parser(inDir) //
+                .parse() //
+                .generateInverseRelations() //
+                .setModelSource(inDir)
+        } catch (e: IOException) {
+            e.printStackTrace(Tracing.psErr)
+            return null
+        }
+    }
 
-	companion object {
+    companion object {
 
-		/**
-		 * Make core model from YAML files
-		 *
-		 * @param args command-line arguments
-		 * @return core model
-		 */
-		private fun makeCoreModel(args: Array<String>): CoreModel? {
-			val inDir = File(args[0])
-			return CoreFactory(inDir).get()
-		}
+        /**
+         * Make core model from YAML files
+         *
+         * @param args command-line arguments
+         * @return core model
+         */
+        private fun makeCoreModel(args: Array<String>): CoreModel? {
+            val inDir = File(args[0])
+            return CoreFactory(inDir).get()
+        }
 
-		/**
-		 * Main
-		 *
-		 * @param args command-line arguments
-		 */
-		@JvmStatic
-		fun main(args: Array<String>) {
-			val model = makeCoreModel(args)
-			Tracing.psInfo.printf("[CoreModel] %s%n%s%n%s%n", model!!.source, model.info(), model.counts())
-		}
-	}
+        /**
+         * Main
+         *
+         * @param args command-line arguments
+         */
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val model = makeCoreModel(args)
+            Tracing.psInfo.printf("[CoreModel] %s%n%s%n%s%n", model!!.source, model.info(), model.counts())
+        }
+    }
 }
