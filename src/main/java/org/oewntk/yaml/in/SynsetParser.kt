@@ -50,7 +50,6 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
 
         // provision for no duplicates in members
-        checkNotNull(members)
         assert(members.none { Collections.frequency(members, it) > 1 })
 
         // relations
