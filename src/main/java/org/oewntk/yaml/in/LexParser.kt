@@ -6,6 +6,8 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.*
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.dumpMap
+import org.oewntk.yaml.`in`.YamlUtils.safeCast
+import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
 import java.util.*
 
@@ -30,7 +32,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 		val lemma = entry.first
 		val lemmaMap = entry.second
 		for ((type, value1) in lemmaMap) {
-			val lexMap = value1 as Map<String, *>
+			val lexMap: Map<String, *> = safeCast(value1!!)
 			assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
 			if (DUMP) {
 				dumpMap("%s %s%n", lexMap)
@@ -40,7 +42,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 			val lex = Lex(lemma, type, source)
 
 			// pronunciations
-			val pronunciationList = lexMap[KEY_LEX_PRONUNCIATION] as List<Map<String, *>>?
+			val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
 			var pronunciations: Array<Pronunciation>? = null
 			if (pronunciationList != null) {
 				pronunciations = Array(pronunciationList.size) {
@@ -57,14 +59,14 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 			lex.pronunciations = pronunciations
 
 			// forms
-			val forms = lexMap[KEY_LEX_FORM] as List<String>?
+			val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
 			if (forms != null) {
 				lex.forms = forms.toTypedArray()
 			}
 
 			// senses
-			val senseMaps = lexMap[KEY_LEX_SENSE] as List<Map<String, *>>?
-			val lexSenses = MutableList(senseMaps!!.size) {
+			val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
+			val lexSenses = MutableList(senseMaps.size) {
 				val senseMap = senseMaps[it]
 				assertKeysIn(
 					source, senseMap.keys,
@@ -82,8 +84,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
 				val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
 				val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-				val examplesList = senseMap[KEY_SENSE_EXAMPLES] as List<String>?
-				val verbFramesList = senseMap[KEY_SENSE_VERBFRAMES] as List<String>?
+				val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
+				val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
 				val examples = examplesList?.toTypedArray()
 				val verbFrames = verbFramesList?.toTypedArray()
 				val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
@@ -92,11 +94,11 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 				var relations: MutableMap<String, MutableSet<String>>? = null
 				for (relationKey in SENSE_RELATIONS) {
 					if (senseMap.containsKey(relationKey)) {
-						val relationTargets = senseMap[relationKey] as List<String>?
+						val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
 						if (relations == null) {
 							relations = TreeMap()
 						}
-						relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets!!)
+						relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
 					}
 				}
 

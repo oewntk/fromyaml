@@ -6,6 +6,8 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.Synset
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.dumpMap
+import org.oewntk.yaml.`in`.YamlUtils.safeCast
+import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import org.yaml.snakeyaml.error.YAMLException
 import java.io.File
 import java.util.*
@@ -42,10 +44,10 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 		)
 
 		val code = synsetMap[KEY_SYNSET_POS] as String?
-		val definitions = synsetMap[KEY_SYNSET_DEFINITION] as List<String>
+		val definitions: List<String> = safeCast(synsetMap[KEY_SYNSET_DEFINITION]!!)
 		val examples = synsetMap[KEY_SYNSET_EXAMPLE] as List<*>?
-		val members = synsetMap[KEY_SYNSET_MEMBERS] as List<String>?
-		val wikidata = synsetMap[KEY_SYNSET_WIKIDATA] as String?
+		val members: List<String> = safeCast(synsetMap[KEY_SYNSET_MEMBERS]!!)
+		val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
 
 		// provision for no duplicates in members
 		checkNotNull(members)
@@ -55,7 +57,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 		var relations: MutableMap<String, MutableSet<String>>? = null
 		for (relationKey in SYNSET_RELATIONS) {
 			if (synsetMap.containsKey(relationKey)) {
-				val relationTargets = checkNotNull(synsetMap[relationKey] as List<String>?)
+				val relationTargets: List<String> = safeCast(synsetMap[relationKey]!!)
 				if (relations == null) {
 					relations = TreeMap()
 				}
@@ -221,9 +223,9 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 				when (examples[it]) {
 					is String -> examples[it] as String
 					is Map<*, *> -> {
-						val exampleMap = examples[it] as Map<String, *>
+						val exampleMap: Map<String, *> = safeCast(examples[it]!!)
 						assertKeysIn(source!!, exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
-						(examples[it] as Map<String, *>)[KEY_EXAMPLE_TEXT].toString()
+						exampleMap[KEY_EXAMPLE_TEXT].toString()
 					}
 
 					else -> throw YAMLException(examples[it].toString())

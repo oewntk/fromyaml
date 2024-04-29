@@ -16,6 +16,22 @@ internal object YamlUtils {
 	private const val CODEPOINT_LIMIT = 0x8000000
 
 	/**
+	 * Avoid warning
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun <T : Any> safeCast(value: Any): T {
+		return value as T
+	}
+
+	/**
+	 * Avoid warning
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun <T : Any?> safeNullableCast(value: Any?): T? {
+		return value as T
+	}
+
+	/**
 	 * Build Yaml
 	 *
 	 * @return yaml
