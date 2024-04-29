@@ -100,7 +100,7 @@ class TestsYamlModelWords {
 		@JvmStatic
 		@BeforeClass
 		fun init() {
-			init()
+			LibTestsYamlCommon.init()
 			checkNotNull(model)
 		}
 	}
