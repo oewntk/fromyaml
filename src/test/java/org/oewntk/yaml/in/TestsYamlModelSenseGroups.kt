@@ -38,6 +38,7 @@ class TestsYamlModelSenseGroups {
 	}
 
 	companion object {
+
 		@JvmStatic
 		@BeforeClass
 		fun init() {

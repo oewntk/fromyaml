@@ -35,6 +35,7 @@ class TestsYamlModelDuplicates {
 	}
 
 	companion object {
+
 		@JvmStatic
 		@BeforeClass
 		fun init() {

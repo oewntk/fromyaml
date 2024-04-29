@@ -14,7 +14,7 @@ import java.util.*
  * @param K type of key
  * @param V type of value
  */
-abstract class YamProcessor<T, K : Comparable<K>?, V>(@JvmField protected val dir: File) {
+abstract class YamProcessor<T, K : Comparable<K>?, V>(protected val dir: File) {
 
 	/**
 	 * YAML files to process

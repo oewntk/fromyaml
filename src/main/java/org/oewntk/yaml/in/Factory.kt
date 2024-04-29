@@ -56,7 +56,6 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
 		 * @param args command-line arguments
 		 * @return core model
 		 */
-		@JvmStatic
 		fun makeModel(args: Array<String>): Model? {
 			val inDir = File(args[0])
 			val inDir2 = File(args[1])

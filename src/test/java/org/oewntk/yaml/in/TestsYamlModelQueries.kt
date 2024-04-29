@@ -63,6 +63,7 @@ class TestsYamlModelQueries {
 	}
 
 	companion object {
+
 		@JvmStatic
 		@BeforeClass
 		fun init() {

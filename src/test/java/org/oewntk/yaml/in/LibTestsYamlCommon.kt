@@ -12,13 +12,10 @@ object LibTestsYamlCommon {
 
 	private val source: String? = System.getProperty("SOURCE")
 
-	@JvmField
 	val ps: PrintStream = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
 
-	@JvmField
 	var model: CoreModel? = null
 
-	@JvmStatic
 	fun init() {
 		if (model == null) {
 			if (source == null) {

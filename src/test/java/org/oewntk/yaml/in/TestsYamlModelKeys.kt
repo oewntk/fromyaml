@@ -165,6 +165,7 @@ class TestsYamlModelKeys {
 	}
 
 	companion object {
+
 		@JvmStatic
 		@BeforeClass
 		fun init() {

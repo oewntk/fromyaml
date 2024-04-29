@@ -78,6 +78,7 @@ class TestsYamlModelLexGroups {
 	}
 
 	companion object {
+
 		@JvmStatic
 		@BeforeClass
 		fun init() {
