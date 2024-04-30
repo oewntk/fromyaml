@@ -70,13 +70,13 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                 val senseMap = senseMaps[it]
                 assertKeysIn(
                     source, senseMap.keys,
-                    VALID_SENSE_RELATIONS,  //
-                    KEY_SENSE_ID,  //
-                    KEY_SENSE_SYNSET,  //
-                    KEY_SENSE_VERBFRAMES,  //
-                    KEY_SENSE_VERBFRAMES,  //
+                    VALID_SENSE_RELATIONS,  
+                    KEY_SENSE_ID,  
+                    KEY_SENSE_SYNSET,  
+                    KEY_SENSE_VERBFRAMES,  
+                    KEY_SENSE_VERBFRAMES,  
                     KEY_SENSE_ADJPOSITION,
-                    KEY_SENSE_EXAMPLES //
+                    KEY_SENSE_EXAMPLES 
                 )
                 if (DUMP) {
                     dumpMap("\t%s %s%n", senseMap)
@@ -132,16 +132,16 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
         private const val KEY_PRONUNCIATION_VARIETY = "variety"
         private const val KEY_PRONUNCIATION_VALUE = "value"
 
-        private val VALID_SENSE_RELATIONS = arrayOf( //
-            "antonym",  //
-            "similar",  //
-            "exemplifies",  //
-            "derivation",  //
-            "pertainym",  //
-            "participle",  //
-            "also",  //
-            "domain_region",  //
-            "domain_topic",  //
+        private val VALID_SENSE_RELATIONS = arrayOf( 
+            "antonym",  
+            "similar",  
+            "exemplifies",  
+            "derivation",  
+            "pertainym",  
+            "participle",  
+            "also",  
+            "domain_region",  
+            "domain_topic",  
 
             "state",
             "result",
@@ -161,16 +161,16 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             "other"
         )
 
-        private val SENSE_RELATIONS = arrayOf( //
-            "antonym",  //
-            "similar",  //
-            "exemplifies", "is_exemplified_by",  //
-            "derivation",  //
-            "pertainym",  //
-            "participle",  //
-            "also",  //
-            "domain_region", "has_domain_region",  //
-            "domain_topic", "has_domain_topic",  //
+        private val SENSE_RELATIONS = arrayOf( 
+            "antonym",  
+            "similar",  
+            "exemplifies", "is_exemplified_by",  
+            "derivation",  
+            "pertainym",  
+            "participle",  
+            "also",  
+            "domain_region", "has_domain_region",  
+            "domain_topic", "has_domain_topic",  
 
             "agent",
             "material",

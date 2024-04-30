@@ -65,10 +65,10 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         }
 
         return Synset(
-            id, code!![0], domain,  //
-            members.toTypedArray(),  //
-            definitions.toTypedArray(),  //
-            if (examples == null) null else examplesToArray(source, examples),  //
+            id, code!![0], domain,  
+            members.toTypedArray(),  
+            definitions.toTypedArray(),  
+            if (examples == null) null else examplesToArray(source, examples),  
             wikidata, relations
         )
     }
@@ -89,7 +89,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         private const val KEY_EXAMPLE_TEXT = "text"
 
         private val VALID_SYNSET_RELATIONS = arrayOf(
-            //
+            
             "hypernym",  // "hyponym",
             "instance_hypernym",  // "instance_hyponym",
             "mero_part",  // "holo_part",
@@ -100,26 +100,26 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
             "exemplifies",  // "is_exemplified_by",
             "domain_topic",  // "has_domain_topic"
             "domain_region",  // "has_domain_region"
-            "attribute",  //
-            "similar",  //
-            "also",  //
+            "attribute",  
+            "similar",  
+            "also",  
         )
 
         private val SYNSET_RELATIONS = arrayOf(
-            //
-            "hypernym", "hyponym",  //
-            "instance_hypernym", "instance_hyponym",  //
-            "mero_part", "holo_part",  //
-            "mero_member", "holo_member",  //
-            "mero_substance", "holo_substance",  //
-            "causes", "is_caused_by",  //
-            "entails", "is_entailed_by",  //
-            "exemplifies", "is_exemplified_by",  //
-            "domain_topic", "has_domain_topic",  //
-            "domain_region", "has_domain_region",  //
-            "attribute",  //
-            "similar",  //
-            "also",  //
+            
+            "hypernym", "hyponym",  
+            "instance_hypernym", "instance_hyponym",  
+            "mero_part", "holo_part",  
+            "mero_member", "holo_member",  
+            "mero_substance", "holo_substance",  
+            "causes", "is_caused_by",  
+            "entails", "is_entailed_by",  
+            "exemplifies", "is_exemplified_by",  
+            "domain_topic", "has_domain_topic",  
+            "domain_region", "has_domain_region",  
+            "attribute",  
+            "similar",  
+            "also",  
         )
 
         /*
