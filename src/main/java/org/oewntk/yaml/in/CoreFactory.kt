@@ -19,8 +19,8 @@ class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
         try {
             return Parser(inDir) 
                 .parse() 
-                .generateInverseRelations() 
-                .setModelSource(inDir)
+                .generateInverseRelations()
+                .apply { source = inDir }
         } catch (e: IOException) {
             e.printStackTrace(Tracing.psErr)
             return null
