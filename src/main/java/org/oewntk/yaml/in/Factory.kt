@@ -4,6 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.Model
+import org.oewntk.model.ModelInfo
 import org.oewntk.model.TagCount
 import java.io.File
 import java.io.IOException
@@ -78,7 +79,7 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
                 "[Model] %s%n%s%n%s%n",
                 model!!.sources.contentToString(),
                 model.info(),
-                model.counts()
+                ModelInfo.counts(model)
             )
         }
     }
