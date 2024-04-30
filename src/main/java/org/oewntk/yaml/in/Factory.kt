@@ -30,7 +30,11 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
             val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsProcessor(inDir2).parse()
 
             return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
-                .setSources(inDir, inDir2)
+                .apply {
+                    source = inDir
+                    source2 = inDir
+                }
+
         } catch (e: IOException) {
             e.printStackTrace(Tracing.psErr)
             return null
