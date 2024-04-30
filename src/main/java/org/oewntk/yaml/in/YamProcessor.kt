@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024. Bernard Bou.
+ */
+
 package org.oewntk.yaml.`in`
 
 import org.yaml.snakeyaml.Yaml

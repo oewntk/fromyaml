@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024. Bernard Bou.
+ */
+
 package org.oewntk.yaml.`in`
 
 import java.io.OutputStream
