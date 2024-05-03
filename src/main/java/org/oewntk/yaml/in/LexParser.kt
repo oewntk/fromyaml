@@ -43,9 +43,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
             // pronunciations
             val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
-            var pronunciations: Array<Pronunciation>? = null
-            if (pronunciationList != null) {
-                pronunciations = Array(pronunciationList.size) {
+            val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
+                Array(pronunciationList.size) {
                     val pronunciationMap = pronunciationList[it]
                     assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
                     if (DUMP) {
@@ -55,14 +54,12 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
                     Pronunciation(value, variety)
                 }
-            }
+            } else null
             lex.pronunciations = pronunciations?.toSet()
 
             // forms
             val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
-            if (forms != null) {
-                lex.forms = forms.toSet() // preserves order (LinkedHashSet)
-            }
+            lex.forms = forms?.toSet() // preserves order (LinkedHashSet)
 
             // senses
             val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
