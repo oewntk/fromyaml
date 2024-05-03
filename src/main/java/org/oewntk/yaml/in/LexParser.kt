@@ -61,7 +61,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             // forms
             val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
             if (forms != null) {
-                lex.forms = forms.toTypedArray()
+                lex.forms = forms.toSet() // preserves order (LinkedHashSet)
             }
 
             // senses
