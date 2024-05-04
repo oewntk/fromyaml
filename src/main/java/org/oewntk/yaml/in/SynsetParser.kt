@@ -227,6 +227,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
                         assertKeysIn(source!!, exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
                         exampleMap[KEY_EXAMPLE_TEXT].toString()
                     }
+
                     else         -> throw YAMLException(examples[it].toString())
                 }
             }

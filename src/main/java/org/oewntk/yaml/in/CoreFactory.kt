@@ -18,8 +18,8 @@ class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         try {
-            return Parser(inDir) 
-                .parse() 
+            return Parser(inDir)
+                .parse()
                 .generateInverseRelations()
                 .apply { source = inDir }
         } catch (e: IOException) {
