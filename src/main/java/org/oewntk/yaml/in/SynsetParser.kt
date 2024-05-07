@@ -5,7 +5,6 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.Synset
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
-import org.oewntk.yaml.`in`.YamlUtils.dumpMap
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import org.yaml.snakeyaml.error.YAMLException
@@ -28,10 +27,9 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         val synsetMap = entry.second
         if (DUMP) {
             Tracing.psInfo.println(id)
-            dumpMap("%s %s%n", synsetMap)
+            dumpMap(synsetMap)
         }
         assertKeysIn(
-            source,
             synsetMap.keys,
             VALID_SYNSET_RELATIONS,
             KEY_SYNSET_POS,
@@ -64,13 +62,10 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
             }
         }
 
-        return Synset(
-            id, code!![0], domain,
-            members.toTypedArray(),
-            definitions.toTypedArray(),
-            if (examples == null) null else examplesToArray(source, examples),
-            wikidata, relations
-        )
+        // type
+        val type = code!![0]
+
+        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.examplesToArray(), relations, wikidata)
     }
 
     companion object {
@@ -214,21 +209,20 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         /**
          * Examples to array
          *
-         * @param source   source
-         * @param examples examples
+         * @receiver examples examples
          * @return array of examples
          */
-        fun examplesToArray(source: String?, examples: List<*>): Array<String> {
-            return Array(examples.size) {
-                when (examples[it]) {
-                    is String    -> examples[it] as String
+        fun List<*>.examplesToArray(): Array<String> {
+            return Array(this.size) {
+                when (this[it]) {
+                    is String    -> this[it] as String
                     is Map<*, *> -> {
-                        val exampleMap: Map<String, *> = safeCast(examples[it]!!)
-                        assertKeysIn(source!!, exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
+                        val exampleMap: Map<String, *> = safeCast(this[it]!!)
+                        assertKeysIn(exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
                         exampleMap[KEY_EXAMPLE_TEXT].toString()
                     }
 
-                    else         -> throw YAMLException(examples[it].toString())
+                    else         -> throw YAMLException(this[it].toString())
                 }
             }
         }

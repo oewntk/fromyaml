@@ -45,51 +45,42 @@ internal object YamlUtils {
         return Yaml(options)
     }
 
-    private val VOID_STRING_ARRAY = arrayOf<String>()
-
     /**
      * Assert keys are in set of valid keys
      *
-     * @param source    source
      * @param keys      bunch of valid keys
      * @param validKeys array of extra valid keys
      */
-    fun assertKeysIn(source: String, keys: Set<String>, vararg validKeys: String) {
-        assertKeysIn(source, keys, VOID_STRING_ARRAY, *validKeys)
+    fun assertKeysIn(keys: Set<String>, vararg validKeys: String) {
+        assertKeysIn(keys, arrayOf(), *validKeys)
     }
 
     /**
      * Assert keys are in set of valid keys
      *
-     * @param source     source
      * @param keys       bunch of valid keys
      * @param validKeys1 array of extra valid keys
      * @param validKeys2 array of extra valid keys
      */
-    fun assertKeysIn(source: String, keys: Set<String>, validKeys1: Array<String>, vararg validKeys2: String) {
-        val validKeys = mutableListOf(*validKeys1, *validKeys2)
-        for (key in keys) {
-            var valid = false
-            for (validKey in validKeys) {
-                if (key == validKey) {
-                    valid = true
-                    break
-                }
-            }
-            require(valid) { "'$key' in $source" }
+    fun assertKeysIn(keys: Set<String>, validKeys1: Array<String>, vararg validKeys2: String) {
+        val validKeys = setOf(*validKeys1, *validKeys2)
+        val difference = keys.subtract(validKeys)
+        if (difference.isNotEmpty()) {
+            val rogues = difference.joinToString { "'$it'" }
+            throw IllegalArgumentException(rogues)
         }
     }
+}
 
-    /**
-     * Dump map
-     *
-     * @param format format string for key-value pair
-     * @param map    string to object map
-     */
-    fun dumpMap(format: String, map: Map<String, *>) {
-        for ((k, v) in map) {
-            Tracing.psInfo.printf(format, k, v.toString())
-        }
-        Tracing.psInfo.println()
-    }
+/**
+ * Dump map
+ *
+ * @param map    string to object map
+ * @param indent indent
+ */
+fun dumpMap(map: Map<String, *>, indent: String = "") {
+    val s = map
+        .entries
+        .joinToString(postfix = "\n") { "$indent${it.key} ${it.value}" }
+    Tracing.psInfo.println(s)
 }

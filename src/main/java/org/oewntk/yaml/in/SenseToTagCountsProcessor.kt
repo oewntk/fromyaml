@@ -20,15 +20,19 @@ class SenseToTagCountsProcessor(dir: File) : YamProcessor1<Pair<String, TagCount
 
     override fun processEntry(source: String?, entry: Pair<SenseKey, Map<String, Int>>): Pair<SenseKey, TagCount> {
 
-        val sensekey = entry.first
-        val tagCntMap = entry.second
-        assertKeysIn(source!!, tagCntMap.keys, KEY_TAGCOUNT_SENSE_NUM, KEY_TAGCOUNT_COUNT)
-        if (DUMP) {
-            Tracing.psInfo.println(sensekey)
+        try {
+            val sensekey = entry.first
+            val tagCntMap = entry.second
+            assertKeysIn(tagCntMap.keys, KEY_TAGCOUNT_SENSE_NUM, KEY_TAGCOUNT_COUNT)
+            if (DUMP) {
+                Tracing.psInfo.println(sensekey)
+            }
+            val senseNum = tagCntMap[KEY_TAGCOUNT_SENSE_NUM]!!
+            val count = tagCntMap[KEY_TAGCOUNT_COUNT]!!
+            return sensekey to TagCount(senseNum, count)
+        } catch (iae: IllegalArgumentException) {
+            throw IllegalArgumentException("${iae.message} in $source")
         }
-        val senseNum = tagCntMap[KEY_TAGCOUNT_SENSE_NUM]!!
-        val count = tagCntMap[KEY_TAGCOUNT_COUNT]!!
-        return sensekey to TagCount(senseNum, count)
     }
 
     companion object {

@@ -5,12 +5,10 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
-import org.oewntk.yaml.`in`.YamlUtils.dumpMap
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Lex YAML parser
@@ -28,91 +26,96 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
         get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
-        val lexes: MutableList<Lex> = ArrayList<Lex>()
+        try {
+            val lexes: MutableList<Lex> = ArrayList()
 
-        val lemma = entry.first
-        val lemmaMap = entry.second
-        for ((type, value1) in lemmaMap) {
-            val lexMap: Map<String, *> = safeCast(value1!!)
-            assertKeysIn(source!!, lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
-            if (DUMP) {
-                dumpMap("%s %s%n", lexMap)
-            }
-
-            // lex
-            val lex = Lex(lemma, type, source)
-
-            // senses
-            val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
-            val lexSenses = MutableList(senseMaps.size) {
-                val senseMap = senseMaps[it]
-                assertKeysIn(
-                    source, senseMap.keys,
-                    VALID_SENSE_RELATIONS,
-                    KEY_SENSE_ID,
-                    KEY_SENSE_SYNSET,
-                    KEY_SENSE_VERBFRAMES,
-                    KEY_SENSE_VERBFRAMES,
-                    KEY_SENSE_ADJPOSITION,
-                    KEY_SENSE_EXAMPLES
-                )
+            val lemma = entry.first
+            val lemmaMap = entry.second
+            for ((type, value1) in lemmaMap) {
+                val lexMap: Map<String, *> = safeCast(value1!!)
+                assertKeysIn(lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
                 if (DUMP) {
-                    dumpMap("\t%s %s%n", senseMap)
+                    dumpMap(lexMap)
                 }
 
-                val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
-                val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-                val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
-                val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
-                val examples = examplesList?.toTypedArray()
-                val verbFrames = verbFramesList?.toTypedArray()
-                val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
+                // lex
+                val lex = Lex(lemma, type, source = source)
 
-                // relations
-                var relations: MutableMap<String, MutableSet<String>>? = null
-                for (relationKey in SENSE_RELATIONS) {
-                    if (senseMap.containsKey(relationKey)) {
-                        val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
-                        if (relations == null) {
-                            relations = TreeMap()
-                        }
-                        relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
-                    }
-                }
-
-                // sense
-                val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples, verbFrames, adjPosition, relations)
-                senses.add(lexSense)
-                lexSense
-            }
-            lexSenses
-                .map { it.senseKey }
-                .forEach{ lex.senseKeys.add(it) }
-
-            // pronunciations
-            val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
-            val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
-                Array(pronunciationList.size) {
-                    val pronunciationMap = pronunciationList[it]
-                    assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+                // senses
+                val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
+                val lexSenses = MutableList(senseMaps.size) {
+                    val senseMap = senseMaps[it]
+                    assertKeysIn(
+                        senseMap.keys,
+                        VALID_SENSE_RELATIONS,
+                        KEY_SENSE_ID,
+                        KEY_SENSE_SYNSET,
+                        KEY_SENSE_VERBFRAMES,
+                        KEY_SENSE_VERBFRAMES,
+                        KEY_SENSE_ADJPOSITION,
+                        KEY_SENSE_EXAMPLES
+                    )
                     if (DUMP) {
-                        dumpMap("\t%s %s%n", pronunciationMap)
+                        dumpMap(senseMap, indent = "\t")
                     }
-                    val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
-                    val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
-                    Pronunciation(value, variety)
+
+                    val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
+                    val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
+                    val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
+                    val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
+                    val examples = examplesList?.toTypedArray()
+                    val verbFrames = verbFramesList?.toTypedArray()
+                    val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
+
+                    // relations
+                    var relations: MutableMap<String, MutableSet<String>>? = null
+                    for (relationKey in SENSE_RELATIONS) {
+                        if (senseMap.containsKey(relationKey)) {
+                            val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
+                            if (relations == null) {
+                                relations = TreeMap()
+                            }
+                            relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
+                        }
+                    }
+
+                    // sense
+                    val lexSense = Sense(senseId, lex, type[0], it, synsetId, verbFrames, adjPosition, relations, examples)
+                    senses.add(lexSense)
+                    lexSense
                 }
-            } else null
-            lex.pronunciations = pronunciations?.toSet()
+                lexSenses
+                    .map { it.senseKey }
+                    .forEach { lex.senseKeys.add(it) }
 
-            // forms
-            val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
-            lex.forms = forms?.toSet() // preserves order (LinkedHashSet)
+                // pronunciations
+                val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
+                val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
+                    Array(pronunciationList.size) {
+                        val pronunciationMap = pronunciationList[it]
+                        assertKeysIn(pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+                        if (DUMP) {
+                            dumpMap(pronunciationMap, indent = "\t")
+                        }
+                        val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
+                        val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
+                        Pronunciation(value, variety)
+                    }
+                } else null
+                lex.pronunciations = pronunciations?.toSet()
 
-            // accumulate
-            lexes.add(lex)
+                // forms
+                val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
+                lex.forms = forms?.toSet() // preserves order (LinkedHashSet)
+
+                // accumulate
+                lexes.add(lex)
+            }
+            return lexes
+
+        } catch (iae: IllegalArgumentException) {
+            throw IllegalArgumentException("${iae.message} in $source")
         }
-        return lexes
     }
 
     companion object {
