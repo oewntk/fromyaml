@@ -4,7 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.SenseKey
-import org.oewntk.model.VerbTemplateType
+import org.oewntk.model.VerbTemplateId
 import java.io.File
 
 /**
@@ -12,12 +12,12 @@ import java.io.File
  *
  * @param dir dir containing YAML files
  */
-class SenseToVerbTemplatesProcessor(dir: File) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateType>>, String, List<VerbTemplateType>>(dir) {
+class SenseToVerbTemplatesProcessor(dir: File) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.yaml".toRegex()) }!!
 
-    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateType>>): Pair<String, Array<VerbTemplateType>>? {
+    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<String, Array<VerbTemplateId>>? {
         val sensekey = entry.first
         val v = entry.second
         if (DUMP) {

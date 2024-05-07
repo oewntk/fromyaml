@@ -4,7 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.VerbTemplate
-import org.oewntk.model.VerbTemplateType
+import org.oewntk.model.VerbTemplateId
 import java.io.File
 
 /**
@@ -21,7 +21,7 @@ class VerbTemplateProcessor(dir: File) : YamProcessor1<VerbTemplate, Int, String
     override val files: Array<File>
         get() = dir.listFiles { f -> f.name.matches("verbTemplates.yaml".toRegex()) }!!
 
-    override fun processEntry(source: String?, entry: Pair<VerbTemplateType, String>): VerbTemplate {
+    override fun processEntry(source: String?, entry: Pair<VerbTemplateId, String>): VerbTemplate {
         val id = entry.first
         val v = entry.second
         if (DUMP) {
