@@ -10,6 +10,7 @@ import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Lex YAML parser
@@ -40,26 +41,6 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
             // lex
             val lex = Lex(lemma, type, source)
-
-            // pronunciations
-            val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
-            val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
-                Array(pronunciationList.size) {
-                    val pronunciationMap = pronunciationList[it]
-                    assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
-                    if (DUMP) {
-                        dumpMap("\t%s %s%n", pronunciationMap)
-                    }
-                    val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
-                    val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
-                    Pronunciation(value, variety)
-                }
-            } else null
-            lex.pronunciations = pronunciations?.toSet()
-
-            // forms
-            val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
-            lex.forms = forms?.toSet() // preserves order (LinkedHashSet)
 
             // senses
             val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
@@ -104,7 +85,29 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                 senses.add(lexSense)
                 lexSense
             }
-            lex.senses = lexSenses
+            lexSenses
+                .map { it.senseKey }
+                .forEach{ lex.senseKeys.add(it) }
+
+            // pronunciations
+            val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
+            val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
+                Array(pronunciationList.size) {
+                    val pronunciationMap = pronunciationList[it]
+                    assertKeysIn(source, pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+                    if (DUMP) {
+                        dumpMap("\t%s %s%n", pronunciationMap)
+                    }
+                    val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
+                    val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
+                    Pronunciation(value, variety)
+                }
+            } else null
+            lex.pronunciations = pronunciations?.toSet()
+
+            // forms
+            val forms: List<String>? = safeNullableCast(lexMap[KEY_LEX_FORM])
+            lex.forms = forms?.toSet() // preserves order (LinkedHashSet)
 
             // accumulate
             lexes.add(lex)
