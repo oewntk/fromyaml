@@ -215,16 +215,46 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         fun List<*>.examplesToArray(): Array<String> {
             return Array(this.size) {
                 when (this[it]) {
-                    is String    -> this[it] as String
+                    is String    -> {
+                        val example = this[it] as String
+                        processExample(example)
+                    }
+
                     is Map<*, *> -> {
                         val exampleMap: Map<String, *> = safeCast(this[it]!!)
                         assertKeysIn(exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
-                        exampleMap[KEY_EXAMPLE_TEXT].toString()
+                        val example = exampleMap[KEY_EXAMPLE_TEXT].toString()
+                        processExample(example)
                     }
 
                     else         -> throw YAMLException(this[it].toString())
                 }
             }
+        }
+
+        fun processExample(example: String): String {
+            val trimmed = example.trim()
+            if (trimmed.matches("\".*\"".toRegex())) {
+                Tracing.psErr.println("[W] Illegal quoted example format <$example>")
+                return example.trim('"')
+            }
+            if (trimmed.contains('"')) {
+                val quoteCount = countQuotes(trimmed)
+                if (quoteCount % 2 != 0)
+                    Tracing.psErr.println("[W] Uneven quotes $quoteCount in <$example>")
+                // else
+                //  Tracing.psInfo.println("[W] With-quotes example format <$example>")
+            }
+            return trimmed
+        }
+
+        private fun countQuotes(str: String): Int {
+            var quoteCount = 0
+            var p = -1
+            while ((str.indexOf('"', p + 1).also { p = it }) != -1) {
+                quoteCount++
+            }
+            return quoteCount
         }
     }
 }
