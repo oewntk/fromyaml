@@ -232,13 +232,15 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
             }
         }
 
-        private const val FIX_QUOTES = false
+        private const val EXAMPLES_FIX_QUOTES = true
+
+        private const val EXAMPLES_TRIM = false
 
         fun processExample(example: String): String {
-            val trimmed = example.trim()
+            val trimmed = if (EXAMPLES_TRIM) example.trim() else example
             if (trimmed.matches("\".*\"".toRegex())) {
                 Tracing.psErr.println("[W] Illegal quoted example format <$example>")
-                return if (!FIX_QUOTES) example else example.trim('"')
+                return if (!EXAMPLES_FIX_QUOTES) example else example.trim('"')
             }
             if (trimmed.contains('"')) {
                 val quoteCount = countQuotes(trimmed)
