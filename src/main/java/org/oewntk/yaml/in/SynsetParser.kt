@@ -234,7 +234,10 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 
         private const val EXAMPLES_FIX_QUOTES = true
 
-        private const val EXAMPLES_TRIM = false
+        // TODO trimming examples
+        private const val LEGACY_V1 = true
+
+        private const val EXAMPLES_TRIM = !LEGACY_V1
 
         fun processExample(example: String): String {
             val trimmed = if (EXAMPLES_TRIM) example.trim() else example
