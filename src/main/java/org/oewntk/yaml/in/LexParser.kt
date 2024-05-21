@@ -70,9 +70,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     val relations = SENSE_RELATIONS
                         .asSequence()
                         .filter { relation -> senseMap.containsKey(relation) }
-                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toMutableSet() } // relation, setOf(targets)
+                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toSet() } // relation, setOf(targets)
                         .toMap()
-                        .toMutableMap()
                         .ifEmpty { null }
 
                     // sense

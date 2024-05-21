@@ -54,9 +54,8 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         val relations = SYNSET_RELATIONS
             .asSequence()
             .filter { relation -> synsetMap.containsKey(relation) }
-            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toMutableSet() } // relation, setOf(targets)
+            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
             .toMap()
-            .toMutableMap()
             .ifEmpty { null }
 
         // type
