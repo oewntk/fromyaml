@@ -8,7 +8,6 @@ import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
-import java.util.*
 
 /**
  * Lex YAML parser
@@ -68,24 +67,13 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
                     // relations
-                    // TODO remove
-                    var relations: MutableMap<String, MutableSet<String>>? = null
-                    for (relationKey in SENSE_RELATIONS) {
-                        if (senseMap.containsKey(relationKey)) {
-                            val relationTargets: List<String> = safeCast(senseMap[relationKey]!!)
-                            if (relations == null) {
-                                relations = TreeMap()
-                            }
-                            relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
-                        }
-                    }
-                    val relations2: Map<String, Set<String>>? = SENSE_RELATIONS
+                    val relations = SENSE_RELATIONS
                         .asSequence()
                         .filter { relation -> senseMap.containsKey(relation) }
-                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toSet() } // relation, setOf(targets)
-                        .toMap().ifEmpty { null }
-
-                    assert(relations2 == relations)
+                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toMutableSet() } // relation, setOf(targets)
+                        .toMap()
+                        .toMutableMap()
+                        .ifEmpty { null }
 
                     // sense
                     val lexSense = Sense(senseId, lex, type[0], it, synsetId, verbFrames, adjPosition, relations, examples)

@@ -51,24 +51,13 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         assert(members.none { Collections.frequency(members, it) > 1 })
 
         // relations
-        var relations: MutableMap<String, MutableSet<String>>? = null
-        for (relationKey in SYNSET_RELATIONS) {
-            if (synsetMap.containsKey(relationKey)) {
-                val relationTargets: List<String> = safeCast(synsetMap[relationKey]!!)
-                if (relations == null) {
-                    relations = TreeMap()
-                }
-                relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
-            }
-        }
-        val relations2: Map<String, Set<String>> ? = SYNSET_RELATIONS
+        val relations = SYNSET_RELATIONS
             .asSequence()
             .filter { relation -> synsetMap.containsKey(relation) }
-            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
+            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toMutableSet() } // relation, setOf(targets)
             .toMap()
+            .toMutableMap()
             .ifEmpty { null }
-
-        assert(relations2 == relations)
 
         // type
         val type = code!![0]
