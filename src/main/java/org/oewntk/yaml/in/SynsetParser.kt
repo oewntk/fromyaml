@@ -61,6 +61,14 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
                 relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
             }
         }
+        val relations2: Map<String, Set<String>> ? = SYNSET_RELATIONS
+            .asSequence()
+            .filter { relation -> synsetMap.containsKey(relation) }
+            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
+            .toMap()
+            .ifEmpty { null }
+
+        assert(relations2 == relations)
 
         // type
         val type = code!![0]

@@ -43,7 +43,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
                 // senses
                 val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
-                val lexSenses = MutableList(senseMaps.size) {
+                val lexSenses = MutableList(senseMaps.size) { it ->
                     val senseMap = senseMaps[it]
                     assertKeysIn(
                         senseMap.keys,
@@ -68,6 +68,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
                     // relations
+                    // TODO remove
                     var relations: MutableMap<String, MutableSet<String>>? = null
                     for (relationKey in SENSE_RELATIONS) {
                         if (senseMap.containsKey(relationKey)) {
@@ -78,6 +79,13 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                             relations.computeIfAbsent(relationKey) { LinkedHashSet() }.addAll(relationTargets)
                         }
                     }
+                    val relations2: Map<String, Set<String>>? = SENSE_RELATIONS
+                        .asSequence()
+                        .filter { relation -> senseMap.containsKey(relation) }
+                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toSet() } // relation, setOf(targets)
+                        .toMap().ifEmpty { null }
+
+                    assert(relations2 == relations)
 
                     // sense
                     val lexSense = Sense(senseId, lex, type[0], it, synsetId, verbFrames, adjPosition, relations, examples)
