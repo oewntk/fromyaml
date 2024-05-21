@@ -79,9 +79,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     senses.add(lexSense)
                     lexSense
                 }
-                lexSenses
-                    .map { it.senseKey }
-                    .forEach { lex.senseKeys.add(it) }
+                lex.senseKeys = lex.senseKeys.toMutableList() + lexSenses.map { it.senseKey }.asSequence()
 
                 // pronunciations
                 val pronunciationList: List<Map<String, *>>? = safeNullableCast(lexMap[KEY_LEX_PRONUNCIATION])
