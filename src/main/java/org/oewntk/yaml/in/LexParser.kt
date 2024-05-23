@@ -42,7 +42,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
                 // senses
                 val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
-                val lexSenses = MutableList(senseMaps.size) { it ->
+                val lexSenses = MutableList(senseMaps.size) {
                     val senseMap = senseMaps[it]
                     assertKeysIn(
                         senseMap.keys,
