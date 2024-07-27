@@ -19,4 +19,4 @@ Project [fromyaml](https://github.com/oewntk/fromyaml)
 
 		<groupId>io.github.oewntk</groupId>
 		<artifactId>fromyaml</artifactId>
-		<version>1.0.0</version>
+		<version>2.1.2</version>
