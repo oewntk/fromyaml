@@ -33,9 +33,10 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
             synsetMap.keys,
             VALID_SYNSET_RELATIONS,
             KEY_SYNSET_POS,
+            KEY_SYNSET_MEMBERS,
             KEY_SYNSET_DEFINITION,
             KEY_SYNSET_EXAMPLE,
-            KEY_SYNSET_MEMBERS,
+            KEY_SYNSET_USAGE,
             KEY_SYNSET_WIKIDATA,
             KEY_SYNSET_ILI,
             KEY_SYNSET_SOURCE
@@ -43,8 +44,9 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 
         val code = synsetMap[KEY_SYNSET_POS] as String?
         val definitions: List<String> = safeCast(synsetMap[KEY_SYNSET_DEFINITION]!!)
-        val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
         val members: List<String> = safeCast(synsetMap[KEY_SYNSET_MEMBERS]!!)
+        val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
+        val usages: List<String>? = safeNullableCast(synsetMap[KEY_SYNSET_USAGE])
         val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
 
         // provision for no duplicates in members
@@ -61,7 +63,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         // type
         val type = code!![0]
 
-        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), relations, wikidata)
+        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, wikidata)
     }
 
     companion object {
@@ -70,8 +72,9 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 
         private const val KEY_SYNSET_POS = "partOfSpeech"
         private const val KEY_SYNSET_DEFINITION = "definition"
-        private const val KEY_SYNSET_EXAMPLE = "example"
         private const val KEY_SYNSET_MEMBERS = "members"
+        private const val KEY_SYNSET_EXAMPLE = "example"
+        private const val KEY_SYNSET_USAGE = "usage"
         private const val KEY_SYNSET_ILI = "ili"
         private const val KEY_SYNSET_WIKIDATA = "wikidata"
         private const val KEY_SYNSET_SOURCE = "source"
