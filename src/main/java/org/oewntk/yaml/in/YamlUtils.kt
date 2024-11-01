@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.error.YAMLException
  *
  * @author Bernard Bou
  */
+@Suppress("KotlinConstantConditions")
 internal object YamlUtils {
 
     private const val CODEPOINT_LIMIT = 0x8000000
@@ -104,6 +105,7 @@ internal object YamlUtils {
     // TODO trimming examples
     private const val LEGACY_V1 = true
 
+    @Suppress("KotlinConstantConditions")
     private const val EXAMPLES_TRIM = !LEGACY_V1
 
     fun processExampleText(example: String): String {

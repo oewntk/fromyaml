@@ -45,6 +45,7 @@ class TestsExamples {
 
     companion object {
 
+        @Suppress("EmptyMethod")
         @JvmStatic
         @BeforeClass
         fun init() {
