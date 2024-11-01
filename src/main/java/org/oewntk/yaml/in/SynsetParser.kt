@@ -47,6 +47,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         val members: List<String> = safeCast(synsetMap[KEY_SYNSET_MEMBERS]!!)
         val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
         val usages: List<String>? = safeNullableCast(synsetMap[KEY_SYNSET_USAGE])
+        val ili: String? = safeNullableCast(synsetMap[KEY_SYNSET_ILI])
         val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
 
         // provision for no duplicates in members
@@ -63,7 +64,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         // type
         val type = code!![0]
 
-        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, wikidata)
+        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, ili, wikidata)
     }
 
     companion object {
