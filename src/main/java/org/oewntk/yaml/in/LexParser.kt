@@ -5,6 +5,7 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
+import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
@@ -60,10 +61,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
                     val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
                     val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-                    val examplesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_EXAMPLES])
-                    val verbFramesList: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
-                    val examples = examplesList?.toTypedArray()
-                    val verbFrames = verbFramesList?.toTypedArray()
+                    val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
+                    val verbFrames: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
                     // relations
@@ -75,7 +74,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                         .ifEmpty { null }
 
                     // sense
-                    val lexSense = Sense(senseId, lex, type[0], it, synsetId, verbFrames, adjPosition, relations, examples)
+                    val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples?.toTypedArray(), verbFrames?.toTypedArray(), adjPosition, relations)
                     senses.add(lexSense)
                     lexSense
                 }
@@ -124,6 +123,9 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
         private const val KEY_SENSE_ADJPOSITION = "adjposition"
         private const val KEY_SENSE_VERBFRAMES = "subcat"
         private const val KEY_SENSE_EXAMPLES = "sent"
+
+        private const val KEY_EXAMPLE_SOURCE = "source"
+        private const val KEY_EXAMPLE_TEXT = "text"
 
         private const val KEY_PRONUNCIATION_VARIETY = "variety"
         private const val KEY_PRONUNCIATION_VALUE = "value"

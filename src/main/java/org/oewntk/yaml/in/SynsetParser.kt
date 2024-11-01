@@ -5,9 +5,9 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.Synset
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
+import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
-import org.yaml.snakeyaml.error.YAMLException
 import java.io.File
 import java.util.*
 
@@ -43,7 +43,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
 
         val code = synsetMap[KEY_SYNSET_POS] as String?
         val definitions: List<String> = safeCast(synsetMap[KEY_SYNSET_DEFINITION]!!)
-        val examples = synsetMap[KEY_SYNSET_EXAMPLE] as List<*>?
+        val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
         val members: List<String> = safeCast(synsetMap[KEY_SYNSET_MEMBERS]!!)
         val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
 
@@ -61,7 +61,7 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         // type
         val type = code!![0]
 
-        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.examplesToArray(), relations, wikidata)
+        return Synset(id, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), relations, wikidata)
     }
 
     companion object {
@@ -202,62 +202,5 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
       ir_synonym
      */
 
-        /**
-         * Examples to array
-         *
-         * @receiver examples examples
-         * @return array of examples
-         */
-        fun List<*>.examplesToArray(): Array<String> {
-            return Array(this.size) {
-                when (this[it]) {
-                    is String    -> {
-                        val example = this[it] as String
-                        processExample(example)
-                    }
-
-                    is Map<*, *> -> {
-                        val exampleMap: Map<String, *> = safeCast(this[it]!!)
-                        assertKeysIn(exampleMap.keys, KEY_EXAMPLE_SOURCE, KEY_EXAMPLE_TEXT)
-                        val example = exampleMap[KEY_EXAMPLE_TEXT].toString()
-                        processExample(example)
-                    }
-
-                    else         -> throw YAMLException(this[it].toString())
-                }
-            }
-        }
-
-        private const val EXAMPLES_FIX_QUOTES = true
-
-        // TODO trimming examples
-        private const val LEGACY_V1 = true
-
-        private const val EXAMPLES_TRIM = !LEGACY_V1
-
-        fun processExample(example: String): String {
-            val trimmed = if (EXAMPLES_TRIM) example.trim() else example
-            if (trimmed.matches("\".*\"".toRegex())) {
-                Tracing.psErr.println("[W] Illegal quoted example format <$example>")
-                return if (!EXAMPLES_FIX_QUOTES) example else example.trim('"')
-            }
-            if (trimmed.contains('"')) {
-                val quoteCount = countQuotes(trimmed)
-                if (quoteCount % 2 != 0)
-                    Tracing.psErr.println("[W] Uneven quotes $quoteCount in <$example>")
-                // else
-                //  Tracing.psInfo.println("[W] With-quotes example format <$example>")
-            }
-            return trimmed
-        }
-
-        private fun countQuotes(str: String): Int {
-            var quoteCount = 0
-            var p = -1
-            while ((str.indexOf('"', p + 1).also { p = it }) != -1) {
-                quoteCount++
-            }
-            return quoteCount
-        }
     }
 }

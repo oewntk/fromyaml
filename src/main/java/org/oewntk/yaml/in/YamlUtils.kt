@@ -5,6 +5,7 @@ package org.oewntk.yaml.`in`
 
 import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.error.YAMLException
 
 /**
  * Yaml utilities
@@ -69,6 +70,65 @@ internal object YamlUtils {
             val rogues = difference.joinToString { "'$it'" }
             throw IllegalArgumentException(rogues)
         }
+    }
+
+    // examples
+
+    fun processExamples(examples: List<*>?, keyText: String, keySource: String): List<Pair<String, String?>>? {
+        return examples
+            ?.asSequence()
+            ?.map { processExample(it, keyText, keySource) }
+            ?.toList()
+    }
+
+    fun processExample(example: Any?, keyText: String, keySource: String): Pair<String, String?> {
+        return when (example) {
+            is String    -> {
+                processExampleText(example) to null
+            }
+
+            is Map<*, *> -> {
+                val exampleMap: Map<String, *> = safeCast(example)
+                assertKeysIn(exampleMap.keys, keyText, keySource)
+                val text = exampleMap[keyText].toString()
+                val source = exampleMap[keySource].toString()
+                processExampleText(text) to source
+            }
+
+            else         -> throw YAMLException(example.toString())
+        }
+    }
+
+    private const val EXAMPLES_FIX_QUOTES = true
+
+    // TODO trimming examples
+    private const val LEGACY_V1 = true
+
+    private const val EXAMPLES_TRIM = !LEGACY_V1
+
+    fun processExampleText(example: String): String {
+        val trimmed = if (EXAMPLES_TRIM) example.trim() else example
+        if (trimmed.matches("\".*\"".toRegex())) {
+            Tracing.psErr.println("[W] Illegal quoted example format <$example>")
+            return if (!EXAMPLES_FIX_QUOTES) example else example.trim('"')
+        }
+        if (trimmed.contains('"')) {
+            val quoteCount = countQuotes(trimmed)
+            if (quoteCount % 2 != 0)
+                Tracing.psErr.println("[W] Uneven quotes $quoteCount in <$example>")
+            // else
+            //  Tracing.psInfo.println("[W] With-quotes example format <$example>")
+        }
+        return trimmed
+    }
+
+    private fun countQuotes(str: String): Int {
+        var quoteCount = 0
+        var p = -1
+        while ((str.indexOf('"', p + 1).also { p = it }) != -1) {
+            quoteCount++
+        }
+        return quoteCount
     }
 }
 
