@@ -75,6 +75,14 @@ internal object YamlUtils {
 
     // examples
 
+    /**
+     * Process examples
+     *
+     * @param examples YAML objects for examples
+     * @param keyText YAML key for text
+     * @param keySource YAML key for source
+     * @return list of pairs of processed text, source
+     */
     fun processExamples(examples: List<*>?, keyText: String, keySource: String): List<Pair<String, String?>>? {
         return examples
             ?.asSequence()
@@ -82,6 +90,14 @@ internal object YamlUtils {
             ?.toList()
     }
 
+    /**
+     * Process example
+     *
+     * @param example YAML object
+     * @param keyText YAML key for text
+     * @param keySource YAML key for source
+     * @return pair of processed text, source
+     */
     fun processExample(example: Any?, keyText: String, keySource: String): Pair<String, String?> {
         return when (example) {
             is String    -> {
@@ -102,12 +118,17 @@ internal object YamlUtils {
 
     private const val EXAMPLES_FIX_QUOTES = true
 
-    // TODO trimming examples
     private const val LEGACY_V1 = true
 
     @Suppress("KotlinConstantConditions")
     private const val EXAMPLES_TRIM = !LEGACY_V1
 
+    /**
+     * Process example text
+     *
+     * @param example text
+     * @return processed text
+     */
     fun processExampleText(example: String): String {
         val trimmed = if (EXAMPLES_TRIM) example.trim() else example
         if (trimmed.matches("\".*\"".toRegex())) {
@@ -124,6 +145,11 @@ internal object YamlUtils {
         return trimmed
     }
 
+    /**
+     * Count quotes in string
+     * @param str string
+     * @return number of quotes in str
+     */
     private fun countQuotes(str: String): Int {
         var quoteCount = 0
         var p = -1
