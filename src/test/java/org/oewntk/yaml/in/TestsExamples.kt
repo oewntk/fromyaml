@@ -5,6 +5,7 @@ package org.oewntk.yaml.`in`
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.yaml.`in`.YamlUtils.processExampleText
 import java.io.PrintStream
 
 class TestsExamples {
@@ -18,7 +19,7 @@ class TestsExamples {
 
     private fun process(example: String): String {
         ps.println("<$example>")
-        val processed = SynsetParser.processExample(example)
+        val processed = processExampleText(example)
         ps.println("<$processed>")
         return processed
     }
