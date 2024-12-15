@@ -156,6 +156,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             "vehicle",
             "body_part",
 
+            "collocation",
             "other"
         )
 
@@ -185,10 +186,11 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             "body_part",
             "vehicle",
 
+            "collocation",
             "other"
         )
 
-        /*
+    /*
     ignored
       // antonym|
       // also|
