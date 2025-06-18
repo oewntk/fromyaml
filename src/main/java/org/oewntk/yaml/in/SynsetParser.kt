@@ -48,7 +48,15 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
         val usages: List<String>? = safeNullableCast(synsetMap[KEY_SYNSET_USAGE])
         val ili: String? = safeNullableCast(synsetMap[KEY_SYNSET_ILI])
-        val wikidata: String? = safeNullableCast(synsetMap[KEY_SYNSET_WIKIDATA])
+        val wikidatas = synsetMap[KEY_SYNSET_WIKIDATA]
+        val wikidata: List<String>? = when {
+            wikidatas is String                            -> listOf(wikidatas)
+            wikidatas is List<*> && wikidatas.isNotEmpty() -> {
+                @Suppress("UNCHECKED_CAST")
+                wikidatas as List<String>?
+            }
+            else                                           -> null as List<String>?
+        }
 
         // provision for no duplicates in members
         assert(members.none { Collections.frequency(members, it) > 1 })
