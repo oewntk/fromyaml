@@ -61,7 +61,11 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
 
                     val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
                     val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-                    val examples: List<Pair<String, String?>>? = processExamples(safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
+                    val examples: List<Pair<String, String?>>? = processExamples(
+                        safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]),
+                        KEY_EXAMPLE_TEXT,
+                        KEY_EXAMPLE_SOURCE
+                    )
                     val verbFrames: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
@@ -87,7 +91,17 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                             .ifEmpty { null }
 
                     // sense
-                    val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples?.toTypedArray(), verbFrames?.toTypedArray(), adjPosition, relations)
+                    val lexSense = Sense(
+                        senseId,
+                        lex,
+                        type[0],
+                        it,
+                        synsetId,
+                        examples?.toTypedArray(),
+                        verbFrames?.toTypedArray(),
+                        adjPosition,
+                        relations
+                    )
                     senses.add(lexSense)
                     lexSense
                 }
@@ -205,38 +219,38 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             "other"
         )
 
-    /*
-    ignored
-      // antonym|
-      // also|
-      // participle|
-      // pertainym|
-      // derivation|
-      // domain_topic|
-      // has_domain_topic|
-      // domain_region|
-      // has_domain_region|
-      // exemplifies|
-      // is_exemplified_by|
-      // similar|
-      // other|
-      simple_aspect_ip|
-      secondary_aspect_ip|
-      simple_aspect_pi|
-      secondary_aspect_pi|
-      feminine|
-      has_feminine|
-      masculine|
-      has_masculine|
-      young|
-      has_young|
-      diminutive|
-      has_diminutive|
-      augmentative|
-      has_augmentative|
-      anto_gradable|
-      anto_simple|
-      anto_converse
-     */
+        /*
+        ignored
+          // antonym|
+          // also|
+          // participle|
+          // pertainym|
+          // derivation|
+          // domain_topic|
+          // has_domain_topic|
+          // domain_region|
+          // has_domain_region|
+          // exemplifies|
+          // is_exemplified_by|
+          // similar|
+          // other|
+          simple_aspect_ip|
+          secondary_aspect_ip|
+          simple_aspect_pi|
+          secondary_aspect_pi|
+          feminine|
+          has_feminine|
+          masculine|
+          has_masculine|
+          young|
+          has_young|
+          diminutive|
+          has_diminutive|
+          augmentative|
+          has_augmentative|
+          anto_gradable|
+          anto_simple|
+          anto_converse
+         */
     }
 }
