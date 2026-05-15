@@ -61,7 +61,13 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         }
 
         // provision for no duplicates in members
-        assert(members.none { Collections.frequency(members, it) > 1 })
+        if (!IGNORE_DUPLICATE_MEMBERS) {
+            val noDuplicates = members.none { Collections.frequency(members, it) > 1 }
+            //assert(noDuplicates) { Tracing.psErr.println("[E] duplicate members in $id: $members") }
+            if (!noDuplicates) {
+                Tracing.psErr.println("[E] duplicate members in $id: $members")
+            }
+        }
 
         // relations
         val relations = if (IGNORE_QTARGETS)
@@ -102,6 +108,8 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
     companion object {
 
         private const val IGNORE_QTARGETS = true
+
+        private const val IGNORE_DUPLICATE_MEMBERS = false
 
         private const val DUMP = false
 
