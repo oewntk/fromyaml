@@ -20,6 +20,7 @@ class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
         try {
             return Parser(inDir)
                 .parse()
+                .check()
                 .generateInverseRelations()
                 .apply { source = inDir.absolutePath }
         } catch (e: IOException) {
