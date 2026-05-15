@@ -62,12 +62,23 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
         assert(members.none { Collections.frequency(members, it) > 1 })
 
         // relations
-        val relations = SYNSET_RELATIONS
-            .asSequence()
-            .filter { relation -> synsetMap.containsKey(relation) }
-            .map { relation -> relation to safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
-            .toMap()
-            .ifEmpty { null }
+        val relations = if (IGNORE_QTARGETS)
+            SYNSET_RELATIONS
+                .asSequence()
+                .filter { relation -> synsetMap.containsKey(relation) }
+                .map { relation ->
+                    relation to safeCast<List<String>>(synsetMap[relation]!!).filter { target -> target[0] != 'Q' }
+                        .toSet() // relation, setOf(targets)
+                }
+                .filter { (_, targets) -> targets.isNotEmpty() }
+                .toMap()
+                .ifEmpty { null }
+        else
+            SYNSET_RELATIONS
+                .asSequence()
+                .filter { relation -> synsetMap.containsKey(relation) }
+                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
+                .ifEmpty { null }
 
         // type
         val type = code!![0]
@@ -76,6 +87,8 @@ class SynsetParser(dir: File) : YamProcessor1<Synset, String, Map<String, *>>(di
     }
 
     companion object {
+
+        private const val IGNORE_QTARGETS = true
 
         private const val DUMP = false
 

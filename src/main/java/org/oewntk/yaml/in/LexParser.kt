@@ -66,12 +66,25 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
 
                     // relations
-                    val relations = SENSE_RELATIONS
-                        .asSequence()
-                        .filter { relation -> senseMap.containsKey(relation) }
-                        .map { relation -> relation to safeCast<List<String>>(senseMap[relation]!!).toSet() } // relation, setOf(targets)
-                        .toMap()
-                        .ifEmpty { null }
+                    val relations = if (IGNORE_QTARGETS)
+                        SENSE_RELATIONS
+                            .asSequence()
+                            .filter { relation -> senseMap.containsKey(relation) }
+                            .associateWith { relation ->
+                                safeCast<List<String>>(senseMap[relation]!!).toSet()
+                            }
+                            .ifEmpty { null }
+                    else
+                        SENSE_RELATIONS
+                            .asSequence()
+                            .filter { relation -> senseMap.containsKey(relation) }
+                            .map { relation ->
+                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { target -> target[0] != 'Q' }
+                                    .toSet()
+                            }
+                            .filter { (_, targets) -> targets.isNotEmpty() }
+                            .toMap()
+                            .ifEmpty { null }
 
                     // sense
                     val lexSense = Sense(senseId, lex, type[0], it, synsetId, examples?.toTypedArray(), verbFrames?.toTypedArray(), adjPosition, relations)
@@ -111,6 +124,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
     }
 
     companion object {
+
+        private const val IGNORE_QTARGETS = true
 
         private const val DUMP = false
 
