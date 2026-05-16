@@ -19,7 +19,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
         return readModelAndFix(inDir, inDir2)
     }
 
-    fun readModelAndFix(inDir: File, inDir2: File): Model? {
+    private fun readModelAndFix(inDir: File, inDir2: File): Model? {
         val stubModel: Model? = Factory(inDir, inDir2).get()
         return stubModel?.let { model ->
             Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.sources.contentToString(), model.info(), ModelInfo.counts(stubModel))
@@ -29,11 +29,11 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
             Tracing.psInfo.println("Check sense relation targets")
             model.checkSenseRelationTargets()
             Tracing.psInfo.println("Check members")
-            model.checkMembers(verbose = false)
+            model.checkMembers(verbose = VERBOSE)
 
             return model
                 .fixMemberEntries()
-                .checkMembers(verbose = true)
+                .checkMembers(verbose = VERBOSE)
         }
     }
 
