@@ -75,8 +75,7 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
         @JvmStatic
         fun main(args: Array<String>) {
             val model = makeModel(args)
-            Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model!!.sources.contentToString(), model.info(), ModelInfo.counts(model)
-            )
+            Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model!!.sources.contentToString(), model.info(), ModelInfo.counts(model))
         }
     }
 }
