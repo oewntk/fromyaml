@@ -33,7 +33,7 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
             return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
                 .apply {
                     source = inDir.absolutePath
-                    source2 = inDir.absolutePath
+                    source2 = inDir2.absolutePath
                 }
 
         } catch (e: IOException) {
