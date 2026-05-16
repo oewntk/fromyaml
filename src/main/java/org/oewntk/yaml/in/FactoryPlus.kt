@@ -15,9 +15,31 @@ import java.util.function.Supplier
  */
 class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<Model?> {
 
-    override fun get(): Model? = Factory(inDir, inDir2).get()
+    override fun get(): Model? {
+        return readModelAndFix(inDir, inDir2)
+    }
+
+    fun readModelAndFix(inDir: File, inDir2: File): Model? {
+        val stubModel: Model? = Factory(inDir, inDir2).get()
+        return stubModel?.let { model ->
+            Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.sources.contentToString(), model.info(), ModelInfo.counts(stubModel))
+            // model.check()
+            Tracing.psInfo.println("Check synset relation targets")
+            model.checkSynsetRelationTargets()
+            Tracing.psInfo.println("Check sense relation targets")
+            model.checkSenseRelationTargets()
+            Tracing.psInfo.println("Check members")
+            model.checkMembers(verbose = false)
+
+            return model
+                .fixMemberEntries()
+                .checkMembers(verbose = true)
+        }
+    }
 
     companion object {
+
+        val VERBOSE = false
 
         /**
          * Make model
@@ -44,30 +66,11 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
 
         // C O L L E C T
 
-        val VERBOSE = false
-
         /**
          * Collect
+         *
+         * @return list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          */
-        fun CoreModel.fixMembersReference(): CoreModel {
-            val orphans = orphanMembers()
-            if (VERBOSE) {
-                orphans.forEach { (lemma, synsets) ->
-                    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
-                }
-            }
-            Tracing.psErr.println("[I] ${orphans.size} orphan entries")
-            return fix(orphans)
-        }
-
-        fun CoreModel.orphanMembers0(): Map<Lemma, List<Synset>> {
-            return synsets
-                .map { synset -> synset to synset.members.filter { lexesByLemma!![it] == null }.toList() }
-                .filter { (_, lemmas) -> lemmas.isNotEmpty() }
-                .flatMap { (synset, lemmas) -> lemmas.map { lemma -> synset to lemma } }
-                .groupBy({ it.second }, { it.first })
-        }
-
         fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
             return synsets
                 .map { synset -> synset to synset.members.filter { lexesByLemma!![it] == null || lexesByLemma!![it]?.none { lex -> lex.type == synset.type } ?: true }.toList() }
@@ -79,9 +82,28 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
         // F I X
 
         /**
-         * Fix
+         * Fix this model
+         *
+         * @return a new fixed model
          */
-        fun CoreModel.fix(pseudos: Map<Pair<Lemma, Category>, List<Synset>>): CoreModel {
+        fun Model.fixMemberEntries(): Model {
+            val orphans = orphanMembers()
+            if (VERBOSE) {
+                orphans.forEach { (lemma, synsets) ->
+                    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
+                }
+            }
+            Tracing.psErr.println("[I] ${orphans.size} orphan entries")
+            return fixMemberEntries(orphans)
+        }
+
+        /**
+         * Fix
+         *
+         * @param pseudos list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
+         * @return a new fixed model
+         */
+        fun Model.fixMemberEntries(pseudos: Map<Pair<Lemma, Category>, List<Synset>>): Model {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
             pseudos.forEach { (typedLemma, synsets) ->
@@ -96,7 +118,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
                 }.toList()
                 newLexes.add(lex)
             }
-            return CoreModel(newLexes, newSenses, synsets)
+            return Model(newLexes, newSenses, synsets, verbFrames, verbTemplates)
         }
 
         private fun escapeLemma(lemma: Lemma): String {
@@ -111,19 +133,6 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
         @JvmStatic
         fun main(args: Array<String>) {
             val model = makeModel(args)
-            Tracing.psInfo.printf("[Model+] %s%n%s%n%s%n", model!!.sources.contentToString(), model.info(), ModelInfo.counts(model))
-            // model.check()
-
-            Tracing.psInfo.println("Check synset relation targets")
-            model.checkSynsetRelationTargets()
-            Tracing.psInfo.println("Check sense relation targets")
-            model.checkSenseRelationTargets()
-            Tracing.psInfo.println("Check members")
-            model.checkMembers(verbose=false)
-
-            val xModel = model
-                .fixMembersReference()
-                .checkMembers(verbose=true)
         }
     }
 }
