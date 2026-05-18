@@ -4,6 +4,10 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
+import org.oewntk.model.SenseKeys.escapeForSenseKey
+import org.oewntk.model.SenseKeys.toLexFileNum
+import org.oewntk.model.SenseKeys.toPosNum
+import org.oewntk.model.SenseKeys.toPosTag
 import java.io.File
 import java.util.function.Supplier
 
@@ -108,21 +112,20 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
             val newSenses = senses.toMutableList()
             pseudos.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.toString(), source = source)
+                val lex = Lex(lemma, type.toString(), source = "entries-pseudo.yaml")
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
-                    val ssType: Category = synset.type
-                    val senseid = "${escapeLemma(lemma)}%pseudo:$ssType:${idx + 1}"
-                    val sense = Sense(senseid, lex, ssType, 0, synset.synsetId)
+                    val ssType = synset.type.toPosNum()
+                    val escapedLemma = lemma.escapeForSenseKey()
+                    val lexfileNum = "%02d".format(synset.lexfile!!.toLexFileNum())
+                    val lexfileIdx = "%02d".format(idx + 1)
+                    val senseid = "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
+                    val sense = Sense(senseid, lex, synset.type, 0, synset.synsetId)
                     newSenses.add(sense)
                     senseid
                 }.toList()
                 newLexes.add(lex)
             }
             return Model(newLexes, newSenses, synsets, verbFrames, verbTemplates)
-        }
-
-        private fun escapeLemma(lemma: Lemma): String {
-            return lemma.replace(' ', '_')
         }
 
         /**
