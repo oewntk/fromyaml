@@ -16,10 +16,10 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class Factory(private val inDir: File, private val inDir2: File) : Supplier<Model?> {
+class Factory(private val inDir: File, private val inDir2: File, val verbose: Boolean = false) : Supplier<Model?> {
 
     override fun get(): Model? {
-        val coreModel = CoreFactory(inDir).get() ?: return null
+        val coreModel = CoreFactory(inDir, verbose = verbose).get() ?: return null
 
         try {
             // verb frames and templates
@@ -51,8 +51,8 @@ class Factory(private val inDir: File, private val inDir2: File) : Supplier<Mode
          * @param inDir2 dir containing extra YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, inDir2: File): Model? {
-            return Factory(inDir, inDir2).get()
+        private fun makeModel(inDir: File, inDir2: File, verbose: Boolean = true): Model? {
+            return Factory(inDir, inDir2, verbose = verbose).get()
         }
 
         /**

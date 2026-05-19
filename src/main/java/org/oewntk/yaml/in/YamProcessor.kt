@@ -18,7 +18,7 @@ import java.util.*
  * @param K type of key
  * @param V type of value
  */
-abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File) {
+abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File, val verbose: Boolean = false) {
 
     /**
      * YAML files to process
@@ -44,6 +44,8 @@ abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File) {
     fun parse(): Collection<T> {
         val items: MutableCollection<T> = ArrayList()
         for (file in files) {
+            if (verbose)
+                Tracing.psInfo.println("-$file")
             loadClass(file, items)
         }
         return Collections.unmodifiableCollection(items)

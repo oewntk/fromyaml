@@ -16,7 +16,7 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<Model?> {
+class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose: Boolean = false, val generated: Boolean = true) : Supplier<Model?> {
 
     override fun get(): Model? {
         return readModelAndFix(inDir, inDir2)
@@ -32,17 +32,15 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
             Tracing.psInfo.println("Check sense relation targets")
             model.checkSenseRelationTargets()
             Tracing.psInfo.println("Check members")
-            model.checkMembers(verbose = VERBOSE)
+            model.checkMembers(verbose = verbose)
 
             return model
-                .generatedMemberEntries()
-                .checkMembers(verbose = VERBOSE)
+                .generatedMemberEntries(verbose = verbose, generated = generated)
+                .checkMembers(verbose = verbose)
         }
     }
 
     companion object {
-
-        val VERBOSE = false
 
         /**
          * Make model
@@ -89,29 +87,29 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
          *
          * @return a new fixed model
          */
-        fun Model.generatedMemberEntries(): Model {
+        fun Model.generatedMemberEntries(verbose: Boolean = false, generated: Boolean = false): Model {
             val orphans = orphanMembers()
-            if (VERBOSE) {
+            if (verbose) {
                 orphans.forEach { (lemma, synsets) ->
                     Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
                 }
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
-            return generatedMemberEntries(orphans)
+            return generatedMemberEntries(orphans, generated = generated)
         }
 
         /**
          * Fix
          *
-         * @param pseudos list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
+         * @param orphans list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return a new fixed model
          */
-        fun Model.generatedMemberEntries(pseudos: Map<Pair<Lemma, Category>, List<Synset>>): Model {
+        fun Model.generatedMemberEntries(orphans: Map<Pair<Lemma, Category>, List<Synset>>, generated: Boolean = false): Model {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
-            pseudos.forEach { (typedLemma, synsets) ->
+            orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.toString(), source = findFile(lemma))
+                val lex = Lex(lemma, type.toString(), source = findFile(lemma, generated = generated))
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                     val ssType = synset.type.toPosNum()
                     val escapedLemma = lemma.escapeForSenseKey()
@@ -127,10 +125,8 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
             return Model(newLexes, newSenses, synsets, verbFrames, verbTemplates)
         }
 
-        const val TO_GENERATED_FILE = true
-
-        private fun findFile(lemma: String): String {
-            return if (TO_GENERATED_FILE) "entries-generated.yaml" else {
+        private fun findFile(lemma: String, generated: Boolean = false): String {
+            return if (generated) "entries-generated.yaml" else {
                 var c = lemma[0].lowercaseChar()
                 if (c !in 'a' until 'z' + 1)
                     c = '0'
@@ -146,6 +142,9 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
         @JvmStatic
         fun main(args: Array<String>) {
             val model = makeModel(args)
+            if (model?.check(verbose = true) == null) {
+                Tracing.psErr.println("null model")
+            }
         }
     }
 }

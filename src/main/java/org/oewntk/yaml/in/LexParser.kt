@@ -15,7 +15,7 @@ import java.io.File
  *
  * @property dir dir containing YAML files
  */
-class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
+class LexParser(dir: File, verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose=verbose) {
 
     /**
      * Accumulated senses as lexes are processed
@@ -33,7 +33,7 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
             val lemmaMap = entry.second
             for ((type, value1) in lemmaMap) {
                 val lexMap: Map<String, *> = safeCast(value1!!)
-                assertKeysIn(lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM)
+                assertKeysIn(lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM, "source")
                 if (DUMP) {
                     dumpMap(lexMap)
                 }
@@ -53,7 +53,8 @@ class LexParser(dir: File) : YamProcessor<Lex, String, Map<String, *>>(dir) {
                         KEY_SENSE_VERBFRAMES,
                         KEY_SENSE_VERBFRAMES,
                         KEY_SENSE_ADJPOSITION,
-                        KEY_SENSE_EXAMPLES
+                        KEY_SENSE_EXAMPLES,
+                        "is_exemplified_by"
                     )
                     if (DUMP) {
                         dumpMap(senseMap, indent = "\t")

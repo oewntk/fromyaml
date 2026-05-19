@@ -15,11 +15,11 @@ import java.util.function.Supplier
  *
  * @property inDir dir containing YAML files
  */
-class CoreFactory(private val inDir: File) : Supplier<CoreModel?> {
+class CoreFactory(private val inDir: File, val verbose: Boolean = false) : Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         try {
-            return Parser(inDir)
+            return Parser(inDir, verbose=verbose)
                 .parse()
                 .check()
                 .generateInverseRelations()
