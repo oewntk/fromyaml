@@ -7,7 +7,6 @@ import org.oewntk.model.*
 import org.oewntk.model.SenseKeys.escapeForSenseKey
 import org.oewntk.model.SenseKeys.toLexFileNum
 import org.oewntk.model.SenseKeys.toPosNum
-import org.oewntk.model.SenseKeys.toPosTag
 import java.io.File
 import java.util.function.Supplier
 
@@ -36,7 +35,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
             model.checkMembers(verbose = VERBOSE)
 
             return model
-                .fixMemberEntries()
+                .generatedMemberEntries()
                 .checkMembers(verbose = VERBOSE)
         }
     }
@@ -90,7 +89,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
          *
          * @return a new fixed model
          */
-        fun Model.fixMemberEntries(): Model {
+        fun Model.generatedMemberEntries(): Model {
             val orphans = orphanMembers()
             if (VERBOSE) {
                 orphans.forEach { (lemma, synsets) ->
@@ -98,7 +97,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
                 }
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
-            return fixMemberEntries(orphans)
+            return generatedMemberEntries(orphans)
         }
 
         /**
@@ -107,12 +106,12 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
          * @param pseudos list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return a new fixed model
          */
-        fun Model.fixMemberEntries(pseudos: Map<Pair<Lemma, Category>, List<Synset>>): Model {
+        fun Model.generatedMemberEntries(pseudos: Map<Pair<Lemma, Category>, List<Synset>>): Model {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
             pseudos.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.toString(), source = "entries-pseudo.yaml")
+                val lex = Lex(lemma, type.toString(), source = findFile(lemma))
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                     val ssType = synset.type.toPosNum()
                     val escapedLemma = lemma.escapeForSenseKey()
@@ -126,6 +125,17 @@ class FactoryPlus(private val inDir: File, private val inDir2: File) : Supplier<
                 newLexes.add(lex)
             }
             return Model(newLexes, newSenses, synsets, verbFrames, verbTemplates)
+        }
+
+        const val TO_GENERATED_FILE = true
+
+        private fun findFile(lemma: String): String {
+            return if (TO_GENERATED_FILE) "entries-generated.yaml" else {
+                var c = lemma[0].lowercaseChar()
+                if (c !in 'a' until 'z' + 1)
+                    c = '0'
+                "entries-$c.yaml"
+            }
         }
 
         /**
