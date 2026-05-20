@@ -16,7 +16,7 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose: Boolean = false, val generated: Boolean = true) : Supplier<Model?> {
+class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose: Boolean = false) : Supplier<Model?> {
 
     override fun get(): Model? {
         return readModelAndFix(inDir, inDir2)
@@ -35,7 +35,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
             model.checkMembers(verbose = verbose)
 
             return model
-                .generatedMemberEntries(verbose = verbose, generated = generated)
+                .generatedMemberEntries(verbose = verbose)
                 .checkMembers(verbose = verbose)
         }
     }
@@ -87,7 +87,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
          *
          * @return a new fixed model
          */
-        fun Model.generatedMemberEntries(verbose: Boolean = false, generated: Boolean = false): Model {
+        fun Model.generatedMemberEntries(verbose: Boolean = false): Model {
             val orphans = orphanMembers()
             if (verbose) {
                 orphans.forEach { (lemma, synsets) ->
@@ -95,7 +95,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
                 }
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
-            return generatedMemberEntries(orphans, generated = generated)
+            return generatedMemberEntries(orphans)
         }
 
         /**
@@ -104,12 +104,12 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
          * @param orphans list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return a new fixed model
          */
-        fun Model.generatedMemberEntries(orphans: Map<Pair<Lemma, Category>, List<Synset>>, generated: Boolean = false): Model {
+        fun Model.generatedMemberEntries(orphans: Map<Pair<Lemma, Category>, List<Synset>>): Model {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.toString(), source = findFile(lemma, generated = generated))
+                val lex = Lex(lemma, type.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                     val ssType = synset.type.toPosNum()
                     val escapedLemma = lemma.escapeForSenseKey()
@@ -123,15 +123,6 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
                 newLexes.add(lex)
             }
             return Model(newLexes, newSenses, synsets, verbFrames, verbTemplates)
-        }
-
-        private fun findFile(lemma: String, generated: Boolean = false): String {
-            return if (generated) "entries-generated.yaml" else {
-                var c = lemma[0].lowercaseChar()
-                if (c !in 'a' until 'z' + 1)
-                    c = '0'
-                "entries-$c.yaml"
-            }
         }
 
         /**
