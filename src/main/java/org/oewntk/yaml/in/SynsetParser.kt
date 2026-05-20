@@ -16,7 +16,7 @@ import java.util.*
  *
  * @param dir dir containing YAML files
  */
-class SynsetParser(dir: File, verbose: Boolean = false) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose=verbose) {
+class SynsetParser(dir: File, verbose: Boolean = false) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("(noun|verb|adj|adv).*\\.yaml".toRegex()) }!!
@@ -69,6 +69,7 @@ class SynsetParser(dir: File, verbose: Boolean = false) : YamProcessor1<Synset, 
 
             else -> null as List<String>?
         }
+        val source: String? = safeNullableCast(synsetMap[KEY_SYNSET_SOURCE])
 
         // members
         if (WARN_DUPLICATE_MEMBERS) {
@@ -113,7 +114,9 @@ class SynsetParser(dir: File, verbose: Boolean = false) : YamProcessor1<Synset, 
             relations,
             ili,
             wikidata
-        )
+        ).apply {
+            this.source = source
+        }
     }
 
     companion object {

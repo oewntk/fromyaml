@@ -39,7 +39,7 @@ class LexParser(dir: File, verbose: Boolean = false) : YamProcessor<Lex, String,
                 }
 
                 // lex
-                val lex = Lex(lemma, type, source = source)
+                val lex = Lex(lemma, type)
 
                 // senses
                 val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
