@@ -72,9 +72,15 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
          *
          * @return list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          */
-        fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
+         fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
             return synsets
-                .map { synset -> synset to synset.members.filter { lexesByLemma!![it] == null || lexesByLemma!![it]?.none { lex -> lex.type == synset.type } ?: true }.toList() }
+                .map { synset -> synset to synset.members
+                    .filter {
+                        val found = lexesByLemma!![it]
+                        found == null || found.none { lex -> lex.type == synset.type }
+                    }
+                    .toList()
+                }
                 .filter { (_, lemmas) -> lemmas.isNotEmpty() }
                 .flatMap { (synset, lemmas) -> lemmas.map { lemma -> synset to (lemma to synset.type) } }
                 .groupBy({ it.second }, { it.first })
