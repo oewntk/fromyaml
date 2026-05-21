@@ -76,7 +76,7 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
             return synsets
                 .map { synset -> synset to synset.members
                     .filter {
-                        val found = lexesByLemma!![it]
+                        val found = lexFinder(it)
                         found == null || found.none { lex -> lex.type == synset.type }
                     }
                     .toList()
