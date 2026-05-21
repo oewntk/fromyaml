@@ -14,7 +14,7 @@ class TestsYamlQuotes {
 
     @Test
     fun testQuote() {
-        val synset = model!!.synsetsById?.get("06853940-n")!!
+        val synset = model.synsetResolver("06853940-n")
         synset.examples?.forEach {
             ps.println(it)
             assert(it.first.startsWith("`"))
@@ -26,8 +26,7 @@ class TestsYamlQuotes {
         @JvmStatic
         @BeforeClass
         fun init() {
-            LibTestsYamlCommon.init()
-            checkNotNull(model)
+            model
         }
     }
 }

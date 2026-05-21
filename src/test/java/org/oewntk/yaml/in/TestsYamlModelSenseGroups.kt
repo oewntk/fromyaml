@@ -14,27 +14,27 @@ class TestsYamlModelSenseGroups {
 
     @Test
     fun testCISensesBaroque() {
-        testCISensesGroupingByLCLemma(model!!, "baroque", ps)
+        testCISensesGroupingByLCLemma(model, "baroque", ps)
     }
 
     @Test
     fun testCISensesBaroqueA() {
-        testCISensesGroupingByLCLemmaAndPos(model!!, "baroque", 'a', ps)
+        testCISensesGroupingByLCLemmaAndPos(model, "baroque", 'a', ps)
     }
 
     @Test
     fun testCISensesCriticalA() {
-        testCISensesGroupingByLCLemmaAndPos(model!!, "critical", 'a', ps)
+        testCISensesGroupingByLCLemmaAndPos(model, "critical", 'a', ps)
     }
 
     @Test
     fun testCISensesAiN() {
-        testCISensesGroupingByLCLemmaAndPos(model!!, "ai", 'n', ps)
+        testCISensesGroupingByLCLemmaAndPos(model, "ai", 'n', ps)
     }
 
     @Test
     fun testCISensesAbsoluteA() {
-        testCISensesGroupingByLCLemmaAndPos(model!!, "absolute", 'a', ps)
+        testCISensesGroupingByLCLemmaAndPos(model, "absolute", 'a', ps)
     }
 
     companion object {
@@ -42,8 +42,7 @@ class TestsYamlModelSenseGroups {
         @JvmStatic
         @BeforeClass
         fun init() {
-            LibTestsYamlCommon.init()
-            checkNotNull(model)
+            model
         }
     }
 }

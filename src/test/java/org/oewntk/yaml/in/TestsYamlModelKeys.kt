@@ -25,7 +25,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testMobile() {
-        val r = testMobile(model!!, ps)
+        val r = testMobile(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(1, r[2].toLong())
@@ -36,7 +36,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testMobileNoPronunciation() {
-        val r = testMobileNoPronunciation(model!!, ps)
+        val r = testMobileNoPronunciation(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -46,7 +46,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testEarthMulti() {
-        val r = testEarthMulti(model!!, ps)
+        val r = testEarthMulti(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -56,7 +56,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testEarthMono() {
-        val r = testEarthMono(model!!, ps)
+        val r = testEarthMono(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(1, r[2].toLong())
@@ -66,7 +66,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testBaroqueMulti() {
-        val r = testBaroqueMulti(model!!, ps)
+        val r = testBaroqueMulti(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -88,7 +88,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testBaroqueMono() {
-        val r = testBaroqueMono(model!!, ps)
+        val r = testBaroqueMono(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(1, r[2].toLong())
@@ -110,7 +110,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testCriticalMulti() {
-        val r = testCriticalMulti(model!!, ps)
+        val r = testCriticalMulti(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong()) // <2> before a,s merging (p-request for a)
         assertEquals(0, r[2].toLong()) // <1> before a,s merging (t-request for s)
@@ -120,7 +120,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testCriticalMono() {
-        val r = testCriticalMono(model!!, ps)
+        val r = testCriticalMono(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(0, r[2].toLong()) // <2> before s,a merging (t-request for s)
@@ -130,7 +130,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testBassDeep() {
-        val r = testBassDeep(model!!, ps)
+        val r = testBassDeep(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -139,7 +139,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testBassShallow() {
-        val r = testBassShallow(model!!, ps)
+        val r = testBassShallow(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -148,7 +148,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testRowDeep() {
-        val r = testRowDeep(model!!, ps)
+        val r = testRowDeep(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -157,7 +157,7 @@ class TestsYamlModelKeys {
 
     @Test
     fun testRowShallow() {
-        val r = testRowShallow(model!!, ps)
+        val r = testRowShallow(model, ps)
         assertEquals(1, r[0].toLong())
         assertEquals(1, r[1].toLong())
         assertEquals(2, r[2].toLong())
@@ -169,8 +169,7 @@ class TestsYamlModelKeys {
         @JvmStatic
         @BeforeClass
         fun init() {
-            LibTestsYamlCommon.init()
-            checkNotNull(model)
+            model
         }
     }
 }

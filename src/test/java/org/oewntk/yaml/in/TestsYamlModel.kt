@@ -13,8 +13,8 @@ class TestsYamlModel {
 
     @Test
     fun testModelInfo() {
-        val info = model!!.info()
-        val counts = ModelInfo.counts(model!!)
+        val info = model.info()
+        val counts = ModelInfo.counts(model)
         ps.println("$info\n$counts")
     }
 
@@ -23,8 +23,7 @@ class TestsYamlModel {
         @JvmStatic
         @BeforeClass
         fun init() {
-            LibTestsYamlCommon.init()
-            checkNotNull(model)
+            model
         }
     }
 }
