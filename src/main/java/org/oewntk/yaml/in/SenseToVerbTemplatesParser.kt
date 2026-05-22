@@ -8,11 +8,11 @@ import org.oewntk.model.VerbTemplateId
 import java.io.File
 
 /**
- * Sense-to-verb-templates processor
+ * Sense-to-verb-templates parser
  *
- * @param dir dir containing YAML files
+ * @param dir dir containing YAML/JSON files
  */
-class SenseToVerbTemplatesProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir) {
+class SenseToVerbTemplatesParser(dir: File, val fileext:String="yaml") : YamProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) }!!

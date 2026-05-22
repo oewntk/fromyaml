@@ -19,10 +19,10 @@ import java.util.function.Supplier
 class FactoryPlus(private val inDir: File, private val inDir2: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<Model?> {
 
     override fun get(): Model? {
-        return readModelAndFix(inDir, inDir2)
+        return readModelAndGenerate(inDir, inDir2)
     }
 
-    private fun readModelAndFix(inDir: File, inDir2: File): Model? {
+    private fun readModelAndGenerate(inDir: File, inDir2: File): Model? {
         val stubModel: Model? = Factory(inDir, inDir2, fileext = fileext, verbose = verbose).get()
         return stubModel?.let { model ->
             Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.sources.contentToString(), model.info(), ModelInfo.counts(stubModel))

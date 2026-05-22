@@ -9,11 +9,11 @@ import org.oewntk.model.VerbFrameId
 import java.io.File
 
 /**
- * Verb frames processor
+ * Verb frames parser
  *
- * @param dir dir containing YAML files
+ * @param dir dir containing YAML/JSON files
  */
-class VerbFrameProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<VerbFrame, String, String>(dir) {
+class VerbFrameParser(dir: File, val fileext:String="yaml") : YamProcessor1<VerbFrame, String, String>(dir) {
 
     init {
         this.dir = dir

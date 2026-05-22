@@ -9,11 +9,11 @@ import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import java.io.File
 
 /**
- * Sense-to-tag-count processor
+ * Sense-to-tag-count parser
  *
- * @param dir dir containing YAML files
+ * @param dir dir containing YAML/JSON files
  */
-class SenseToTagCountsProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir) {
+class SenseToTagCountsParser(dir: File, val fileext:String="yaml") : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) }!!

@@ -8,11 +8,11 @@ import org.oewntk.model.VerbTemplateId
 import java.io.File
 
 /**
- * Verb Templates processor
+ * Verb Templates parser
  *
- * @property dir dir containing YAML files
+ * @property dir dir containing YAML/JSON files
  */
-class VerbTemplateProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<VerbTemplate, Int, String>(dir) {
+class VerbTemplateParser(dir: File, val fileext:String="yaml") : YamProcessor1<VerbTemplate, Int, String>(dir) {
 
     init {
         this.dir = dir
