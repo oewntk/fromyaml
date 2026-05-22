@@ -28,12 +28,12 @@ class Factory(
 
         try {
             // verb frames and templates
-            val verbFrames = VerbFrameParser(inDir, fileext = fileext).parse()
-            val verbTemplates = VerbTemplateParser(inDir2, fileext = fileext2).parse()
-            val sensesToVerbTemplates = SenseToVerbTemplatesParser(inDir2, fileext = fileext2).parse()
+            val verbFrames = VerbFrameParser(inDir, fileext = fileext, verbose = verbose).parse()
+            val verbTemplates = VerbTemplateParser(inDir2, fileext = fileext2, verbose = verbose).parse()
+            val sensesToVerbTemplates = SenseToVerbTemplatesParser(inDir2, fileext = fileext2, verbose = verbose).parse()
 
             // tag counts
-            val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsParser(inDir2, fileext = fileext2).parse()
+            val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsParser(inDir2, fileext = fileext2, verbose = verbose).parse()
 
             return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
                 .apply {
