@@ -13,10 +13,10 @@ import java.io.File
  *
  * @param dir dir containing YAML files
  */
-class SenseToTagCountsProcessor(dir: File) : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir) {
+class SenseToTagCountsProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir) {
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.yaml".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<SenseKey, Map<String, Int>>): Pair<SenseKey, TagCount> {
 

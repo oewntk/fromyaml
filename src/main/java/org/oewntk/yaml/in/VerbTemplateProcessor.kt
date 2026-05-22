@@ -12,14 +12,14 @@ import java.io.File
  *
  * @property dir dir containing YAML files
  */
-class VerbTemplateProcessor(dir: File) : YamProcessor1<VerbTemplate, Int, String>(dir) {
+class VerbTemplateProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<VerbTemplate, Int, String>(dir) {
 
     init {
         this.dir = dir
     }
 
     override val files: Array<File>
-        get() = dir.listFiles { f -> f.name.matches("verbTemplates.yaml".toRegex()) }!!
+        get() = dir.listFiles { f -> f.name.matches("verbTemplates.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<VerbTemplateId, String>): VerbTemplate {
         val id = entry.first

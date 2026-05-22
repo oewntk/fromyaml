@@ -16,19 +16,19 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class Factory(private val inDir: File, private val inDir2: File, val verbose: Boolean = false) : Supplier<Model?> {
+class Factory(private val inDir: File, private val inDir2: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<Model?> {
 
     override fun get(): Model? {
-        val coreModel = CoreFactory(inDir, verbose = verbose).get() ?: return null
+        val coreModel = CoreFactory(inDir, fileext = fileext, verbose = verbose).get() ?: return null
 
         try {
             // verb frames and templates
-            val verbFrames = VerbFrameProcessor(inDir).parse()
-            val verbTemplates = VerbTemplateProcessor(inDir2).parse()
-            val sensesToVerbTemplates = SenseToVerbTemplatesProcessor(inDir2).parse()
+            val verbFrames = VerbFrameProcessor(inDir, fileext = fileext).parse()
+            val verbTemplates = VerbTemplateProcessor(inDir2, fileext = fileext).parse()
+            val sensesToVerbTemplates = SenseToVerbTemplatesProcessor(inDir2, fileext = fileext).parse()
 
             // tag counts
-            val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsProcessor(inDir2).parse()
+            val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsProcessor(inDir2, fileext = fileext).parse()
 
             return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
                 .apply {

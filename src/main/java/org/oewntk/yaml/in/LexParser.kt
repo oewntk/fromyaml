@@ -15,7 +15,7 @@ import java.io.File
  *
  * @property dir dir containing YAML files
  */
-class LexParser(dir: File, verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose=verbose) {
+class LexParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose=verbose) {
 
     /**
      * Accumulated senses as lexes are processed
@@ -23,7 +23,7 @@ class LexParser(dir: File, verbose: Boolean = false) : YamProcessor<Lex, String,
     val senses: MutableList<Sense> = ArrayList()
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.yaml".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
         try {

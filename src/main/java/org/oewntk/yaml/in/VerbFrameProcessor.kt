@@ -13,14 +13,14 @@ import java.io.File
  *
  * @param dir dir containing YAML files
  */
-class VerbFrameProcessor(dir: File) : YamProcessor1<VerbFrame, String, String>(dir) {
+class VerbFrameProcessor(dir: File, val fileext:String="yaml") : YamProcessor1<VerbFrame, String, String>(dir) {
 
     init {
         this.dir = dir
     }
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("frames.yaml".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("frames.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<SenseKey, VerbFrameId>): VerbFrame {
         val id = entry.first

@@ -16,14 +16,14 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose: Boolean = false) : Supplier<Model?> {
+class FactoryPlus(private val inDir: File, private val inDir2: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<Model?> {
 
     override fun get(): Model? {
         return readModelAndFix(inDir, inDir2)
     }
 
     private fun readModelAndFix(inDir: File, inDir2: File): Model? {
-        val stubModel: Model? = Factory(inDir, inDir2).get()
+        val stubModel: Model? = Factory(inDir, inDir2, fileext = fileext, verbose = verbose).get()
         return stubModel?.let { model ->
             Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.sources.contentToString(), model.info(), ModelInfo.counts(stubModel))
             // model.check()
@@ -72,14 +72,15 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val verbose
          *
          * @return list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          */
-         fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
+        fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
             return synsets
-                .map { synset -> synset to synset.members
-                    .filter {
-                        val found = lexFinder(it)
-                        found == null || found.none { lex -> lex.type == synset.type }
-                    }
-                    .toList()
+                .map { synset ->
+                    synset to synset.members
+                        .filter {
+                            val found = lexFinder(it)
+                            found == null || found.none { lex -> lex.type == synset.type }
+                        }
+                        .toList()
                 }
                 .filter { (_, lemmas) -> lemmas.isNotEmpty() }
                 .flatMap { (synset, lemmas) -> lemmas.map { lemma -> synset to (lemma to synset.type) } }
