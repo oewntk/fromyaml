@@ -2,7 +2,11 @@
 <module version="4">
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" dumb="true">
+      <excludeFolder url="file://$MODULE_DIR$/json" />
+      <excludeFolder url="file://$MODULE_DIR$/jsonplus" />
+      <excludeFolder url="file://$MODULE_DIR$/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/yaml2" />
+      <excludeFolder url="file://$MODULE_DIR$/yamlplus" />
     </content>
   </component>
 </module>
