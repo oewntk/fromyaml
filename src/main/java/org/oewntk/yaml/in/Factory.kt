@@ -3,9 +3,7 @@
  */
 package org.oewntk.yaml.`in`
 
-import org.oewntk.model.Model
-import org.oewntk.model.ModelInfo
-import org.oewntk.model.TagCount
+import org.oewntk.model.*
 import java.io.File
 import java.io.IOException
 import java.util.function.Supplier
@@ -23,9 +21,29 @@ class Factory(
     val verbose: Boolean = false
 ) : Supplier<Model?> {
 
+    data class Extra(
+        val verbFrames: Collection<VerbFrame>,
+        val verbTemplates: Collection<VerbTemplate>,
+        val sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
+        val sensesToTagCounts: Collection<Pair<String, TagCount>>,
+    )
+
     override fun get(): Model? {
         val coreModel = CoreFactory(inDir, fileext = fileext, verbose = verbose).get() ?: return null
+        return from(coreModel)
+    }
 
+    fun from(coreModel: CoreModel): Model? {
+        return makeExtra()?.let {
+            return Model(coreModel, it.verbFrames, it.verbTemplates, it.sensesToVerbTemplates, it.sensesToTagCounts)
+                .apply {
+                    source = inDir.absolutePath
+                    source2 = inDir2.absolutePath
+                }
+        }
+    }
+
+    fun makeExtra(): Extra? {
         try {
             // verb frames and templates
             val verbFrames = VerbFrameParser(inDir, fileext = fileext, verbose = verbose).parse()
@@ -35,11 +53,7 @@ class Factory(
             // tag counts
             val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsParser(inDir2, fileext = fileext2, verbose = verbose).parse()
 
-            return Model(coreModel, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
-                .apply {
-                    source = inDir.absolutePath
-                    source2 = inDir2.absolutePath
-                }
+            return Extra(verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
 
         } catch (e: IOException) {
             e.printStackTrace(Tracing.psErr)
@@ -79,8 +93,8 @@ class Factory(
                 iArg++
             }
             val inDir = File(args[iArg])
-            val inDir2 = File(args[iArg+1])
-            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, )
+            val inDir2 = File(args[iArg + 1])
+            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2)
         }
 
         /**
