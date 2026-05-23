@@ -14,7 +14,7 @@ import java.util.function.Supplier
  * Model factory
  *
  * @param inDir  dir containing release YAML files
-  */
+ */
 class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
@@ -26,7 +26,7 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
         return stubModel?.let { model ->
             if (verbose) Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
             model.check(verbose = verbose)
-
+            if (verbose) Tracing.psInfo.printf("[I] Fixing ...")
             return model
                 .fix(verbose = verbose)
                 .checkMembers(verbose = verbose)

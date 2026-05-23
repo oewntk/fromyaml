@@ -8,7 +8,7 @@ import org.oewntk.model.CoreModel
 import java.io.File
 import java.io.PrintStream
 
-object LibTestsPlusYamlCommon {
+object LibTestsYamlPlusCommon {
 
     private val source: String? = System.getProperty("SOURCE")
 
