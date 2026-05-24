@@ -15,7 +15,11 @@ import java.util.function.Supplier
  *
  * @param inDir  dir containing release YAML files
  */
-class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<CoreModel?> {
+class CoreFactoryPlus(
+    private val inDir: File,
+    private val fileext: String = "yaml",
+    private val verbose: Boolean = false
+) : Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         return make(inDir)

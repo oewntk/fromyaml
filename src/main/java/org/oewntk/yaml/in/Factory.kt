@@ -16,9 +16,9 @@ import java.util.function.Supplier
  */
 class Factory(
     private val inDir: File, private val inDir2: File,
-    val fileext: String = "yaml",
-    val fileext2: String = "yaml",
-    val verbose: Boolean = false
+    private val fileext: String = "yaml",
+    private val fileext2: String = "yaml",
+    private val verbose: Boolean = false
 ) : Supplier<Model?> {
 
     data class Extra(
@@ -70,7 +70,7 @@ class Factory(
          * @param inDir2 dir containing extra YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, inDir2: File, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = true): Model? {
+        private fun makeModel(inDir: File, inDir2: File, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = false): Model? {
             return Factory(inDir, inDir2, fileext = fileext, fileext2 = fileext2, verbose = verbose).get()
         }
 
@@ -83,6 +83,11 @@ class Factory(
         fun makeModel(args: Array<String>): Model? {
             var iArg = 0
             var fileext = "yaml"
+            var verbose = false
+            if ("--verbose" == args[iArg]) {
+                verbose = true
+                iArg++
+            }
             if ("--json" == args[iArg]) {
                 fileext = "json"
                 iArg++
@@ -94,7 +99,7 @@ class Factory(
             }
             val inDir = File(args[iArg])
             val inDir2 = File(args[iArg + 1])
-            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2)
+            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, verbose = verbose)
         }
 
         /**

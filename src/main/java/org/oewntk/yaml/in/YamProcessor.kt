@@ -74,7 +74,7 @@ abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File, va
      */
     @Throws(IOException::class)
     private fun load(file: File, yaml: Yaml, items: MutableCollection<T>) {
-        FileInputStream(file).use { inputStream ->
+         FileInputStream(file).use { inputStream ->
             val top: Map<K, V> = yaml.load(inputStream)
             for (entry in top.entries) {
                 val processedItems = processEntry(file.name, entry.key to entry.value)

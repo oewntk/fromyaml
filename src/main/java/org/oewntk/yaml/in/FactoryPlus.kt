@@ -14,11 +14,16 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  * @param inDir2 dir containing extra YAML files
  */
-class FactoryPlus(private val inDir: File, private val inDir2: File, val fileext: String = "yaml", val verbose: Boolean = false) : Supplier<Model?> {
+class FactoryPlus(
+    private val inDir: File,
+    private val inDir2: File,
+    private val fileext: String = "yaml",
+    private val verbose: Boolean = false
+) : Supplier<Model?> {
 
     override fun get(): Model? {
         val coreModel = CoreFactoryPlus(inDir).get()
-        return coreModel?.let { Factory(inDir, inDir2).from(it) }
+        return coreModel?.let { Factory(inDir, inDir2, verbose = verbose).from(it) }
     }
 
     companion object {
@@ -30,8 +35,8 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val fileext
          * @param inDir2 dir containing extra YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, inDir2: File): Model? {
-            return FactoryPlus(inDir, inDir2).get()
+        private fun makeModel(inDir: File, inDir2: File, verbose: Boolean = false): Model? {
+            return FactoryPlus(inDir, inDir2, verbose = verbose).get()
         }
 
         /**
@@ -41,9 +46,15 @@ class FactoryPlus(private val inDir: File, private val inDir2: File, val fileext
          * @return core model
          */
         fun makeModel(args: Array<String>): Model? {
-            val inDir = File(args[0])
-            val inDir2 = File(args[1])
-            return makeModel(inDir, inDir2)
+            var iArg = 0
+            var verbose = false
+            if (args[iArg] == "-verbose") {
+                verbose = true
+                iArg++
+            }
+            val inDir = File(args[iArg])
+            val inDir2 = File(args[iArg + 1])
+            return makeModel(inDir, inDir2, verbose = verbose)
         }
 
         /**
