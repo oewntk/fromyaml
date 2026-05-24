@@ -3,6 +3,7 @@
  */
 package org.oewntk.yaml.`in`
 
+import org.oewntk.model.PartOfSpeech
 import org.oewntk.model.Synset
 import org.oewntk.model.SynsetType
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
@@ -20,7 +21,7 @@ import java.util.*
 class SynsetParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("(noun|verb|adj|adv).*\\.$fileext".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}).*\\.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Synset {
         val domain = source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
