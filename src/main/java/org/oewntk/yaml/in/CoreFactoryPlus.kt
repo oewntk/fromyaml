@@ -116,7 +116,7 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.toString(), generated = true) //, source = findFile(lemma, generated = generated))
+                val lex = Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                     val ssType = synset.type.toPosNum()
                     val escapedLemma = lemma.escapeForSenseKey()
