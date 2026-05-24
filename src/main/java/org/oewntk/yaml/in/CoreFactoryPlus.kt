@@ -58,12 +58,16 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
 
         // C O L L E C T
 
+        private val keyComparator: Comparator<Pair<Lemma, SynsetType>> =
+            compareBy<Pair<Lemma, SynsetType>> { it.first }   // Lemma
+                .thenBy { it.second }                   // Category
+
         /**
          * Collect
          *
-         * @return list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
+         * @return list of (lemma,synsetType) pairs to synsets in which they appear as members but don't have an entry
          */
-        private fun CoreModel.orphanMembers(): Map<Pair<Lemma, Char>, List<Synset>> {
+        private fun CoreModel.orphanMembers(): Map<Pair<Lemma, SynsetType>, List<Synset>> {
             return synsets
                 .map { synset ->
                     synset to synset.members
@@ -76,6 +80,7 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
                 .filter { (_, lemmas) -> lemmas.isNotEmpty() }
                 .flatMap { (synset, lemmas) -> lemmas.map { lemma -> synset to (lemma to synset.type) } }
                 .groupBy({ it.second }, { it.first })
+                .toSortedMap(keyComparator)
         }
 
         // F I X
@@ -88,9 +93,13 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
         private fun CoreModel.generateMemberEntries(verbose: Boolean = false): Pair<Collection<Lex>, Collection<Sense>> {
             val orphans = orphanMembers()
             if (verbose) {
-                orphans.forEach { (lemma, synsets) ->
-                    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
-                }
+                //orphans.forEach { (lemma, synsets) ->
+                //    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
+                //}
+                val csv = orphans
+                    .map { (key, synsets) -> "${key.first};${key.second};${synsets.joinToString(separator = ",") { it.synsetId }}" }
+                    .joinToString(separator = "\n")
+                Tracing.psInfo.println("[W] orphans ${orphans.size}\n$csv")
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
             return generateMemberEntries(orphans)
@@ -102,7 +111,7 @@ class CoreFactoryPlus(private val inDir: File, val fileext: String = "yaml", val
          * @param orphans list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return new list of lexes and new list of senses
          */
-        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, Category>, List<Synset>>): Pair<Collection<Lex>, Collection<Sense>> {
+        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): Pair<Collection<Lex>, Collection<Sense>> {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
