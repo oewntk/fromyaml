@@ -41,12 +41,17 @@ class CoreFactory(private val inDir: File, val fileext: String = "yaml", val ver
         private fun makeCoreModel(args: Array<String>): CoreModel? {
             var iArg = 0
             var fileext = "yaml"
+            var verbose = true
+            if ("--verbose" == args[iArg]) {
+                verbose = false
+                iArg++
+            }
             if ("--json" == args[iArg]) {
                 fileext = "json"
                 iArg++
             }
             val inDir = File(args[iArg])
-            return CoreFactory(inDir, fileext = fileext).get()
+            return CoreFactory(inDir, fileext = fileext, verbose = verbose).get()
         }
 
         /**

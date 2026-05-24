@@ -12,7 +12,9 @@ object LibTestsYamlCommon {
 
     private val source: String? = System.getProperty("SOURCE")
 
-    val ps: PrintStream = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
+    val silent =  !System.getProperties().containsKey("SILENT")
+
+    val ps: PrintStream = if (silent) Tracing.psInfo else Tracing.psNull
 
     val model: CoreModel by lazy {
         if (source == null) {
@@ -25,6 +27,6 @@ object LibTestsYamlCommon {
             Tracing.psErr.println("Define YAML source dir that exists")
             Assert.fail()
         }
-        CoreFactory(inDir).get()!!
+        CoreFactory(inDir, verbose = !silent).get()!!
     }
 }
