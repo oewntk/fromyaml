@@ -4,6 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.Synset
+import org.oewntk.model.SynsetType
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -105,7 +106,7 @@ class SynsetParser(dir: File, val fileext:String="yaml", verbose: Boolean = fals
 
         return Synset(
             id,
-            type,
+            SynsetType.fromChar(type),
             domain,
             synsetMembers.toTypedArray(),
             definitions.toTypedArray(),

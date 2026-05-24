@@ -15,7 +15,7 @@ import java.io.File
  *
  * @property dir dir containing YAML files
  */
-class LexParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose=verbose) {
+class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
 
     /**
      * Accumulated senses as lexes are processed
@@ -31,7 +31,8 @@ class LexParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) 
 
             val lemma = entry.first
             val lemmaMap = entry.second
-            for ((type, value1) in lemmaMap) {
+            for ((k2, value1) in lemmaMap) {
+                val type = SynsetType.fromChar(k2[0])
                 val lexMap: Map<String, *> = safeCast(value1!!)
                 assertKeysIn(lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM, "source")
                 if (DUMP) {
@@ -39,7 +40,7 @@ class LexParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) 
                 }
 
                 // lex
-                val lex = Lex(lemma, type)
+                val lex = Lex(lemma, k2)
 
                 // senses
                 val senseMaps: List<Map<String, *>> = safeCast(lexMap[KEY_LEX_SENSE]!!)
@@ -95,7 +96,7 @@ class LexParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) 
                     val lexSense = Sense(
                         senseId,
                         lex,
-                        type[0],
+                        type,
                         it,
                         synsetId,
                         examples?.toTypedArray(),

@@ -26,10 +26,10 @@ class TestsYamlPlusModel {
     fun testLexes() {
         testCases
             .forEach { testCase ->
-                val (lemma: Lemma, pos: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (lemma: Lemma, pos: SynsetType, _: List<SynsetId>) = testCase
                 val lexes = model.lexResolver(lemma)
-                val byPos: Map<SynsetType, Set<SynsetId>> = lexes.associateBy(
-                    { it.partOfSpeech },
+                val byType: Map<SynsetType, Set<SynsetId>> = lexes.associateBy(
+                    { it.type },
                     { lex: Lex ->
                         lex.senseKeys
                             .map { sk: SenseKey -> model.senseResolver(sk) }
@@ -39,7 +39,7 @@ class TestsYamlPlusModel {
 
                 ps.println("$lemma -> ${lexes.joinToString(prefix = "{\n", postfix = "\n}", separator = ",\n") { it.toXString(model) }}")
 
-                assert(byPos.containsKey(pos)) { ps.print("k2=$pos") }
+                assert(byType.containsKey(pos)) { ps.print("k2=$pos") }
             }
     }
 
@@ -47,10 +47,10 @@ class TestsYamlPlusModel {
     fun testLexesSenses() {
         testCases
             .forEach { testCase ->
-                val (lemma: Lemma, pos: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 val lexes = model.lexResolver(lemma)
                 val byPos: Map<SynsetType, Set<SynsetId>> = lexes.associateBy(
-                    { it.partOfSpeech },
+                    { it.type },
                     { lex: Lex ->
                         lex.senseKeys
                             .map { sk: SenseKey -> model.senseResolver(sk) }
@@ -79,7 +79,7 @@ class TestsYamlPlusModel {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], fields[1][0], fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
                     }
                     .toList()
             }
