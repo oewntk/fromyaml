@@ -10,14 +10,14 @@ import java.io.PrintStream
 
 object LibTestsYamlCommon {
 
-    private val source: String? = System.getProperty("SOURCEPLUS")
+    private val source: String? = System.getProperty("SOURCE")
 
     val ps: PrintStream = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
 
     val model: CoreModel by lazy {
         if (source == null) {
-            Tracing.psErr.println("Define yamplus PLUS source dir with -DSOURCEPLUS=path")
-            throw AssertionError("SOURCEPLUS not defined")
+            Tracing.psErr.println("Define yamplus PLUS source dir with -DSOURCE=path")
+            throw AssertionError("SOURCE not defined")
         }
         val inDir = File(source)
         Tracing.psInfo.printf("source=%s%n", inDir.absolutePath)
