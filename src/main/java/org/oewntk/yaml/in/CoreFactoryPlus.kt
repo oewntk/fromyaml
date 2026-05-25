@@ -101,7 +101,7 @@ class CoreFactoryPlus(
                 //    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
                 //}
                 val csv = orphans
-                    .map { (key, synsets) -> "${key.first};${key.second};${synsets.joinToString(separator = ",") { it.synsetId }}" }
+                    .map { (key, synsets) -> "${key.first};${key.second.value};${synsets.joinToString(separator = ",") { it.synsetId }}" }
                     .joinToString(separator = "\n")
                 Tracing.psInfo.println("[W] orphans ${orphans.size}\n$csv")
             }
