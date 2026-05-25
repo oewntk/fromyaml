@@ -99,7 +99,7 @@ internal object YamlUtils {
      */
     fun processExample(example: Any?, keyText: String, keySource: String): Pair<String, String?> {
         return when (example) {
-            is String    -> {
+            is String -> {
                 processExampleText(example) to null
             }
 
@@ -111,7 +111,7 @@ internal object YamlUtils {
                 processExampleText(text) to source
             }
 
-            else         -> throw YAMLException(example.toString())
+            else -> throw YAMLException(example.toString())
         }
     }
 
@@ -141,6 +141,18 @@ internal object YamlUtils {
             //  Tracing.psInfo.println("[W] With-quotes example format <$example>")
         }
         return trimmed
+    }
+
+    fun processExampleTextOrThrow(example: String) {
+        val trimmed = if (EXAMPLES_TRIM) example.trim() else example
+        if (trimmed.matches("\".*\"".toRegex())) {
+            throw IllegalArgumentException("Illegal quoted example format <$example>")
+        }
+        if (trimmed.contains('"')) {
+            val quoteCount = countQuotes(trimmed)
+            if (quoteCount % 2 != 0)
+                throw IllegalArgumentException("Uneven quotes $quoteCount in <$example>")
+        }
     }
 
     /**
