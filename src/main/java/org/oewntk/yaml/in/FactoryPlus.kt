@@ -22,7 +22,7 @@ class FactoryPlus(
 ) : Supplier<Model?> {
 
     override fun get(): Model? {
-        val coreModel = CoreFactoryPlus(inDir).get()
+        val coreModel = CoreFactoryPlus(inDir, verbose = verbose).get()
         return coreModel?.let { Factory(inDir, inDir2, verbose = verbose).from(it) }
     }
 
