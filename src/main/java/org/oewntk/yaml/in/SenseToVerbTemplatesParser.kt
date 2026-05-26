@@ -15,7 +15,7 @@ import java.io.File
 class SenseToVerbTemplatesParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir, verbose = verbose) {
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) } ?: arrayOf()
 
     override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<String, Array<VerbTemplateId>>? {
         val sensekey = entry.first

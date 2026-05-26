@@ -16,7 +16,7 @@ import java.io.File
 class SenseToTagCountsParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir, verbose = verbose) {
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) }!!
+        get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) } ?: arrayOf()
 
     override fun processEntry(source: String?, entry: Pair<SenseKey, Map<String, Int>>): Pair<SenseKey, TagCount> {
 
