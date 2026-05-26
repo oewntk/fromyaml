@@ -8,6 +8,7 @@ import org.oewntk.model.SenseKeys.escapeForSenseKey
 import org.oewntk.model.SenseKeys.toLexFileNum
 import org.oewntk.model.SenseKeys.toPosNum
 import java.io.File
+import java.util.*
 import java.util.function.Supplier
 
 /**
@@ -100,13 +101,31 @@ class CoreFactoryPlus(
                 //orphans.forEach { (lemma, synsets) ->
                 //    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
                 //}
-                val csv = orphans
-                    .map { (key, synsets) -> "${key.first};${key.second.value};${synsets.joinToString(separator = ",") { it.synsetId }}" }
-                    .joinToString(separator = "\n")
+                val csv = orphanToCsv(orphans)
+                File("orphans.log").writeText(csv)
                 Tracing.psInfo.println("[W] orphans ${orphans.size}\n$csv")
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
             return generateMemberEntries(orphans)
+        }
+
+        private fun generateSenseKey(lemma: Lemma, synset: Synset, idx: Int): SenseKey {
+            lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+            val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+            val ssType = synset.type.toPosNum()
+            val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
+            val lexfileIdx = "%02d".format(idx + 1)
+            return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
+        }
+
+        private fun orphanToCsv(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): String {
+            return orphans
+                .map { (key, synsets) ->
+                    val synsetIds = synsets.joinToString(separator = ",") { it.synsetId }
+                    val senseKeys = synsets.withIndex().joinToString(separator = ",") { (idx, synset) -> generateSenseKey(key.first, synset, idx) }
+                    "${key.first};${key.second.value};$synsetIds;$senseKeys"
+                }
+                .joinToString(separator = "\n")
         }
 
         /**
@@ -122,14 +141,10 @@ class CoreFactoryPlus(
                 val (lemma, type) = typedLemma
                 val lex = Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                 lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
-                    val ssType = synset.type.toPosNum()
-                    val escapedLemma = lemma.escapeForSenseKey()
-                    val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
-                    val lexfileIdx = "%02d".format(idx + 1)
-                    val senseid = "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
-                    val sense = Sense(senseid, lex, synset.type, 0, synset.synsetId)
+                    val senseId = generateSenseKey(lemma, synset, idx)
+                    val sense = Sense(senseId, lex, synset.type, 0, synset.synsetId)
                     newSenses.add(sense)
-                    senseid
+                    senseId
                 }.toList()
                 newLexes.add(lex)
             }
