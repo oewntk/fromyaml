@@ -102,8 +102,9 @@ class CoreFactoryPlus(
                 //    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
                 //}
                 val csv = orphanToCsv(orphans)
-                File("orphans.log").writeText(csv)
-                Tracing.psInfo.println("[W] orphans ${orphans.size}\n$csv")
+                val csvFile = File("orphans.log")
+                csvFile.writeText(csv)
+                Tracing.psInfo.println("[W] orphans ${orphans.size} logged in $csvFile")
             }
             Tracing.psErr.println("[I] ${orphans.size} orphan entries")
             return generateMemberEntries(orphans)
@@ -165,6 +166,7 @@ class CoreFactoryPlus(
         fun CoreModel.fix(verbose: Boolean = false): CoreModel {
             val (newLexes, newSenses) = generateMemberEntries(verbose = verbose)
             val newSynsets = generateSynsets(verbose = verbose)
+            if (verbose) Tracing.psErr.println("[I] plus completed")
             return CoreModel(newLexes, newSenses, newSynsets)
         }
 
