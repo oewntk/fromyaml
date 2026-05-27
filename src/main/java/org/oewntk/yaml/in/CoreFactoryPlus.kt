@@ -127,16 +127,15 @@ class CoreFactoryPlus(
          */
         private fun CoreModel.generateMemberEntries(verbose: Boolean = false): Pair<Collection<Lex>, Collection<Sense>> {
             val orphans = orphanMembers()
+            val csv = orphanToCsv(orphans)
+            val csvFile = File("plus.log")
+            csvFile.writeText(csv)
+
             if (verbose) {
-                //orphans.forEach { (lemma, synsets) ->
-                //    Tracing.psErr.println("[E] lemma $lemma member of  {${synsets.joinToString()}}")
-                //}
-                val csv = orphanToCsv(orphans)
-                val csvFile = File("orphans.log")
-                csvFile.writeText(csv)
-                Tracing.psInfo.println("[W] orphans ${orphans.size} logged in $csvFile")
+                Tracing.psInfo.println("[W] ${orphans.size} fixes logged in $csvFile")
             }
-            Tracing.psErr.println("[I] ${orphans.size} orphan entries")
+
+            Tracing.ps(orphans.isEmpty()).println("[I] ${orphans.size} orphan entries")
             return generateMemberEntries(orphans)
         }
 
@@ -195,9 +194,8 @@ class CoreFactoryPlus(
          */
         fun CoreModel.fix(verbose: Boolean = false): CoreModel {
             val (newLexes, newSenses) = generateMemberEntries(verbose = verbose)
-            // TODO val (newLexes, newSenses) = lexes to senses
             val newSynsets = generateSynsets(verbose = verbose)
-            if (verbose) Tracing.psErr.println("[I] plus completed")
+            if (verbose) Tracing.psInfo.println("[I] plus completed")
             return CoreModel(newLexes, newSenses, newSynsets)
         }
 
