@@ -6,7 +6,6 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.*
 import org.oewntk.model.SenseKeys.generateSenseKey
 import java.io.File
-import java.util.*
 import java.util.function.Supplier
 
 /**
@@ -15,22 +14,19 @@ import java.util.function.Supplier
  * @param inDir  dir containing release YAML files
  */
 class CoreFactoryPlus(
-    private val inDir: File,
-    private val fileext: String = "yaml",
-    private val verbose: Boolean = false
-) : Supplier<CoreModel?> {
+    inDir: File,
+    fileext: String = "yaml",
+    val verbose: Boolean = false
+) : CoreProtoFactoryPlus(inDir, fileext = fileext, verbose = verbose), Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
-        return make(inDir)
+        return make()
     }
 
-    private fun make(inDir: File): CoreModel? {
-        val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, throws = false, verbose = false).get()
-        return stubModel?.let { model ->
-            if (verbose) Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
-            model.check(throws = false, verbose = verbose)
+    private fun make(): CoreModel? {
+        return super.get()?.let { stubModel ->
             if (verbose) Tracing.psInfo.printf("[I] Fixing ...")
-            return model
+            return stubModel
                 .fix(verbose = false)
                 .checkMembers(verbose = verbose)
         }
