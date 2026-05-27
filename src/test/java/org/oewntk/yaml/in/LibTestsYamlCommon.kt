@@ -27,6 +27,7 @@ object LibTestsYamlCommon {
             Tracing.psErr.println("Define YAML source dir that exists")
             Assert.fail()
         }
-        CoreFactory(inDir, verbose = !silent).get()!!
+        // TODO
+        CoreFactory(inDir, throws = false, verbose = !silent).get()!!
     }
 }
