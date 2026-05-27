@@ -19,6 +19,7 @@ class CoreFactory(
     private val inDir: File,
     private val fileext: String = "yaml",
     private val throws: Boolean = true,
+    private val inverses: Boolean = false,
     private val verbose: Boolean = false
 ) : Supplier<CoreModel?> {
 
@@ -27,7 +28,7 @@ class CoreFactory(
             return Parser(inDir, fileext = fileext, verbose = verbose)
                 .parse()
                 .check(throws = throws, verbose = verbose)
-                .generateInverseRelations()
+                .apply{ if (inverses) generateInverseRelations() }
                 .apply { source = inDir.absolutePath }
         } catch (e: IOException) {
             e.printStackTrace(Tracing.psErr)
