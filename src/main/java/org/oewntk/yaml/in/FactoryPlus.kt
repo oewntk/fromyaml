@@ -22,7 +22,7 @@ class FactoryPlus(
 ) : Supplier<Model?> {
 
     override fun get(): Model? {
-        val coreModel = CoreFactoryPlus(inDir, verbose = verbose).get()
+        val coreModel = CoreFactoryPlus(inDir, fileext = fileext, verbose = verbose).get()
         return coreModel?.let { Factory(inDir, inDir2, verbose = verbose).from(it) }
     }
 
@@ -65,7 +65,7 @@ class FactoryPlus(
         @JvmStatic
         fun main(args: Array<String>) {
             val model = makeModel(args)
-            if (model?.check(verbose = true) == null) {
+            if (model?.check(throws = false, verbose = true) == null) {
                 Tracing.psErr.println("null model")
             }
         }

@@ -27,13 +27,13 @@ class CoreFactoryPlus(
     }
 
     private fun make(inDir: File): CoreModel? {
-        val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, verbose = verbose).get()
+        val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, throws = false, verbose = false).get()
         return stubModel?.let { model ->
             if (verbose) Tracing.psInfo.printf("[Model] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
-            model.check(verbose = verbose)
+            model.check(throws = false, verbose = verbose)
             if (verbose) Tracing.psInfo.printf("[I] Fixing ...")
             return model
-                .fix(verbose = verbose)
+                .fix(verbose = false)
                 .checkMembers(verbose = verbose)
         }
     }
@@ -67,6 +67,34 @@ class CoreFactoryPlus(
             compareBy<Pair<Lemma, SynsetType>> { it.first }   // Lemma
                 .thenBy { it.second }                   // Category
 
+        private fun Collection<Lex>.collectTargetSynsets(senseResolver: (SenseKey) -> Sense) = this
+            .flatMap { it.senseKeys }
+            .map { senseResolver(it).synsetId }
+            .toSet()
+
+        fun CoreModel.orphans(synset: Synset) = synset.members
+            .filter {
+                val found = lexFinder(it)
+                found == null
+                        || found.none { lex -> lex.type == synset.type }
+                        || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
+            }
+            .toList()
+
+        // private fun Collection<Lex>.collectTargetSynsets(senseResolver: (SenseKey) -> Sense) = this
+        //     .flatMap { it.senseKeys }
+        //     .map { senseResolver(it).synsetId }
+        //     .toSet()
+
+        // fun Synset.orphans(senseResolver: (SenseKey) -> Sense, lexFinder: (Lemma) -> Collection<Lex>?) = this.members
+        //     .filter {
+        //         val found = lexFinder(it)
+        //         found == null
+        //                 || found.none { lex -> lex.type == this.type }
+        //                 || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(this.synsetId) }
+        //     }
+        //     .toList()
+
         /**
          * Collect
          *
@@ -78,7 +106,9 @@ class CoreFactoryPlus(
                     synset to synset.members
                         .filter {
                             val found = lexFinder(it)
-                            found == null || found.none { lex -> lex.type == synset.type }
+                            found == null
+                                    || found.none { lex -> lex.type == synset.type }
+                                    || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
                         }
                         .toList()
                 }
@@ -165,6 +195,7 @@ class CoreFactoryPlus(
          */
         fun CoreModel.fix(verbose: Boolean = false): CoreModel {
             val (newLexes, newSenses) = generateMemberEntries(verbose = verbose)
+            // TODO val (newLexes, newSenses) = lexes to senses
             val newSynsets = generateSynsets(verbose = verbose)
             if (verbose) Tracing.psErr.println("[I] plus completed")
             return CoreModel(newLexes, newSenses, newSynsets)
