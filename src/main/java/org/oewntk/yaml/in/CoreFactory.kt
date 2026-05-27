@@ -18,6 +18,7 @@ import java.util.function.Supplier
 class CoreFactory(
     private val inDir: File,
     private val fileext: String = "yaml",
+    private val throws: Boolean = true,
     private val verbose: Boolean = false
 ) : Supplier<CoreModel?> {
 
@@ -25,7 +26,7 @@ class CoreFactory(
         try {
             return Parser(inDir, fileext = fileext, verbose = verbose)
                 .parse()
-                .check()
+                .check(throws = throws, verbose = verbose)
                 .generateInverseRelations()
                 .apply { source = inDir.absolutePath }
         } catch (e: IOException) {
