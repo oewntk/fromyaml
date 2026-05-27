@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.ModelInfo
+import org.oewntk.model.check
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
@@ -16,6 +17,11 @@ class TestsYamlModel {
         val info = model.info()
         val counts = ModelInfo.counts(model)
         ps.println("$info\n$counts")
+    }
+
+    @Test
+    fun testModel() {
+        model.check(throws = false)
     }
 
     companion object {

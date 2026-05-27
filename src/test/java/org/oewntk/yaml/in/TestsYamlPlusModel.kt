@@ -66,6 +66,11 @@ class TestsYamlPlusModel {
             }
     }
 
+    @Test
+    fun testModel() {
+        model.check(throws = true)
+    }
+
     companion object {
 
         lateinit var testCases: List<Triple<Lemma, SynsetType, List<SynsetId>>>
