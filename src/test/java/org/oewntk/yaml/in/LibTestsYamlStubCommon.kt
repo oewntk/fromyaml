@@ -8,9 +8,9 @@ import org.oewntk.model.CoreModel
 import java.io.File
 import java.io.PrintStream
 
-object LibTestsYamlCommon {
+object LibTestsYamlStubCommon {
 
-    private val source: String? = System.getProperty("SOURCE")
+    private val source: String? = System.getProperty("SOURCEPLUS")
 
     val silent =  !System.getProperties().containsKey("SILENT")
 
@@ -18,8 +18,8 @@ object LibTestsYamlCommon {
 
     val model: CoreModel by lazy {
         if (source == null) {
-            Tracing.psErr.println("Define yaml source dir with -DSOURCE=path")
-            throw AssertionError("SOURCE not defined")
+            Tracing.psErr.println("Define yamlplus PLUS source dir with -DSOURCEPLUS=path")
+            throw AssertionError("SOURCEPLUS not defined")
         }
         val inDir = File(source)
         Tracing.psInfo.printf("source=%s%n", inDir.absolutePath)
@@ -27,6 +27,6 @@ object LibTestsYamlCommon {
             Tracing.psErr.println("Define YAML source dir that exists")
             Assert.fail()
         }
-        CoreFactory(inDir, verbose = !silent).get()!!
+        CoreProtoFactoryPlus(inDir, verbose = !silent).get()!!
     }
 }

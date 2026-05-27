@@ -73,7 +73,7 @@ class TestsYamlPlusModel {
         @JvmStatic
         @BeforeClass
         fun init() {
-            testCases = requireNotNull(this::class.java.getResourceAsStream("/generated.txt")).bufferedReader().useLines { lines ->
+            testCases = requireNotNull(this::class.java.getResourceAsStream("/plus.log")).bufferedReader().useLines { lines ->
                 lines
                     .map { line -> line.trim() }
                     .filter { line -> line.isEmpty() }

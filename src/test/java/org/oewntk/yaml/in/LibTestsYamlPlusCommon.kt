@@ -12,13 +12,13 @@ object LibTestsYamlPlusCommon {
 
     private val source: String? = System.getProperty("SOURCEPLUS")
 
-    val verbose = true // TODO !System.getProperties().containsKey("SILENT")
+    val silent =  !System.getProperties().containsKey("SILENT")
 
-    val ps: PrintStream = if (verbose) Tracing.psInfo else Tracing.psNull
+    val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
 
     val model: CoreModel by lazy {
         if (source == null) {
-            Tracing.psErr.println("Define serialized source file dir with -DSOURCEPLUS=path")
+            Tracing.psErr.println("Define yamlplus PLUS source dir with -DSOURCEPLUS=path")
             throw AssertionError("SOURCEPLUS not defined")
         }
         val inDir = File(source)
@@ -27,6 +27,6 @@ object LibTestsYamlPlusCommon {
             Tracing.psErr.println("Define YAML source dir that exists")
             Assert.fail()
         }
-        CoreFactoryPlus(inDir, verbose = verbose).get()!!
+        CoreFactoryPlus(inDir, verbose = !silent).get()!!
     }
 }
