@@ -4,9 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
-import org.oewntk.model.SenseKeys.escapeForSenseKey
-import org.oewntk.model.SenseKeys.toLexFileNum
-import org.oewntk.model.SenseKeys.toPosNum
+import org.oewntk.model.SenseKeys.generateSenseKey
 import java.io.File
 import java.util.*
 import java.util.function.Supplier
@@ -137,15 +135,6 @@ class CoreFactoryPlus(
 
             Tracing.ps(orphans.isEmpty()).println("[I] ${orphans.size} orphan entries")
             return generateMemberEntries(orphans)
-        }
-
-        private fun generateSenseKey(lemma: Lemma, synset: Synset, idx: Int): SenseKey {
-            lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
-            val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
-            val ssType = synset.type.toPosNum()
-            val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
-            val lexfileIdx = "%02d".format(idx + 1)
-            return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
         }
 
         private fun orphanToCsv(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): String {
