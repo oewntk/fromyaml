@@ -18,7 +18,12 @@ import java.util.*
  *
  * @param dir dir containing YAML files
  */
-class SynsetParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
+class SynsetParser(
+    dir: File,
+    val fileext: String = "yaml",
+    verbose: Boolean = false,
+    val throws: Boolean = true,
+) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}).*\\.$fileext".toRegex()) }!!
@@ -32,6 +37,7 @@ class SynsetParser(dir: File, val fileext:String="yaml", verbose: Boolean = fals
             dumpMap(synsetMap)
         }
         assertKeysIn(
+            throws = throws,
             synsetMap.keys,
             VALID_SYNSET_RELATIONS,
             KEY_SYNSET_POS,
@@ -42,16 +48,6 @@ class SynsetParser(dir: File, val fileext:String="yaml", verbose: Boolean = fals
             KEY_SYNSET_WIKIDATA,
             KEY_SYNSET_ILI,
             KEY_SYNSET_SOURCE,
-            "hyponym",
-            "instance_hyponym",
-            "is_entailed_by",
-            "is_caused_by",
-            "holo_part",
-            "holo_member",
-            "holo_substance",
-            "has_domain_region",
-            "has_domain_topic",
-            "is_exemplified_by",
         )
 
         val code = synsetMap[KEY_SYNSET_POS] as String?

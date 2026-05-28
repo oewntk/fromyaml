@@ -15,7 +15,12 @@ import java.io.File
  *
  * @property dir dir containing YAML files
  */
-class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = false) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
+class LexParser(
+    dir: File,
+    val fileext: String = "yaml",
+    verbose: Boolean = false,
+    val throws: Boolean = true,
+) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
 
     /**
      * Accumulated senses as lexes are processed
@@ -34,7 +39,13 @@ class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = fals
             for ((k2, value1) in lemmaMap) {
                 val type = SynsetType.fromChar(k2[0])
                 val lexMap: Map<String, *> = safeCast(value1!!)
-                assertKeysIn(lexMap.keys, KEY_LEX_SENSE, KEY_LEX_PRONUNCIATION, KEY_LEX_FORM, "source")
+                assertKeysIn(
+                    throws = throws,
+                    lexMap.keys,
+                    KEY_LEX_SENSE,
+                    KEY_LEX_PRONUNCIATION,
+                    KEY_LEX_FORM,
+                )
                 if (DUMP) {
                     dumpMap(lexMap)
                 }
@@ -47,6 +58,7 @@ class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = fals
                 val lexSenses = MutableList(senseMaps.size) {
                     val senseMap = senseMaps[it]
                     assertKeysIn(
+                        throws = throws,
                         senseMap.keys,
                         VALID_SENSE_RELATIONS,
                         KEY_SENSE_ID,
@@ -55,7 +67,6 @@ class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = fals
                         KEY_SENSE_VERBFRAMES,
                         KEY_SENSE_ADJPOSITION,
                         KEY_SENSE_EXAMPLES,
-                        "is_exemplified_by"
                     )
                     if (DUMP) {
                         dumpMap(senseMap, indent = "\t")
@@ -114,7 +125,12 @@ class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = fals
                 val pronunciations: Array<Pronunciation>? = if (pronunciationList != null) {
                     Array(pronunciationList.size) {
                         val pronunciationMap = pronunciationList[it]
-                        assertKeysIn(pronunciationMap.keys, KEY_PRONUNCIATION_VARIETY, KEY_PRONUNCIATION_VALUE)
+                        assertKeysIn(
+                            throws = throws,
+                            pronunciationMap.keys,
+                            KEY_PRONUNCIATION_VARIETY,
+                            KEY_PRONUNCIATION_VALUE
+                        )
                         if (DUMP) {
                             dumpMap(pronunciationMap, indent = "\t")
                         }
@@ -161,7 +177,7 @@ class LexParser(dir: File, val fileext: String = "yaml", verbose: Boolean = fals
         private const val KEY_PRONUNCIATION_VARIETY = "variety"
         private const val KEY_PRONUNCIATION_VALUE = "value"
 
-        private val VALID_SENSE_RELATIONS = arrayOf(
+        val VALID_SENSE_RELATIONS = arrayOf(
             "antonym",
             "similar",
             "exemplifies",

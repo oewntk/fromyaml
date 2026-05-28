@@ -52,8 +52,8 @@ internal object YamlUtils {
      * @param keys      bunch of valid keys
      * @param validKeys array of extra valid keys
      */
-    fun assertKeysIn(keys: Set<String>, vararg validKeys: String) {
-        assertKeysIn(keys, arrayOf(), *validKeys)
+    fun assertKeysIn(throws: Boolean = true, keys: Set<String>, vararg validKeys: String) {
+        assertKeysIn(throws = throws, keys, arrayOf(), *validKeys)
     }
 
     /**
@@ -63,12 +63,13 @@ internal object YamlUtils {
      * @param validKeys1 array of extra valid keys
      * @param validKeys2 array of extra valid keys
      */
-    fun assertKeysIn(keys: Set<String>, validKeys1: Array<String>, vararg validKeys2: String) {
+    fun assertKeysIn(throws: Boolean = true, keys: Set<String>, validKeys1: Array<String>, vararg validKeys2: String) {
         val validKeys = setOf(*validKeys1, *validKeys2)
         val difference = keys.subtract(validKeys)
         if (difference.isNotEmpty()) {
             val rogues = difference.joinToString { "'$it'" }
-            throw IllegalArgumentException(rogues)
+            if (throws) throw IllegalArgumentException(rogues)
+            Tracing.psErr.println("[W] rogue keys $rogues")
         }
     }
 
@@ -105,7 +106,11 @@ internal object YamlUtils {
 
             is Map<*, *> -> {
                 val exampleMap: Map<String, *> = safeCast(example)
-                assertKeysIn(exampleMap.keys, keyText, keySource)
+                assertKeysIn(
+                    throws = true,
+                    exampleMap.keys,
+                    keyText,
+                    keySource)
                 val text = exampleMap[keyText].toString()
                 val source = exampleMap[keySource].toString()
                 processExampleText(text) to source
