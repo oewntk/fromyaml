@@ -5,8 +5,10 @@ package org.oewntk.yaml.`in`
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.Lemma
 import org.oewntk.model.Lex
 import org.oewntk.model.LexGroupings
+import org.oewntk.model.LexGroupings.hyperMapByLCLemmaByLemma
 import org.oewntk.model.LibTestModelLexGroups.testCICounts
 import org.oewntk.model.LibTestModelLexGroups.testCICountsFromMap
 import org.oewntk.model.LibTestModelLexGroups.testCIHypermap3
@@ -14,12 +16,13 @@ import org.oewntk.model.LibTestModelLexGroups.testCILemmas
 import org.oewntk.model.LibTestModelLexGroups.testCILexesFor
 import org.oewntk.model.LibTestModelLexGroups.testCILexesFor3
 import org.oewntk.model.LibTestModelLexGroups.testCIMultipleAll
+import org.oewntk.model.LowerCasedLemma
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
 class TestsYamlModelLexGroups {
 
-    private val lexHyperMap: Map<String, Map<String, Collection<Lex>>> by lazy { LexGroupings.hyperMapByLCLemmaByLemma(model) }
+    private val lexHyperMap: Map<LowerCasedLemma, Map<Lemma, Collection<Lex>>> by lazy { model.lexEntries.hyperMapByLCLemmaByLemma() }
 
     @Test
     fun testCIMultipleAll() {
