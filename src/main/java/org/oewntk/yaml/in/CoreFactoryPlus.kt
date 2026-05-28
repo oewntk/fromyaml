@@ -17,7 +17,7 @@ class CoreFactoryPlus(
     inDir: File,
     fileext: String = "yaml",
     val verbose: Boolean = false
-) : CoreProtoFactoryPlus(inDir, fileext = fileext, verbose = verbose), Supplier<CoreModel?> {
+) : CoreProtoFactoryPlus(inDir, fileext = fileext, verbose = false), Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         return make()
@@ -25,10 +25,10 @@ class CoreFactoryPlus(
 
     private fun make(): CoreModel? {
         return super.get()?.let { stubModel ->
-            if (verbose) Tracing.psInfo.printf("[I] Fixing ...")
+            if (verbose) Tracing.psInfo.println("[I] Fixing ...")
             return stubModel
                 .fix(verbose = false)
-                .checkMembers(verbose = verbose)
+                .checkMembers(verbose = true)
         }
     }
 
@@ -140,6 +140,7 @@ class CoreFactoryPlus(
                     val senseKeys = synsets.withIndex().joinToString(separator = ",") { (idx, synset) -> generateSenseKey(key.first, synset, idx) }
                     "${key.first};${key.second.value};$synsetIds;$senseKeys"
                 }
+                .sortedWith(LexicographicOrder.lowerFirst)
                 .joinToString(separator = "\n")
         }
 
@@ -154,18 +155,12 @@ class CoreFactoryPlus(
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                if ("Asia" == lemma) {
-                    println("")
-
-                }
                 val foundLex = Finder.getLexesHavingType(this, lemma, type)?.firstOrNull()
                 if (foundLex != null) {
                     synsets.withIndex().forEach { (idx, synset) ->
-                        val resolvedSenses: List<Pair<Sense?, SynsetId?>> = foundLex.senseKeys.asSequence()
+                        val resolvedSenses: Sequence<Pair<Sense?, SynsetId?>> = foundLex.senseKeys.asSequence()
                             .map { sk -> senseFinder(sk) }
                             .map { sense -> sense to sense?.let { synsetFinder(sense.synsetId)?.synsetId } }
-                            .toList() // TODO
-
                         val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
                         if (found == null || found.first == null) {
                             val senseId = generateSenseKey(lemma, synset, idx)

@@ -6,7 +6,6 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.CoreModel
 import org.oewntk.model.ModelInfo
 import org.oewntk.model.check
-import org.oewntk.model.checkMembers
 import java.io.File
 import java.util.function.Supplier
 
@@ -29,10 +28,8 @@ open class CoreProtoFactoryPlus(
         val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, throws = false, verbose = false).get()
         return stubModel?.let { model ->
             if (verbose) Tracing.psInfo.printf("[StubModel] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
-            model.check(throws = false, verbose = verbose)
-            if (verbose) Tracing.psInfo.printf("[I] Fixing ...")
             return model
-                .checkMembers(verbose = verbose)
+                .check(throws = false, verbose = verbose)
         }
     }
 
