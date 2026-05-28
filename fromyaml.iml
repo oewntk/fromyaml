@@ -7,6 +7,10 @@
       <excludeFolder url="file://$MODULE_DIR$/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/yaml2" />
       <excludeFolder url="file://$MODULE_DIR$/yamlplus" />
+      <excludeFolder url="file://$MODULE_DIR$/oenn" />
+      <excludeFolder url="file://$MODULE_DIR$/oenn-addendum" />
+      <excludeFolder url="file://$MODULE_DIR$/oenn-curated" />
+      <excludeFolder url="file://$MODULE_DIR$/yamlplusplus" />
     </content>
   </component>
 </module>
