@@ -154,14 +154,37 @@ class CoreFactoryPlus(
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val lex = Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
-                lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
-                    val senseId = generateSenseKey(lemma, synset, idx)
-                    val sense = Sense(senseId, lex, synset.type, 0, synset.synsetId)
-                    newSenses.add(sense)
-                    senseId
-                }.toList()
-                newLexes.add(lex)
+                if ("Asia" == lemma) {
+                    println("")
+
+                }
+                val foundLex = Finder.getLexesHavingType(this, lemma, type)?.firstOrNull()
+                if (foundLex != null) {
+                    synsets.withIndex().forEach { (idx, synset) ->
+                        val resolvedSenses: List<Pair<Sense?, SynsetId?>> = foundLex.senseKeys.asSequence()
+                            .map { sk -> senseFinder(sk) }
+                            .map { sense -> sense to sense?.let { synsetFinder(sense.synsetId)?.synsetId } }
+                            .toList() // TODO
+
+                        val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
+                        if (found == null || found.first == null) {
+                            val senseId = generateSenseKey(lemma, synset, idx)
+                            val sense = Sense(senseId, foundLex, synset.type, 0, synset.synsetId)
+                            foundLex.senseKeys = foundLex.senseKeys + senseId  // TODO sort
+                            newSenses.add(sense)
+                        }
+                    }
+
+                } else {
+                    val lex = foundLex ?: Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
+                    lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
+                        val senseId = generateSenseKey(lemma, synset, idx)
+                        val sense = Sense(senseId, lex, synset.type, 0, synset.synsetId)
+                        newSenses.add(sense)
+                        senseId
+                    }.toList()
+                    newLexes.add(lex)
+                }
             }
             return newLexes to newSenses
         }
