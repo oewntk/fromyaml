@@ -5,7 +5,7 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.CoreModel
 import org.oewntk.model.ModelInfo
-import org.oewntk.model.check
+import org.oewntk.model.Validator.check
 import java.io.File
 import java.util.function.Supplier
 

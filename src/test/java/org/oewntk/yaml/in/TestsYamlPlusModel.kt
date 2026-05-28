@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.*
+import org.oewntk.model.Validator.check
 import org.oewntk.yaml.`in`.LibTestsYamlPlusCommon.model
 import org.oewntk.yaml.`in`.LibTestsYamlPlusCommon.ps
 

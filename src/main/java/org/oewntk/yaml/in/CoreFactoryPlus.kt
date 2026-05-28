@@ -5,6 +5,8 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
 import org.oewntk.model.SenseKeys.generateSenseKey
+import org.oewntk.model.Validator.check
+import org.oewntk.model.Validator.checkMembers
 import java.io.File
 import java.util.function.Supplier
 
