@@ -69,7 +69,7 @@ internal object YamlUtils {
         if (difference.isNotEmpty()) {
             val rogues = difference.joinToString { "'$it'" }
             if (throws) throw IllegalArgumentException(rogues)
-            Tracing.psErr.println("[W] rogue keys $rogues")
+            Tracing.psErr.println("[W] Rogue keys $rogues")
         }
     }
 
