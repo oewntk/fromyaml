@@ -8,8 +8,6 @@ import org.junit.Test
 import org.oewntk.model.Lemma
 import org.oewntk.model.Lex
 import org.oewntk.model.Lex.Groups.groupByLCLemmaThenByKey2
-import org.oewntk.model.LexGroupings
-import org.oewntk.model.LexGroupings.hyperMapByLCLemmaByLemma
 import org.oewntk.model.LibTestModelLexGroups.testCICounts
 import org.oewntk.model.LibTestModelLexGroups.testCICountsFromMap
 import org.oewntk.model.LibTestModelLexGroups.testCIHypermap3
