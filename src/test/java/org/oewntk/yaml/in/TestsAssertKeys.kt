@@ -11,8 +11,6 @@ import java.io.PrintStream
 
 class TestsAssertKeys {
 
-    val ps: PrintStream = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
-
     @Test
     fun testDoesNotThrow() {
         assertKeysIn(
@@ -32,7 +30,7 @@ class TestsAssertKeys {
             VALID_SENSE_RELATIONS,
             "id",
             "source",
-         )
+        )
     }
 
     val testCases: Map<String, Any> =

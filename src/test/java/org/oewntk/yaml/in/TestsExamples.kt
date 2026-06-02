@@ -11,7 +11,11 @@ import java.io.PrintStream
 
 class TestsExamples {
 
-    val ps: PrintStream = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
+    private val silent = if (System.getProperties().containsKey("VERBOSE")) false
+    else if (System.getProperties().containsKey("SILENT")) true
+    else true
+
+    private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
 
     private val enclosed = "\"Israel has been the fastest to roll out inoculations.\""
     private val even = "Examples of front vowels include \"a\" in \"man\" and \"e\" in \"gel\""
