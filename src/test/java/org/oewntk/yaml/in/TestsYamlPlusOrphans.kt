@@ -28,7 +28,7 @@ class TestsYamlPlusOrphans {
     fun testFixesPlus() {
         testCases
             .forEach { testCase ->
-                val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (_: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
                     val orphans = model.orphans(synset)
@@ -42,7 +42,7 @@ class TestsYamlPlusOrphans {
     fun testFixesPseudos() {
         pseudoCases
             .forEach { testCase ->
-                val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (_: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
                     val orphans = model.orphans(synset)
@@ -56,7 +56,7 @@ class TestsYamlPlusOrphans {
     fun testFixesGenerated() {
         generatedCases
             .forEach { testCase ->
-                val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (_: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
                     val orphans = model.orphans(synset)
