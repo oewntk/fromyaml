@@ -21,7 +21,7 @@ class TestsYamlPlusModel {
 
     private fun Lex.synsetIds(model: CoreModel): List<SynsetId> = senseKeys.map { model.senseResolver(it).synsetId }.toList()
 
-    private fun Lex.toXString(model: CoreModel): String = "\t${this} -> ${synsetIds(LibTestsYamlPlusCommon.model)}"
+    private fun Lex.toXString(model: CoreModel): String = "\t${this} -> ${synsetIds(model)}"
 
     @Test
     fun testLexes() {
