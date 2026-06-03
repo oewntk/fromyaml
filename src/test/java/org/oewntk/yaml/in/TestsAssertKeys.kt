@@ -7,7 +7,6 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.yaml.`in`.LexParser.Companion.VALID_SENSE_RELATIONS
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
-import java.io.PrintStream
 
 class TestsAssertKeys {
 
