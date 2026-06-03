@@ -28,7 +28,7 @@ internal object YamlUtils {
      * Avoid warning
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any?> safeNullableCast(value: Any?): T? {
+    fun <T> safeNullableCast(value: Any?): T? {
         return value as T
     }
 
