@@ -7,7 +7,7 @@
 
     <groupId>io.github.oewntk</groupId>
     <artifactId>fromyaml</artifactId>
-    <version>2.4.0</version>
+    <version>3.0.1</version>
     <name>from_yaml</name>
     <description>Parse WordNet YAML files into model.</description>
     <url>https://github.com/oewntk/fromyaml</url>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>io.github.oewntk</groupId>
             <artifactId>model</artifactId>
-            <version>2.4.0</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>io.github.oewntk</groupId>
             <artifactId>model</artifactId>
-            <version>2.4.0</version>
+            <version>3.0.1</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
