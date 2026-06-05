@@ -173,8 +173,9 @@ class SynsetParser(
             "also",
         )
 
-        /*
-    ignored
+      /*
+      ignored
+
       agent|
       // also|
       // attribute|
