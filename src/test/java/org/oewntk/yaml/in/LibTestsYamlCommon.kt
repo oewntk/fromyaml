@@ -29,7 +29,7 @@ object LibTestsYamlCommon {
             Tracing.psErr.println("Define YAML source dir that exists")
             Assert.fail()
         }
-        // TODO
-        CoreFactory(inDir, throws = false, verbose = !silent).get()!!
+
+        CoreFactory(inDir, throws = true, inverses = false, verbose = !silent).get()!!
     }
 }
