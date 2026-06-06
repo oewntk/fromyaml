@@ -108,7 +108,6 @@ class LexParser(
                         senseId,
                         lex.key,
                         synsetId,
-                        type,
                         indexInLex = it,
                         examples?.toTypedArray(),
                         verbFrames?.toTypedArray(),

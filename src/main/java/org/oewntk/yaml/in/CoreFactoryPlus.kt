@@ -166,7 +166,7 @@ class CoreFactoryPlus(
                         val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
                         if (found == null || found.first == null) {
                             val senseId = generateSenseKey(lemma, synset, idx)
-                            val sense = Sense(senseId, foundLex.key, synset.synsetId, synset.type, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
+                            val sense = Sense(senseId, foundLex.key, synset.synsetId, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
                             foundLex.senseKeys = foundLex.senseKeys + senseId  // TODO sort by sense order
                             newSenses.add(sense)
                         }
@@ -176,7 +176,7 @@ class CoreFactoryPlus(
                     val lex = foundLex ?: Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                     lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                         val senseId = generateSenseKey(lemma, synset, idx)
-                        val sense = Sense(senseId, lex.key, synset.synsetId, synset.type, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
+                        val sense = Sense(senseId, lex.key, synset.synsetId, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
                         newSenses.add(sense)
                         senseId
                     }.toList()
