@@ -107,9 +107,9 @@ class LexParser(
                     val lexSense = Sense(
                         senseId,
                         lex.key,
+                        synsetId,
                         type,
                         it,
-                        synsetId,
                         examples?.toTypedArray(),
                         verbFrames?.toTypedArray(),
                         adjPosition,
