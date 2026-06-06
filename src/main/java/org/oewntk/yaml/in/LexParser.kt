@@ -109,7 +109,7 @@ class LexParser(
                         lex.key,
                         synsetId,
                         type,
-                        it,
+                        indexInLex = it,
                         examples?.toTypedArray(),
                         verbFrames?.toTypedArray(),
                         adjPosition,
