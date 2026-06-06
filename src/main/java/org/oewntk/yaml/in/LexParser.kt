@@ -106,7 +106,7 @@ class LexParser(
                     // sense
                     val lexSense = Sense(
                         senseId,
-                        lex,
+                        lex.key,
                         type,
                         it,
                         synsetId,

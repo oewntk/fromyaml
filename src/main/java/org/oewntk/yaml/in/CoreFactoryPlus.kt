@@ -166,7 +166,7 @@ class CoreFactoryPlus(
                         val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
                         if (found == null || found.first == null) {
                             val senseId = generateSenseKey(lemma, synset, idx)
-                            val sense = Sense(senseId, foundLex, synset.type, 0, synset.synsetId)
+                            val sense = Sense(senseId, foundLex.key, synset.type, 0, synset.synsetId)
                             foundLex.senseKeys = foundLex.senseKeys + senseId  // TODO sort
                             newSenses.add(sense)
                         }
@@ -176,7 +176,7 @@ class CoreFactoryPlus(
                     val lex = foundLex ?: Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                     lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                         val senseId = generateSenseKey(lemma, synset, idx)
-                        val sense = Sense(senseId, lex, synset.type, 0, synset.synsetId)
+                        val sense = Sense(senseId, lex.key, synset.type, 0, synset.synsetId)
                         newSenses.add(sense)
                         senseId
                     }.toList()
