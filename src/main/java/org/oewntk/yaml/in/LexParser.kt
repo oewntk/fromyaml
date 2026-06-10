@@ -64,8 +64,9 @@ class LexParser(
                         KEY_SENSE_ID,
                         KEY_SENSE_SYNSET,
                         KEY_SENSE_VERBFRAMES,
-                        KEY_SENSE_VERBFRAMES,
+                        KEY_SENSE_VERBTEMPLATES,
                         KEY_SENSE_ADJPOSITION,
+                        KEY_SENSE_TAGCOUNT,
                         KEY_SENSE_EXAMPLES,
                     )
                     if (DUMP) {
@@ -79,8 +80,10 @@ class LexParser(
                         KEY_EXAMPLE_TEXT,
                         KEY_EXAMPLE_SOURCE
                     )
-                    val verbFrames: List<String>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
+                    val verbFrames: List<VerbFrameId>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
+                    val verbTemplates: List<VerbTemplateId>? = safeNullableCast(senseMap[KEY_SENSE_VERBTEMPLATES])
                     val adjPosition = senseMap[KEY_SENSE_ADJPOSITION] as String?
+                    val tagCount = senseMap[KEY_SENSE_TAGCOUNT] as Int?
 
                     // relations
                     val relations = if (IGNORE_QTARGETS)
@@ -111,7 +114,9 @@ class LexParser(
                         indexInLex = it,
                         examples?.toTypedArray(),
                         verbFrames?.toTypedArray(),
+                        verbTemplates?.toTypedArray(),
                         adjPosition,
+                        tagCount,
                         relations
                     )
                     senses.add(lexSense)
@@ -169,6 +174,8 @@ class LexParser(
         private const val KEY_SENSE_ADJPOSITION = "adjposition"
         private const val KEY_SENSE_VERBFRAMES = "subcat"
         private const val KEY_SENSE_EXAMPLES = "sent"
+        private const val KEY_SENSE_VERBTEMPLATES = "template" // not compat
+        private const val KEY_SENSE_TAGCOUNT = "tagcount" // not compat
 
         private const val KEY_EXAMPLE_SOURCE = "source"
         private const val KEY_EXAMPLE_TEXT = "text"
