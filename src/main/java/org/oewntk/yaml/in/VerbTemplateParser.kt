@@ -19,7 +19,7 @@ class VerbTemplateParser(dir: File, val fileext:String="yaml", verbose: Boolean 
     }
 
     override val files: Array<File>
-        get() = dir.listFiles { f -> f.name.matches("templates.$fileext".toRegex()) } ?: arrayOf()
+        get() = dir.listFiles { f -> f.name.matches("(verbT|t)emplates.$fileext".toRegex()) } ?: arrayOf()
 
     override fun processEntry(source: String?, entry: Pair<VerbTemplateId, String>): VerbTemplate {
         val id = entry.first

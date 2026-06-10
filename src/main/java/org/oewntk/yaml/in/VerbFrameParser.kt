@@ -20,7 +20,7 @@ class VerbFrameParser(dir: File, val fileext: String = "yaml", verbose: Boolean 
     }
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("frames.$fileext".toRegex()) } ?: arrayOf()
+        get() = dir.listFiles { f: File -> f.name.matches("(verbF|f)rames.$fileext".toRegex()) } ?: arrayOf()
 
     override fun processEntry(source: String?, entry: Pair<SenseKey, VerbFrameId>): VerbFrame {
         val id = entry.first
