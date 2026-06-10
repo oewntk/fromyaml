@@ -13,7 +13,7 @@ import java.io.File
  *
  * @param dir dir containing YAML/JSON files
  */
-class VerbFrameParser(dir: File, val fileext: String = "yaml", verbose: Boolean = false) : YamProcessor1<VerbFrame, String, String>(dir, verbose = verbose) {
+class VerbFrameParser(dir: File, val fileext: String = "yaml", verbose: Boolean = false) : YamlProcessor1<VerbFrame, String, String>(dir, verbose = verbose) {
 
     init {
         this.dir = dir

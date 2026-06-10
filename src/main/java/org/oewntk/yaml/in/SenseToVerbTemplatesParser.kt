@@ -12,7 +12,7 @@ import java.io.File
  *
  * @param dir dir containing YAML/JSON files
  */
-class SenseToVerbTemplatesParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir, verbose = verbose) {
+class SenseToVerbTemplatesParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamlProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) } ?: arrayOf()

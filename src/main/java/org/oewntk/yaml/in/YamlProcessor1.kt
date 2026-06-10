@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2024. Bernard Bou.
  */
-
 package org.oewntk.yaml.`in`
 
 import org.yaml.snakeyaml.Yaml
@@ -11,14 +10,15 @@ import java.io.IOException
 import java.util.*
 
 /**
- * Abstract YAML processor
+ * Abstract YAML processor, entry produces one item only of type T
  *
- * @property dir dir containing YAML files
+ * @param dir dir containing YAML files
+ *
  * @param T type of elements to parse
  * @param K type of key
  * @param V type of value
  */
-abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File, val verbose: Boolean = false) {
+abstract class YamlProcessor1<T, K : Comparable<K>, V>(protected var dir: File, val verbose: Boolean = false) {
 
     /**
      * YAML files to process
@@ -30,9 +30,9 @@ abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File, va
      *
      * @param source entry source
      * @param entry  key-value pair
-     * @return collection if items of type T
+     * @return item of type T
      */
-    protected abstract fun processEntry(source: String?, entry: Pair<K, V>): Collection<T>?
+    protected abstract fun processEntry(source: String?, entry: Pair<K, V>): T?
 
     /**
      * Parse
@@ -74,12 +74,12 @@ abstract class YamProcessor<T, K : Comparable<K>, V>(protected val dir: File, va
      */
     @Throws(IOException::class)
     private fun load(file: File, yaml: Yaml, items: MutableCollection<T>) {
-         FileInputStream(file).use { inputStream ->
+        FileInputStream(file).use { inputStream ->
             val top: Map<K, V> = yaml.load(inputStream)
             for (entry in top.entries) {
-                val processedItems = processEntry(file.name, entry.key to entry.value)
-                if (processedItems != null) {
-                    items.addAll(processedItems)
+                val t: T? = processEntry(file.name, entry.key to entry.value)
+                if (t != null) {
+                    items.add(t)
                 }
             }
         }

@@ -23,7 +23,7 @@ class SynsetParser(
     val fileext: String = "yaml",
     verbose: Boolean = false,
     val throws: Boolean = true,
-) : YamProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
+) : YamlProcessor1<Synset, String, Map<String, *>>(dir, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}).*\\.$fileext".toRegex()) }!!

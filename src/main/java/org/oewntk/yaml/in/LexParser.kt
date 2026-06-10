@@ -20,7 +20,7 @@ class LexParser(
     val fileext: String = "yaml",
     verbose: Boolean = false,
     val throws: Boolean = true,
-) : YamProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
+) : YamlProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
 
     /**
      * Accumulated senses as lexes are processed
