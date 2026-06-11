@@ -4,6 +4,8 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
+import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
+import org.oewntk.model.Sense.Companion.VALID_SENSE_RELATIONS
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -182,99 +184,5 @@ class LexParser(
 
         private const val KEY_PRONUNCIATION_VARIETY = "variety"
         private const val KEY_PRONUNCIATION_VALUE = "value"
-
-        val VALID_SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region",
-            "domain_topic",
-
-            "state",
-            "result",
-            "event",
-            "property",
-            "location",
-            "destination",
-            "agent",
-            "undergoer",
-            "uses",
-            "instrument",
-            "by_means_of",
-            "material",
-            "vehicle",
-            "body_part",
-
-            "collocation",
-            "other"
-        )
-
-        private val SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies", "is_exemplified_by",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region", "has_domain_region",
-            "domain_topic", "has_domain_topic",
-
-            "agent",
-            "material",
-            "event",
-            "instrument",
-            "location",
-            "by_means_of",
-            "undergoer",
-            "property",
-            "result",
-            "state",
-            "uses",
-            "destination",
-            "body_part",
-            "vehicle",
-
-            "collocation",
-            "other"
-        )
-
-        /*
-        ignored
-          // antonym|
-          // also|
-          // participle|
-          // pertainym|
-          // derivation|
-          // domain_topic|
-          // has_domain_topic|
-          // domain_region|
-          // has_domain_region|
-          // exemplifies|
-          // is_exemplified_by|
-          // similar|
-          // other|
-          simple_aspect_ip|
-          secondary_aspect_ip|
-          simple_aspect_pi|
-          secondary_aspect_pi|
-          feminine|
-          has_feminine|
-          masculine|
-          has_masculine|
-          young|
-          has_young|
-          diminutive|
-          has_diminutive|
-          augmentative|
-          has_augmentative|
-          anto_gradable|
-          anto_simple|
-          anto_converse
-         */
     }
 }
