@@ -15,7 +15,8 @@ import java.util.function.Supplier
  * @param inDir2 dir containing extra YAML files
  */
 class Factory(
-    private val inDir: File, private val inDir2: File,
+    private val inDir: File,
+    private val inDir2: File?,
     private val fileext: String = "yaml",
     private val fileext2: String = "yaml",
     private val verbose: Boolean = false
@@ -24,8 +25,8 @@ class Factory(
     data class Extra(
         val verbFrames: Collection<VerbFrame>,
         val verbTemplates: Collection<VerbTemplate>,
-        val sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
-        val sensesToTagCounts: Collection<Pair<String, TagCount>>,
+        val sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        val sensesToTagCounts: Collection<Pair<String, TagCount>>?,
     )
 
     override fun get(): Model? {
@@ -38,7 +39,7 @@ class Factory(
             return Model(coreModel, it.verbFrames, it.verbTemplates, it.sensesToVerbTemplates, it.sensesToTagCounts)
                 .apply {
                     source = inDir.absolutePath
-                    source2 = inDir2.absolutePath
+                    source2 = inDir2?.absolutePath
                 }
         }
     }
@@ -47,11 +48,13 @@ class Factory(
         try {
             // verb frames and templates
             val verbFrames = VerbFrameParser(inDir, fileext = fileext, verbose = verbose).parse()
-            val verbTemplates = VerbTemplateParser(inDir2, fileext = fileext2, verbose = verbose).parse()
-            val sensesToVerbTemplates = SenseToVerbTemplatesParser(inDir2, fileext = fileext2, verbose = verbose).parse()
+            val verbTemplates = VerbTemplateParser(inDir2 ?: inDir, fileext = fileext2, verbose = verbose).parse()
+
+            // sense to verb templates
+            val sensesToVerbTemplates = if (inDir2 != null) SenseToVerbTemplatesParser(inDir2, fileext = fileext2, verbose = verbose).parse() else null
 
             // tag counts
-            val sensesToTagCounts: Collection<Pair<String, TagCount>> = SenseToTagCountsParser(inDir2, fileext = fileext2, verbose = verbose).parse()
+            val sensesToTagCounts = if (inDir2 != null) SenseToTagCountsParser(inDir2, fileext = fileext2, verbose = verbose).parse() else null
 
             return Extra(verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts)
 
