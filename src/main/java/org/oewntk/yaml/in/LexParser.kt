@@ -39,7 +39,6 @@ class LexParser(
             val lemma = entry.first
             val lemmaMap = entry.second
             for ((k2, value1) in lemmaMap) {
-                val type = SynsetType.fromChar(k2[0])
                 val lexMap: Map<String, *> = safeCast(value1!!)
                 assertKeysIn(
                     throws = throws,
