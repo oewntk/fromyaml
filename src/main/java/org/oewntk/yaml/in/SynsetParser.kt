@@ -50,6 +50,7 @@ class SynsetParser(
             KEY_SYNSET_WIKIDATA,
             KEY_SYNSET_ILI,
             KEY_SYNSET_SOURCE,
+            KEY_SYNSET_DOMAIN,
         )
 
         val code = synsetMap[KEY_SYNSET_POS] as String?
@@ -137,6 +138,7 @@ class SynsetParser(
         private const val KEY_SYNSET_ILI = "ili"
         private const val KEY_SYNSET_WIKIDATA = "wikidata"
         private const val KEY_SYNSET_SOURCE = "source"
+        private const val KEY_SYNSET_DOMAIN = "domain"
 
         private const val KEY_EXAMPLE_SOURCE = "source"
         private const val KEY_EXAMPLE_TEXT = "text"
