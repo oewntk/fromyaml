@@ -25,7 +25,7 @@ class Factory(
     data class Extra(
         val verbFrames: Collection<VerbFrame>,
         val verbTemplates: Collection<VerbTemplate>,
-        val sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        val sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         val sensesToTagCounts: Collection<Pair<String, TagCount>>?,
     )
 

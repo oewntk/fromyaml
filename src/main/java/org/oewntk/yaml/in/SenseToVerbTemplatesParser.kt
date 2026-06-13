@@ -12,23 +12,18 @@ import java.io.File
  *
  * @param dir dir containing YAML/JSON files
  */
-class SenseToVerbTemplatesParser(dir: File, val fileext:String="yaml", verbose: Boolean = false) : YamlProcessor1<Pair<SenseKey, Array<VerbTemplateId>>, String, List<VerbTemplateId>>(dir, verbose = verbose) {
+class SenseToVerbTemplatesParser(dir: File, val fileext: String = "yaml", verbose: Boolean = false) : YamlProcessor1<Pair<SenseKey, List<VerbTemplateId>>, String, List<VerbTemplateId>>(dir, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) } ?: arrayOf()
 
-    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<String, Array<VerbTemplateId>>? {
+    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<String, List<VerbTemplateId>>? {
         val sensekey = entry.first
-        val v = entry.second
+        val templateIds = entry.second
         if (DUMP) {
             Tracing.psInfo.println(sensekey)
         }
-        val n = v.size
-        if (n == 0) {
-            return null
-        }
-        val templateIds = Array(n) { v[it] }
-        return sensekey to templateIds
+        return if (templateIds.isEmpty()) null else sensekey to templateIds
     }
 
     companion object {
