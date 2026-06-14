@@ -41,14 +41,14 @@ abstract class YamlProcessor<T, K : Comparable<K>, V>(protected val dir: File, v
      * @throws IOException io exception
      */
     @Throws(IOException::class)
-    fun parse(): Collection<T> {
-        val items: MutableCollection<T> = ArrayList()
+    fun parse(): Set<T> {
+        val items: MutableSet<T> = LinkedHashSet()
         for (file in files) {
             if (verbose)
                 Tracing.psInfo.println("-$file")
             loadClass(file, items)
         }
-        return Collections.unmodifiableCollection(items)
+        return Collections.unmodifiableSet(items)
     }
 
     /**

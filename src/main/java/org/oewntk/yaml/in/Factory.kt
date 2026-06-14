@@ -23,8 +23,8 @@ class Factory(
 ) : Supplier<Model?> {
 
     data class Extra(
-        val verbFrames: Collection<VerbFrame>,
-        val verbTemplates: Collection<VerbTemplate>,
+        val verbFrames: Set<VerbFrame>,
+        val verbTemplates: Set<VerbTemplate>,
         val sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         val sensesToTagCounts: Collection<Pair<String, TagCount>>?,
     )

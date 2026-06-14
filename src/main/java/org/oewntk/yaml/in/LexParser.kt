@@ -27,7 +27,7 @@ class LexParser(
     /**
      * Accumulated senses as lexes are processed
      */
-    val senses: MutableList<Sense> = ArrayList()
+    val senses: MutableSet<Sense> = LinkedHashSet()
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.$fileext".toRegex()) }!!
