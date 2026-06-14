@@ -19,6 +19,8 @@ class Factory(
     private val inDir2: File?,
     private val fileext: String = "yaml",
     private val fileext2: String = "yaml",
+    private val throws: Boolean = true,
+    private val inverses: Boolean = false,
     private val verbose: Boolean = false
 ) : Supplier<Model?> {
 
@@ -30,7 +32,7 @@ class Factory(
     )
 
     override fun get(): Model? {
-        val coreModel = CoreFactory(inDir, fileext = fileext, verbose = verbose).get() ?: return null
+        val coreModel = CoreFactory(inDir, fileext = fileext, throws = throws, inverses=inverses, verbose = verbose).get() ?: return null
         return from(coreModel)
     }
 
