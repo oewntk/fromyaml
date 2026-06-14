@@ -31,7 +31,6 @@ class SynsetParser(
         get() = dir.listFiles { f: File -> f.name.matches("(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}).*\\.$fileext".toRegex()) }!!
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Synset {
-        val domain = source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
         val id = entry.first
         val synsetMap = entry.second
         if (DUMP) {
@@ -54,22 +53,19 @@ class SynsetParser(
         )
 
         val code = synsetMap[KEY_SYNSET_POS] as String?
-        val definitions: List<String> = safeCast(synsetMap[KEY_SYNSET_DEFINITION]!!)
-        val members: List<String> = safeCast(synsetMap[KEY_SYNSET_MEMBERS]!!)
-        val examples: List<Pair<String, String?>>? =
-            processExamples(safeNullableCast(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
-        val usages: List<String>? = safeNullableCast(synsetMap[KEY_SYNSET_USAGE])
-        val ili: String? = safeNullableCast(synsetMap[KEY_SYNSET_ILI])
-        val wikidatas = synsetMap[KEY_SYNSET_WIKIDATA]
-        val wikidata: List<String>? = when {
-            wikidatas is String -> listOf(wikidatas)
-            wikidatas is List<*> && wikidatas.isNotEmpty() -> {
-                @Suppress("UNCHECKED_CAST")
-                wikidatas as List<String>?
+        val definitions = safeCast<List<String>>(synsetMap[KEY_SYNSET_DEFINITION]!!)
+        val members = safeCast<List<String>>(synsetMap[KEY_SYNSET_MEMBERS]!!)
+        val examples = processExamples(safeNullableCast<List<String>>(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
+        val usages = safeNullableCast<List<String>>(synsetMap[KEY_SYNSET_USAGE])
+        val ili = safeNullableCast<String>(synsetMap[KEY_SYNSET_ILI])
+        val wikidata = synsetMap[KEY_SYNSET_WIKIDATA]?.let {
+            when (it) {
+                is String -> listOf(it)
+                is List<*> -> safeCast<List<String>>(it).ifEmpty { null }
+                else -> null as List<String>?
             }
-
-            else -> null as List<String>?
         }
+        val domain =  safeNullableCast<String>(synsetMap[KEY_SYNSET_DOMAIN]) ?: source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
         val source: String? = safeNullableCast(synsetMap[KEY_SYNSET_SOURCE])
 
         // members
