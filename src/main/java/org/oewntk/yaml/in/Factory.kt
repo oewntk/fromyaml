@@ -73,8 +73,21 @@ class Factory(
          * @param inDir2 dir containing extra YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, inDir2: File, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = false): Model? {
+        private fun makeModel(inDir: File, inDir2: File?, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = false): Model? {
             return Factory(inDir, inDir2, fileext = fileext, fileext2 = fileext2, verbose = verbose).get()
+        }
+
+        /**
+         * Make model
+         *
+         * @param dirPath1 WNDB dir path
+         * @param dirPath2 extra WNDB dir path
+         * @return core model
+         */
+        private fun makeModel(dirPath1: String, dirPath2: String?, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = false): Model? {
+            val inDir = File(dirPath1)
+            val inDir2 = if (dirPath2 == null) null else File(dirPath2)
+            return makeModel(inDir, inDir2, verbose = verbose)
         }
 
         /**
@@ -100,8 +113,9 @@ class Factory(
                 fileext2 = "json"
                 iArg++
             }
-            val inDir = File(args[iArg])
-            val inDir2 = File(args[iArg + 1])
+            val inDir = args[iArg]
+            iArg++
+            val inDir2 = if (iArg < args.size) args[iArg] else null
             return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, verbose = verbose)
         }
 
