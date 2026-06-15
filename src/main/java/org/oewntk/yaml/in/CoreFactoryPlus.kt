@@ -121,7 +121,7 @@ class CoreFactoryPlus(
          *
          * @return new list of lexes and new list of senses
          */
-        private fun CoreModel.generateMemberEntries(verbose: Boolean = false): Pair<Set<Lex>, Set<Sense>> {
+        private fun CoreModel.generateMemberEntries(verbose: Boolean = false): Pair<List<Lex>, List<Sense>> {
             val orphans = orphanMembers()
             val csv = orphanToCsv(orphans)
             val csvFile = File("plus.log")
@@ -152,9 +152,9 @@ class CoreFactoryPlus(
          * @param orphans list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return new list of lexes and new list of senses
          */
-        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): Pair<Set<Lex>, Set<Sense>> {
-            val newLexes = lexes.toMutableSet()
-            val newSenses = senses.toMutableSet()
+        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): Pair<List<Lex>, List<Sense>> {
+            val newLexes = lexes.toMutableList()
+            val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
                 val foundLex = Finder.getLexesHavingType(this, lemma, type)?.firstOrNull()
@@ -186,7 +186,7 @@ class CoreFactoryPlus(
             return newLexes to newSenses
         }
 
-        fun CoreModel.generateSynsets(verbose: Boolean = false): Set<Synset> {
+        fun CoreModel.generateSynsets(verbose: Boolean = false): List<Synset> {
             if (verbose) Tracing.psErr.println("[I] synsets as read from plus")
             return synsets
         }

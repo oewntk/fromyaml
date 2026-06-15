@@ -29,12 +29,12 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
 
         // lexes + senses
         val lexParser = LexParser(inDir, fileext = fileext, verbose = verbose)
-        val lexes = lexParser.parse().sortedWith(lexComparator).toSet()
-        val senses = lexParser.senses.sorted().toSet()
+        val lexes = lexParser.parse().sortedWith(lexComparator).distinct()
+        val senses = lexParser.senses.sorted().distinct()
 
         // synsets
         val synsetParser = SynsetParser(inDir, fileext = fileext, verbose = verbose)
-        val synsets = synsetParser.parse().sorted().toSet()
+        val synsets = synsetParser.parse().sorted().distinct()
 
         return CoreModel(lexes, senses, synsets)
     }
