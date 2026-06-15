@@ -13,8 +13,9 @@ import kotlin.test.assertEquals
 object LibTestsYamlCommon {
 
     private val source: String? = System.getProperty("SOURCE")
-    private val sourceB: String? = System.getProperty("SOURCEB")
     private val source2: String? = System.getProperty("SOURCE2")
+
+    private val sourceB: String? = System.getProperty("SOURCEB")
     private val sourceB2: String? = System.getProperty("SOURCEB2")
 
     val silent = if (System.getProperties().containsKey("VERBOSE")) false
@@ -35,7 +36,7 @@ object LibTestsYamlCommon {
 
     private fun getModel(source: String, source2: String?): Model {
         val inDir = File(source)
-        val inDir2 = if (source2 == null) null else File(source)
+        val inDir2 = if (source2 == null) null else File(source2)
         Tracing.psInfo.printf("source=%s%n", inDir.absolutePath)
         if (!inDir.exists()) {
             Tracing.psErr.println("Define YAML source dir that exists")
