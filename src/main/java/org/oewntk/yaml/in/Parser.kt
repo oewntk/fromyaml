@@ -18,6 +18,9 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
 
     /**
      * Parse
+     * calling toSortedSet() results in TreeSet
+     * which poses problems with serialization
+     * (TreeSet's comparator must be serializable)
      *
      * @return core model
      * @throws IOException io exception
@@ -27,12 +30,12 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
 
         // lexes + senses
         val lexParser = LexParser(inDir, fileext = fileext, verbose = verbose)
-        val lexes = lexParser.parse().toSortedSet(lexComparator)
-        val senses = lexParser.senses.toSortedSet()
+        val lexes = lexParser.parse().sortedWith(lexComparator).toSet()
+        val senses = lexParser.senses.sorted().toSet()
 
         // synsets
         val synsetParser = SynsetParser(inDir, fileext = fileext, verbose = verbose)
-        val synsets = synsetParser.parse().toSortedSet()
+        val synsets = synsetParser.parse().sorted().toSet()
 
         return CoreModel(lexes, senses, synsets)
     }
