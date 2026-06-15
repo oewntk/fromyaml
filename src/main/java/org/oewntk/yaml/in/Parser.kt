@@ -7,7 +7,6 @@ import org.oewntk.model.CoreModel
 import org.oewntk.model.Lex.Companion.lexComparator
 import java.io.File
 import java.io.IOException
-import java.util.Collections
 
 /**
  * YAML parser that supplies model
