@@ -27,18 +27,18 @@ class Factory(
     data class Extra(
         val verbFrames: List<VerbFrame>,
         val verbTemplates: List<VerbTemplate>,
-        val sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
-        val sensesToTagCounts: Collection<Pair<String, TagCount>>?,
+        val senseToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
+        val senseToTagCounts: Collection<Pair<String, TagCount>>?,
     )
 
     override fun get(): Model? {
-        val coreModel = CoreFactory(inDir, fileext = fileext, throws = throws, inverses=inverses, verbose = verbose).get() ?: return null
+        val coreModel = CoreFactory(inDir, fileext = fileext, throws = throws, inverses = inverses, verbose = verbose).get() ?: return null
         return from(coreModel)
     }
 
     fun from(coreModel: CoreModel): Model? {
         return makeExtra()?.let {
-            return Model(coreModel, it.verbFrames, it.verbTemplates, it.sensesToVerbTemplates, it.sensesToTagCounts)
+            return Model(coreModel, it.verbFrames, it.verbTemplates, Injector(it.senseToVerbTemplates, it.senseToTagCounts))
                 .apply {
                     source = inDir.absolutePath
                     source2 = inDir2?.absolutePath
@@ -89,7 +89,7 @@ class Factory(
         private fun makeModel(dirPath1: String, dirPath2: String?, fileext: String = "yaml", fileext2: String = "yaml", verbose: Boolean = false): Model? {
             val inDir = File(dirPath1)
             val inDir2 = if (dirPath2 == null) null else File(dirPath2)
-            return makeModel(inDir, inDir2, verbose = verbose)
+            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, verbose = verbose)
         }
 
         /**
