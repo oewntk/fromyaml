@@ -4,7 +4,6 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.CoreModel
-import org.oewntk.model.Lex.Companion.lexComparator
 import java.io.File
 import java.io.IOException
 
@@ -29,7 +28,7 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
 
         // lexes + senses
         val lexParser = LexParser(inDir, fileext = fileext, verbose = verbose)
-        val lexes = lexParser.parse().sortedWith(lexComparator).distinct()
+        val lexes = lexParser.parse().sorted().distinct()
         val senses = lexParser.senses.sorted().distinct()
 
         // synsets

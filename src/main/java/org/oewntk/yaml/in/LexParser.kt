@@ -114,8 +114,8 @@ class LexParser(
                         synsetId,
                         indexInLex = it,
                         examples,
-                        verbFrames,
-                        verbTemplates,
+                        verbFrames?.toSet(),
+                        verbTemplates?.toSet(),
                         adjPosition,
                         tagCount,
                         relations
