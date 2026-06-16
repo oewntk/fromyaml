@@ -8,12 +8,12 @@ import org.oewntk.model.Synset
 import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 import org.oewntk.model.Synset.Companion.VALID_SYNSET_RELATIONS
 import org.oewntk.model.SynsetType
+import org.oewntk.model.distinctOrDo
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
-import java.util.*
 
 /**
  * Synset YAML parser
@@ -65,18 +65,13 @@ class SynsetParser(
                 else -> null as List<String>?
             }
         }
-        val domain =  safeNullableCast<String>(synsetMap[KEY_SYNSET_DOMAIN]) ?: source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+        val domain = safeNullableCast<String>(synsetMap[KEY_SYNSET_DOMAIN]) ?: source!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
         val source: String? = safeNullableCast(synsetMap[KEY_SYNSET_SOURCE])
 
         // members
-        if (WARN_DUPLICATE_MEMBERS) {
-            val noDuplicates = members.none { Collections.frequency(members, it) > 1 }
-            //assert(noDuplicates) { Tracing.psErr.println("[E] duplicate members in $id: $members") }
-            if (!noDuplicates) {
-                Tracing.psErr.println("[E] duplicate members in $id: $members")
-            }
-        }
-        val synsetMembers = if (DISTINCT_MEMBERS) members.distinct() else members
+        val synsetMembers = if (DISTINCT_MEMBERS)
+            members.distinctOrDo { duplicate -> if (WARN_DUPLICATE_MEMBERS) Tracing.psErr.println("[E] duplicate $duplicate in members $members of $id") }
+        else members
 
         // relations
         val relations = if (IGNORE_QTARGETS)

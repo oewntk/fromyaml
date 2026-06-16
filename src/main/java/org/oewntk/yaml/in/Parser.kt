@@ -4,6 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.CoreModel
+import org.oewntk.model.distinctOrDo
 import java.io.File
 import java.io.IOException
 
@@ -28,12 +29,12 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
 
         // lexes + senses
         val lexParser = LexParser(inDir, fileext = fileext, verbose = verbose)
-        val lexes = lexParser.parse().sorted().distinct()
-        val senses = lexParser.senses.sorted().distinct()
+        val lexes = lexParser.parse().sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate lex $duplicate") }
+        val senses = lexParser.senses.sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate sense $duplicate") }
 
         // synsets
         val synsetParser = SynsetParser(inDir, fileext = fileext, verbose = verbose)
-        val synsets = synsetParser.parse().sorted().distinct()
+        val synsets = synsetParser.parse().sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate synset $duplicate") }
 
         return CoreModel(lexes, senses, synsets)
     }
