@@ -8,7 +8,7 @@ import org.junit.Test
 import org.oewntk.model.Lemma
 import org.oewntk.model.SynsetId
 import org.oewntk.model.SynsetType
-import org.oewntk.yaml.`in`.CoreFactoryPlus.Companion.orphans
+import org.oewntk.yaml.`in`.CoreFactoryPlus.Companion.orphanMembers
 import org.oewntk.yaml.`in`.LibTestsYamlStubCommon.model
 import kotlin.test.assertEquals
 
@@ -17,7 +17,7 @@ class TestsYamlStubOrphans {
     @Test
     fun testZuluOrphan() {
         val synset = model.synsetResolver("08506402-n") // Zulu community (group)
-        val orphans = model.orphans(synset)
+        val orphans = model.orphanMembers(synset)
         Tracing.psInfo.println(orphans)
         assertEquals(1, orphans.size)
         assertEquals("Zulu", orphans[0])
@@ -30,7 +30,7 @@ class TestsYamlStubOrphans {
                 val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
-                    val orphans = model.orphans(synset)
+                    val orphans = model.orphanMembers(synset)
                     Tracing.psInfo.println(orphans)
                     assertEquals(1, orphans.size)
                     assertEquals(lemma, orphans[0])
@@ -44,7 +44,7 @@ class TestsYamlStubOrphans {
                 val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
-                    val orphans = model.orphans(synset)
+                    val orphans = model.orphanMembers(synset)
                     Tracing.psInfo.println(orphans)
                     assertEquals(1, orphans.size)
                     assertEquals(lemma, orphans[0])
@@ -59,7 +59,7 @@ class TestsYamlStubOrphans {
                 val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
-                    val orphans = model.orphans(synset)
+                    val orphans = model.orphanMembers(synset)
                     Tracing.psInfo.println(orphans)
                     assertEquals(1, orphans.size)
                     assertEquals(lemma, orphans[0])
@@ -74,7 +74,7 @@ class TestsYamlStubOrphans {
                 val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
                 synsetIds.forEach { synsetId ->
                     val synset = model.synsetResolver(synsetId)
-                    val orphans = model.orphans(synset)
+                    val orphans = model.orphanMembers(synset)
                     Tracing.psInfo.println(orphans)
                     assertEquals(1, orphans.size)
                     assertEquals(lemma, orphans[0])
@@ -111,7 +111,7 @@ class TestsYamlStubOrphans {
         }
 
         val generatedCases: List<Triple<Lemma, SynsetType, List<SynsetId>>> by lazy {
-            requireNotNull(this::class.java.getResourceAsStream("/generated.log")).bufferedReader().useLines { lines ->
+            requireNotNull(this::class.java.getResourceAsStream("/plus.log")).bufferedReader().useLines { lines ->
                 lines
                     .map { line -> line.trim() }
                     .filter { line -> line.isEmpty() }

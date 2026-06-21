@@ -61,53 +61,38 @@ class CoreFactoryPlus(
 
         private val keyComparator: Comparator<Pair<Lemma, SynsetType>> =
             compareBy<Pair<Lemma, SynsetType>> { it.first }   // Lemma
-                .thenBy { it.second }                   // Category
+                .thenBy { it.second }                         // Type
 
         private fun Collection<Lex>.collectTargetSynsets(senseResolver: (SenseKey) -> Sense) = this
             .flatMap { it.senseKeys }
             .map { senseResolver(it).synsetId }
             .toSet()
 
-        fun CoreModel.orphans(synset: Synset) = synset.members
-            .filter {
-                val found = lexFinder(it)
-                found == null
-                        || found.none { lex -> lex.type == synset.type }
-                        || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
-            }
-            .toList()
-
-        // private fun Collection<Lex>.collectTargetSynsets(senseResolver: (SenseKey) -> Sense) = this
-        //     .flatMap { it.senseKeys }
-        //     .map { senseResolver(it).synsetId }
-        //     .toSet()
-
-        // fun Synset.orphans(senseResolver: (SenseKey) -> Sense, lexFinder: (Lemma) -> Collection<Lex>?) = this.members
-        //     .filter {
-        //         val found = lexFinder(it)
-        //         found == null
-        //                 || found.none { lex -> lex.type == this.type }
-        //                 || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(this.synsetId) }
-        //     }
-        //     .toList()
+        /**
+         * Collect orphan members of a synset
+         *
+         * @param synset synset
+         * @return list of (lemma,synsetType) pairs to synsets in which they appear as members but don't have an entry
+         */
+        fun CoreModel.orphanMembers(synset: Synset): List<Lemma> {
+            return synset.members
+                .filter {
+                    val found = lexFinder(it)
+                    found == null
+                            || found.none { lex -> lex.partOfSpeech == synset.partOfSpeech }
+                            || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
+                }
+                .toList()
+        }
 
         /**
          * Collect
          *
          * @return list of (lemma,synsetType) pairs to synsets in which they appear as members but don't have an entry
          */
-        private fun CoreModel.orphanMembers(): Map<Pair<Lemma, SynsetType>, List<Synset>> {
+        fun CoreModel.orphanMembers(): Map<Pair<Lemma, SynsetType>, List<Synset>> {
             return synsets
-                .map { synset ->
-                    synset to synset.members
-                        .filter {
-                            val found = lexFinder(it)
-                            found == null
-                                    || found.none { lex -> lex.type == synset.type }
-                                    || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
-                        }
-                        .toList()
-                }
+                .map { synset -> synset to orphanMembers(synset) }
                 .filter { (_, lemmas) -> lemmas.isNotEmpty() }
                 .flatMap { (synset, lemmas) -> lemmas.map { lemma -> synset to (lemma to synset.type) } }
                 .groupBy({ it.second }, { it.first })
