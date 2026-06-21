@@ -55,7 +55,7 @@ class SynsetParser(
         val code = synsetMap[KEY_SYNSET_POS] as String?
         val definitions = safeCast<List<String>>(synsetMap[KEY_SYNSET_DEFINITION]!!)
         val members = safeCast<List<String>>(synsetMap[KEY_SYNSET_MEMBERS]!!)
-        val examples = processExamples(safeNullableCast<List<String>>(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE)
+        val examples = processExamples(safeNullableCast<List<String>>(synsetMap[KEY_SYNSET_EXAMPLE]), KEY_EXAMPLE_TEXT, KEY_EXAMPLE_SOURCE, throws = throws)
         val usages = safeNullableCast<List<String>>(synsetMap[KEY_SYNSET_USAGE])
         val ili = safeNullableCast<String>(synsetMap[KEY_SYNSET_ILI])
         val wikidata = synsetMap[KEY_SYNSET_WIKIDATA]?.let {

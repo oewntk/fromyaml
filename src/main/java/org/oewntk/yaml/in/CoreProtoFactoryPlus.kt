@@ -17,6 +17,7 @@ import java.util.function.Supplier
 open class CoreProtoFactoryPlus(
     private val inDir: File,
     private val fileext: String = "yaml",
+    private val throws: Boolean = true,
     private val verbose: Boolean = false
 ) : Supplier<CoreModel?> {
 
@@ -25,7 +26,7 @@ open class CoreProtoFactoryPlus(
     }
 
     private fun make(inDir: File): CoreModel? {
-        val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, throws = false, verbose = false).get()
+        val stubModel: CoreModel? = CoreFactory(inDir, fileext = fileext, throws = throws, verbose = false).get()
         return stubModel?.let { model ->
             if (verbose) Tracing.psInfo.printf("[StubModel] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
             return model
@@ -41,8 +42,8 @@ open class CoreProtoFactoryPlus(
          * @param inDir  dir containing release YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, verbose: Boolean = false): CoreModel? {
-            return CoreProtoFactoryPlus(inDir, verbose = verbose).get()
+        private fun makeModel(inDir: File, throws: Boolean = true, verbose: Boolean = false): CoreModel? {
+            return CoreProtoFactoryPlus(inDir, throws = throws, verbose = verbose).get()
         }
 
         /**
@@ -54,12 +55,17 @@ open class CoreProtoFactoryPlus(
         private fun makeModel(args: Array<String>): CoreModel? {
             var iArg = 0
             var verbose = false
+            var doNotThrow = false
             if (args[iArg] == "--verbose") {
                 verbose = true
                 iArg++
             }
+            if ("--nothrow" == args[iArg]) {
+                doNotThrow = true
+                iArg++
+            }
             val inDir = File(args[iArg])
-            return makeModel(inDir, verbose = verbose)
+            return makeModel(inDir, throws = !doNotThrow, verbose = verbose)
         }
 
         /**

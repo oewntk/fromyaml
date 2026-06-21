@@ -83,10 +83,10 @@ internal object YamlUtils {
      * @param keySource YAML key for source
      * @return list of pairs of processed text, source
      */
-    fun processExamples(examples: List<*>?, keyText: String, keySource: String): List<Pair<String, String?>>? {
+    fun processExamples(examples: List<*>?, keyText: String, keySource: String, throws: Boolean = true): List<Pair<String, String?>>? {
         return examples
             ?.asSequence()
-            ?.map { processExample(it, keyText, keySource) }
+            ?.map { processExample(it, keyText, keySource, throws = throws) }
             ?.toList()
     }
 
@@ -98,7 +98,7 @@ internal object YamlUtils {
      * @param keySource YAML key for source
      * @return pair of processed text, source
      */
-    fun processExample(example: Any?, keyText: String, keySource: String): Pair<String, String?> {
+    fun processExample(example: Any?, keyText: String, keySource: String, throws: Boolean = true): Pair<String, String?> {
         return when (example) {
             is String -> {
                 processExampleText(example) to null
@@ -107,10 +107,11 @@ internal object YamlUtils {
             is Map<*, *> -> {
                 val exampleMap: Map<String, *> = safeCast(example)
                 assertKeysIn(
-                    throws = true,
+                    throws = throws,
                     exampleMap.keys,
                     keyText,
-                    keySource)
+                    keySource
+                )
                 val text = exampleMap[keyText].toString()
                 val source = exampleMap[keySource].toString()
                 processExampleText(text) to source

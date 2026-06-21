@@ -25,7 +25,7 @@ class CoreFactory(
 
     override fun get(): CoreModel? {
         try {
-            return Parser(inDir, fileext = fileext, verbose = verbose)
+            return Parser(inDir, fileext = fileext, throws = throws, verbose = verbose)
                 .parse()
                 .check(throws = throws, verbose = verbose)
                 .apply{ if (inverses) generateInverseRelations() }
@@ -48,8 +48,13 @@ class CoreFactory(
             var iArg = 0
             var fileext = "yaml"
             var verbose = false
+            var doNotThrow = false
             if ("--verbose" == args[iArg]) {
                 verbose = true
+                iArg++
+            }
+            if ("--nothrow" == args[iArg]) {
+                doNotThrow = true
                 iArg++
             }
             if ("--json" == args[iArg]) {
@@ -57,7 +62,7 @@ class CoreFactory(
                 iArg++
             }
             val inDir = File(args[iArg])
-            return CoreFactory(inDir, fileext = fileext, verbose = verbose).get()
+            return CoreFactory(inDir, fileext = fileext, throws = !doNotThrow, verbose = verbose).get()
         }
 
         /**

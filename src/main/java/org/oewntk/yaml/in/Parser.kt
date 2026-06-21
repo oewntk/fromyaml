@@ -13,7 +13,7 @@ import java.io.IOException
  *
  * @property inDir dir containing YAML files
  */
-class Parser(private val inDir: File, val fileext: String = "yaml", val verbose: Boolean = false) {
+class Parser(private val inDir: File, val fileext: String = "yaml", val throws: Boolean = true, val verbose: Boolean = false) {
 
     /**
      * Parse
@@ -28,7 +28,7 @@ class Parser(private val inDir: File, val fileext: String = "yaml", val verbose:
     fun parse(): CoreModel {
 
         // lexes + senses
-        val lexParser = LexParser(inDir, fileext = fileext, verbose = verbose)
+        val lexParser = LexParser(inDir, fileext = fileext, throws = throws, verbose = verbose)
         val lexes = lexParser.parse().sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate lex $duplicate") }
         val senses = lexParser.senses.sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate sense $duplicate") }
 

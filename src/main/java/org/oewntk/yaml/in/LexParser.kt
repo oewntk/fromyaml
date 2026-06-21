@@ -79,7 +79,8 @@ class LexParser(
                     val examples: List<Pair<String, String?>>? = processExamples(
                         safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]),
                         KEY_EXAMPLE_TEXT,
-                        KEY_EXAMPLE_SOURCE
+                        KEY_EXAMPLE_SOURCE,
+                        throws = throws
                     )
                     val verbFrames: List<VerbFrameId>? = safeNullableCast(senseMap[KEY_SENSE_VERBFRAMES])
                     val verbTemplates: List<VerbTemplateId>? = safeNullableCast(senseMap[KEY_SENSE_VERBTEMPLATES])
@@ -100,8 +101,7 @@ class LexParser(
                             .asSequence()
                             .filter { relation -> senseMap.containsKey(relation) }
                             .map { relation ->
-                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { target -> target[0] != 'Q' }
-                                    .toSet()
+                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { target -> target[0] != 'Q' }.toSet()
                             }
                             .filter { (_, targets) -> targets.isNotEmpty() }
                             .toMap()
