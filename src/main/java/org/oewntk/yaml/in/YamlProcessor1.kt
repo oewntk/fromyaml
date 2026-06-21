@@ -18,7 +18,11 @@ import java.util.*
  * @param K type of key
  * @param V type of value
  */
-abstract class YamlProcessor1<T, K : Comparable<K>, V>(protected var dir: File, val verbose: Boolean = false) {
+abstract class YamlProcessor1<T, K : Comparable<K>, V>(
+    protected var dir: File,
+    val throws: Boolean = true,
+    val verbose: Boolean = false
+) {
 
     /**
      * YAML files to process

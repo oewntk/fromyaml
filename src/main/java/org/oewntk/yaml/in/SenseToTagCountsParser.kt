@@ -13,7 +13,12 @@ import java.io.File
  *
  * @param dir dir containing YAML/JSON files
  */
-class SenseToTagCountsParser(dir: File, val fileext: String = "yaml", val throws: Boolean = true, verbose: Boolean = false) : YamlProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir, verbose = verbose) {
+class SenseToTagCountsParser(
+    dir: File,
+    val fileext: String = "yaml",
+    throws: Boolean = true,
+    verbose: Boolean = false
+) : YamlProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir, throws = throws, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) } ?: arrayOf()
