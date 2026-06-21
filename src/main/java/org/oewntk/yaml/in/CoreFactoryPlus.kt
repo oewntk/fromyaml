@@ -25,13 +25,37 @@ class CoreFactoryPlus(
         return make()
     }
 
+    private var lexesStubCount = 0
+    private var sensesStubCount = 0
+    private var synsetsStubCount = 0
+
     private fun make(): CoreModel? {
         return super.get()?.let { stubModel ->
-            if (verbose) Tracing.psInfo.println("[I] Fixing ...")
+            lexesStubCount = stubModel.lexes.size
+            sensesStubCount = stubModel.senses.size
+            synsetsStubCount = stubModel.synsets.size
+
+            if (verbose) Tracing.psInfo.println("[I] Fix")
             return stubModel
-                .fix(verbose = false)
-                .checkMembers(verbose = true)
+                .fix(verbose = verbose)
+                .checkMembers(verbose = verbose)
         }
+    }
+
+    /**
+     * Fix
+     *
+     * @receiver model
+     * @return a new fixed model
+     */
+    fun CoreModel.fix(verbose: Boolean = false): CoreModel {
+        val (newLexes, newSenses) = generateMemberEntries(verbose = verbose)
+        val newSynsets = generateSynsets(verbose = verbose)
+        val lexesDelta = newLexes.size - lexesStubCount
+        val sensesDelta = newSenses.size - sensesStubCount
+        val synsetsDelta = newSynsets.size - synsetsStubCount
+        if (verbose) Tracing.psInfo.println("[I] Fix completed with lexes+=$lexesDelta senses+=$sensesDelta synsets+=$synsetsDelta")
+        return CoreModel(newLexes, newSenses, newSynsets)
     }
 
     companion object {
@@ -118,12 +142,11 @@ class CoreFactoryPlus(
             val csvFile = File("plus.log")
             csvFile.writeText(csv)
 
+            Tracing.ps(orphans.isEmpty()).println("[W] ${orphans.size} orphan entries")
             if (verbose) {
-                Tracing.psInfo.println("[W] ${orphans.size} fixes logged in $csvFile")
+                Tracing.psInfo.println("[I] ${orphans.size} orphans logged in $csvFile")
             }
-
-            Tracing.ps(orphans.isEmpty()).println("[I] ${orphans.size} orphan entries")
-            return generateMemberEntries(orphans)
+             return generateMemberEntries(orphans, verbose = verbose)
         }
 
         private fun orphanToCsv(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): String {
@@ -143,7 +166,7 @@ class CoreFactoryPlus(
          * @param orphans list of (lemma,pos) pairs to synsets in which they appear as members but don't have an entry
          * @return new list of lexes and new list of senses
          */
-        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): Pair<List<Lex>, List<Sense>> {
+        private fun CoreModel.generateMemberEntries(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>, verbose: Boolean = false): Pair<List<Lex>, List<Sense>> {
             val newLexes = lexes.toMutableList()
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
@@ -174,25 +197,13 @@ class CoreFactoryPlus(
                     newLexes.add(lex)
                 }
             }
+            if (verbose) Tracing.psInfo.println("[I] -orphan members and senses added")
             return newLexes to newSenses
         }
 
         fun CoreModel.generateSynsets(verbose: Boolean = false): List<Synset> {
-            if (verbose) Tracing.psErr.println("[I] synsets as read from plus")
+            if (verbose) Tracing.psInfo.println("[I] -no synset added")
             return synsets
-        }
-
-        /**
-         * Fix
-         *
-         * @receiver model
-         * @return a new fixed model
-         */
-        fun CoreModel.fix(verbose: Boolean = false): CoreModel {
-            val (newLexes, newSenses) = generateMemberEntries(verbose = verbose)
-            val newSynsets = generateSynsets(verbose = verbose)
-            if (verbose) Tracing.psInfo.println("[I] plus completed")
-            return CoreModel(newLexes, newSenses, newSynsets)
         }
 
         /**
