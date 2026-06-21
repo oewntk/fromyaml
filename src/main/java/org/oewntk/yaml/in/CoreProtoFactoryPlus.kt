@@ -41,8 +41,8 @@ open class CoreProtoFactoryPlus(
          * @param inDir  dir containing release YAML files
          * @return model
          */
-        private fun makeModel(inDir: File): CoreModel? {
-            return CoreProtoFactoryPlus(inDir).get()
+        private fun makeModel(inDir: File, verbose: Boolean = false): CoreModel? {
+            return CoreProtoFactoryPlus(inDir, verbose = verbose).get()
         }
 
         /**
@@ -51,9 +51,15 @@ open class CoreProtoFactoryPlus(
          * @param args command-line arguments
          * @return core model
          */
-        fun makeModel(args: Array<String>): CoreModel? {
-            val inDir = File(args[0])
-            return makeModel(inDir)
+        private fun makeModel(args: Array<String>): CoreModel? {
+            var iArg = 0
+            var verbose = false
+            if (args[iArg] == "--verbose") {
+                verbose = true
+                iArg++
+            }
+            val inDir = File(args[iArg])
+            return makeModel(inDir, verbose = verbose)
         }
 
         /**

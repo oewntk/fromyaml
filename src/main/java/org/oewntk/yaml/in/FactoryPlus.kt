@@ -45,7 +45,7 @@ class FactoryPlus(
          * @param args command-line arguments
          * @return core model
          */
-        fun makeModel(args: Array<String>): Model? {
+        private fun makeModel(args: Array<String>): Model? {
             var iArg = 0
             var verbose = false
             if (args[iArg] == "--verbose") {
