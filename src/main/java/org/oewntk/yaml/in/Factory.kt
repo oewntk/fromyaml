@@ -98,7 +98,7 @@ class Factory(
          * @param args command-line arguments
          * @return core model
          */
-        private fun makeModel(args: Array<String>): Model? {
+        fun makeModel(args: Array<String>): Model? {
             var iArg = 0
             var fileext = "yaml"
             var verbose = false
