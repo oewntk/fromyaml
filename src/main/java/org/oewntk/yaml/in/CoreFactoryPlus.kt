@@ -18,8 +18,13 @@ import java.util.function.Supplier
 class CoreFactoryPlus(
     inDir: File,
     fileext: String = "yaml",
-    val verbose: Boolean = false
-) : CoreProtoFactoryPlus(inDir, fileext = fileext, verbose = false), Supplier<CoreModel?> {
+    val verbose: Boolean = false,
+) : CoreProtoFactoryPlus(
+    inDir,
+    fileext = fileext,
+    throws = false,
+    verbose = false), Supplier<CoreModel?>
+{
 
     override fun get(): CoreModel? {
         return make()
