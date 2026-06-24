@@ -18,11 +18,12 @@ class FactoryPlus(
     private val inDir: File,
     private val inDir2: File,
     private val fileext: String = "yaml",
+    private val inverses: Boolean = false,
     private val verbose: Boolean = false
 ) : Supplier<Model?> {
 
     override fun get(): Model? {
-        val coreModel = CoreFactoryPlus(inDir, fileext = fileext, verbose = verbose).get()
+        val coreModel = CoreFactoryPlus(inDir, fileext = fileext, inverses = inverses, verbose = verbose).get()
         return coreModel?.let { Factory(inDir, inDir2, verbose = verbose).from(it) }
     }
 
