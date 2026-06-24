@@ -30,7 +30,6 @@ open class CoreProtoFactoryPlus(
         return stubModel?.let { model ->
             if (verbose) Tracing.psInfo.printf("[StubModel] %s%n%s%n%s%n", model.source, model.info(), ModelInfo.counts(stubModel))
             return model
-                .check(throws = false, verbose = verbose)
         }
     }
 
