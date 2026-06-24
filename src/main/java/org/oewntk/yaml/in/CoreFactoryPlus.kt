@@ -208,7 +208,7 @@ class CoreFactoryPlus(
                 }
             }
             if (verbose) Tracing.psInfo.println("[I] -orphan members and senses added")
-            return newLexes to newSenses
+            return newLexes.sorted() to newSenses.sorted()
         }
 
         fun CoreModel.generateSynsets(verbose: Boolean = false): List<Synset> {
