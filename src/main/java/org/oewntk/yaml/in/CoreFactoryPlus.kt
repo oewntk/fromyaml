@@ -24,8 +24,8 @@ class CoreFactoryPlus(
     inDir,
     fileext = fileext,
     throws = false,
-    verbose = false), Supplier<CoreModel?>
-{
+    verbose = false
+), Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         return make()
@@ -45,7 +45,7 @@ class CoreFactoryPlus(
             return stubModel
                 .fix(verbose = verbose)
                 .checkMembers(verbose = verbose)
-                .apply{ if (inverses) generateInverseRelations() }
+                .apply { if (inverses) generateInverseRelations() }
         }
     }
 
@@ -153,7 +153,7 @@ class CoreFactoryPlus(
             if (verbose) {
                 Tracing.psInfo.println("[I] ${orphans.size} orphans logged in $csvFile")
             }
-             return generateMemberEntries(orphans, verbose = verbose)
+            return generateMemberEntries(orphans, verbose = verbose)
         }
 
         private fun orphanToCsv(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): String {
@@ -178,23 +178,26 @@ class CoreFactoryPlus(
             val newSenses = senses.toMutableList()
             orphans.forEach { (typedLemma, synsets) ->
                 val (lemma, type) = typedLemma
-                val foundLex = Finder.getLexesHavingType(this, lemma, type)?.firstOrNull()
+                val foundLex = Finder.getLexesHavingPos(this, lemma, type.toPartOfSpeech())?.firstOrNull()
                 if (foundLex != null) {
+                    // lex found with the required part of speech
+                    val n = foundLex.senseKeys.size
                     synsets.withIndex().forEach { (idx, synset) ->
                         val resolvedSenses: Sequence<Pair<Sense?, SynsetId?>> = foundLex.senseKeys.asSequence()
                             .map { sk -> senseFinder(sk) }
                             .map { sense -> sense to sense?.let { synsetFinder(sense.synsetId)?.synsetId } }
                         val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
                         if (found == null || found.first == null) {
+                            // no sense found with the required synset target: add generated sense to the found lex
                             val senseId = generateSenseKey(lemma, synset, idx)
-                            val sense = Sense(senseId, foundLex.key, synset.synsetId, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
-                            foundLex.senseKeys = foundLex.senseKeys + senseId  // TODO sort by sense order
+                            val sense = Sense(senseId, foundLex.key, synset.synsetId, indexInLex = n + idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
+                            foundLex.senseKeys += senseId  // TODO sort by sense order
                             newSenses.add(sense)
                         }
                     }
-
                 } else {
-                    val lex = foundLex ?: Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
+                    // no lex found with the required part of speech: create one
+                    val lex = Lex(lemma, type.value.toString(), generated = true) //, source = findFile(lemma, generated = generated))
                     lex.senseKeys = synsets.withIndex().map { (idx, synset) ->
                         val senseId = generateSenseKey(lemma, synset, idx)
                         val sense = Sense(senseId, lex.key, synset.synsetId, indexInLex = idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
