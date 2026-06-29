@@ -20,8 +20,8 @@ import java.util.*
  */
 abstract class YamlProcessor1<T, K : Comparable<K>, V>(
     protected var dir: File,
-    val throws: Boolean = true,
-    val verbose: Boolean = false
+    protected val throws: Boolean = true,
+    protected val verbose: Boolean = false
 ) {
 
     /**

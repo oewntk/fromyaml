@@ -15,9 +15,9 @@ import java.io.IOException
  */
 class Parser(
     private val inDir: File,
-    val fileext: String = "yaml",
-    val throws: Boolean = true,
-    val verbose: Boolean = false) {
+    private val fileext: String = "yaml",
+    private val throws: Boolean = true,
+    private val verbose: Boolean = false) {
 
     /**
      * Parse

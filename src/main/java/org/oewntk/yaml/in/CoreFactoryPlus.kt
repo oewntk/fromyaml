@@ -18,8 +18,8 @@ import java.util.function.Supplier
 class CoreFactoryPlus(
     inDir: File,
     fileext: String = "yaml",
-    val inverses: Boolean = false,
-    val verbose: Boolean = false,
+    private val inverses: Boolean = false,
+    private val verbose: Boolean = false,
 ) : CoreProtoFactoryPlus(
     inDir,
     fileext = fileext,
