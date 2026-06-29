@@ -12,6 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/oenn-curated" />
       <excludeFolder url="file://$MODULE_DIR$/yamlplusplus" />
       <excludeFolder url="file://$MODULE_DIR$/plusyaml" />
+      <excludeFolder url="file://$MODULE_DIR$/images" />
     </content>
   </component>
 </module>
