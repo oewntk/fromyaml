@@ -61,6 +61,10 @@ class CoreFactory(
                 fileext = "json"
                 iArg++
             }
+            if ("--no-throw" == args[iArg]) {
+                doNotThrow = true
+                iArg++
+            }
             val inDir = File(args[iArg])
             return CoreFactory(inDir, fileext = fileext, throws = !doNotThrow, verbose = verbose).get()
         }

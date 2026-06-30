@@ -59,7 +59,7 @@ open class CoreProtoFactoryPlus(
                 verbose = true
                 iArg++
             }
-            if ("--nothrow" == args[iArg]) {
+            if ("--no-throw" == args[iArg]) {
                 doNotThrow = true
                 iArg++
             }
