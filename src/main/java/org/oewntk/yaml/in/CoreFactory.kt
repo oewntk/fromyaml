@@ -28,7 +28,7 @@ class CoreFactory(
             return Parser(inDir, fileext = fileext, throws = throws, verbose = verbose)
                 .parse()
                 .check(throws = throws, verbose = verbose)
-                .apply{ if (inverses) generateInverseRelations() }
+                .apply { if (inverses) generateInverseRelations() }
                 .apply { source = inDir.absolutePath }
         } catch (e: IOException) {
             e.printStackTrace(Tracing.psErr)
@@ -46,15 +46,16 @@ class CoreFactory(
          */
         private fun makeCoreModel(args: Array<String>): CoreModel? {
             var iArg = 0
+            var inverses = false
             var fileext = "yaml"
-            var verbose = false
             var doNotThrow = false
+            var verbose = false
             if ("--verbose" == args[iArg]) {
                 verbose = true
                 iArg++
             }
-            if ("--nothrow" == args[iArg]) {
-                doNotThrow = true
+            if ("--inverses" == args[iArg]) {
+                inverses = true
                 iArg++
             }
             if ("--json" == args[iArg]) {
@@ -66,7 +67,7 @@ class CoreFactory(
                 iArg++
             }
             val inDir = File(args[iArg])
-            return CoreFactory(inDir, fileext = fileext, throws = !doNotThrow, verbose = verbose).get()
+            return CoreFactory(inDir, inverses = inverses, fileext = fileext, throws = !doNotThrow, verbose = verbose).get()
         }
 
         /**
