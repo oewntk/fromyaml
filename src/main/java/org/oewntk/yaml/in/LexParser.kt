@@ -76,7 +76,7 @@ class LexParser(
 
                     val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
                     val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
-                    val examples: List<Pair<String, String?>>? = processExamples(
+                    val examples: List<Example>? = processExamples(
                         safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]),
                         KEY_EXAMPLE_TEXT,
                         KEY_EXAMPLE_SOURCE,

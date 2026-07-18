@@ -3,6 +3,7 @@
  */
 package org.oewntk.yaml.`in`
 
+import org.oewntk.model.Example
 import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.error.YAMLException
@@ -83,7 +84,7 @@ internal object YamlUtils {
      * @param keySource YAML key for source
      * @return list of pairs of processed text, source
      */
-    fun processExamples(examples: List<*>?, keyText: String, keySource: String, throws: Boolean = true): List<Pair<String, String?>>? {
+    fun processExamples(examples: List<*>?, keyText: String, keySource: String, throws: Boolean = true): List<Example>? {
         return examples
             ?.asSequence()
             ?.map { processExample(it, keyText, keySource, throws = throws) }
@@ -98,10 +99,10 @@ internal object YamlUtils {
      * @param keySource YAML key for source
      * @return pair of processed text, source
      */
-    fun processExample(example: Any?, keyText: String, keySource: String, throws: Boolean = true): Pair<String, String?> {
+    fun processExample(example: Any?, keyText: String, keySource: String, throws: Boolean = true): Example {
         return when (example) {
             is String -> {
-                processExampleText(example) to null
+                Example(processExampleText(example), null)
             }
 
             is Map<*, *> -> {
@@ -114,7 +115,7 @@ internal object YamlUtils {
                 )
                 val text = exampleMap[keyText].toString()
                 val source = exampleMap[keySource].toString()
-                processExampleText(text) to source
+                Example(processExampleText(text), source)
             }
 
             else -> throw YAMLException(example.toString())

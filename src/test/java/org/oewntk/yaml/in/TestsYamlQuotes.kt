@@ -17,7 +17,7 @@ class TestsYamlQuotes {
         val synset = model.synsetResolver("06853940-n")
         synset.examples?.forEach {
             ps.println(it)
-            assert(it.first.startsWith("`"))
+            assert(it.text.startsWith("`"))
         }
     }
 
