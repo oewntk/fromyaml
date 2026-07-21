@@ -76,8 +76,8 @@ abstract class YamlProcessor<T, K : Comparable<K>, V>(protected val dir: File, v
     private fun load(file: File, yaml: Yaml, items: MutableCollection<T>) {
          FileInputStream(file).use { inputStream ->
             val top: Map<K, V> = yaml.load(inputStream)
-            for (entry in top.entries) {
-                val processedItems = processEntry(file.name, entry.key to entry.value)
+            for ((key, value) in top) {
+                val processedItems = processEntry(file.name, key to value)
                 if (processedItems != null) {
                     items.addAll(processedItems)
                 }
