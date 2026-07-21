@@ -187,7 +187,7 @@ class CoreFactoryPlus(
                             .map { sk -> senseFinder(sk) }
                             .map { sense -> sense to sense?.let { synsetFinder(sense.synsetId)?.synsetId } }
                         val found: Pair<Sense?, SynsetId?>? = resolvedSenses.firstOrNull { synset.synsetId == it.second }
-                        if (found == null || found.first == null) {
+                        if (found?.first == null) {
                             // no sense found with the required synset target: add generated sense to the found lex
                             val senseId = generateSenseKey(lemma, synset, idx)
                             val sense = Sense(senseId, foundLex.key, synset.synsetId, indexInLex = n + idx) // TODO compute indexInLex (idx is the index of the synset in the orphan entry)
