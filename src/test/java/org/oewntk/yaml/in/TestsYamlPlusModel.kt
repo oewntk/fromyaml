@@ -27,10 +27,10 @@ class TestsYamlPlusModel {
     fun testLexes() {
         testCases
             .forEach { testCase ->
-                val (lemma: Lemma, pos: SynsetType, _: List<SynsetId>) = testCase
+                val (lemma: Lemma, pos: PartOfSpeech, _: List<SynsetId>) = testCase
                 val lexes = model.lexResolver(lemma)
-                val byType: Map<SynsetType, Set<SynsetId>> = lexes.associateBy(
-                    { it.type },
+                val byPartOfSpeech: Map<PartOfSpeech, Set<SynsetId>> = lexes.associateBy(
+                    { it.partOfSpeech },
                     { lex: Lex ->
                         lex.senseKeys
                             .map { sk: SenseKey -> model.senseResolver(sk) }
@@ -40,7 +40,7 @@ class TestsYamlPlusModel {
 
                 ps.println("$lemma -> ${lexes.joinToString(prefix = "{\n", postfix = "\n}", separator = ",\n") { it.toXString(model) }}")
 
-                assert(byType.containsKey(pos)) { ps.print("k2=$pos") }
+                assert(byPartOfSpeech.containsKey(pos)) { ps.print("k2=$pos") }
             }
     }
 
@@ -48,10 +48,10 @@ class TestsYamlPlusModel {
     fun testLexesSenses() {
         testCases
             .forEach { testCase ->
-                val (lemma: Lemma, _: SynsetType, synsetIds: List<SynsetId>) = testCase
+                val (lemma: Lemma, _: PartOfSpeech, synsetIds: List<SynsetId>) = testCase
                 val lexes = model.lexResolver(lemma)
-                val byPos: Map<SynsetType, Set<SynsetId>> = lexes.associateBy(
-                    { it.type },
+                val byPos: Map<PartOfSpeech, Set<SynsetId>> = lexes.associateBy(
+                    { it.partOfSpeech },
                     { lex: Lex ->
                         lex.senseKeys
                             .map { sk: SenseKey -> model.senseResolver(sk) }
@@ -74,7 +74,7 @@ class TestsYamlPlusModel {
 
     companion object {
 
-        lateinit var testCases: List<Triple<Lemma, SynsetType, List<SynsetId>>>
+        lateinit var testCases: List<Triple<Lemma, PartOfSpeech, List<SynsetId>>>
 
         @JvmStatic
         @BeforeClass
@@ -85,7 +85,7 @@ class TestsYamlPlusModel {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], PartOfSpeech.fromChar(fields[1][0]), fields[2].split(","))
                     }
                     .toList()
             }
