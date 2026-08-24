@@ -79,10 +79,10 @@ class SynsetParser(
                 .asSequence()
                 .filter { relation -> synsetMap.containsKey(relation) }
                 .map { relation ->
-                    relation to safeCast<List<String>>(synsetMap[relation]!!).filter { target -> target[0] != 'Q' }
+                    relation to safeCast<List<String>>(synsetMap[relation]!!).filter { targetId -> targetId[0] != 'Q' }
                         .toSet() // relation, setOf(targets)
                 }
-                .filter { (_, targets) -> targets.isNotEmpty() }
+                .filter { (_, targetIds) -> targetIds.isNotEmpty() }
                 .toMap()
                 .ifEmpty { null }
         else

@@ -117,7 +117,7 @@ class CoreFactoryPlus(
                     val found = lexFinder(it)
                     found == null
                             || found.none { lex -> lex.partOfSpeech == synset.partOfSpeech }
-                            || found.collectTargetSynsets(senseResolver).none { targets -> targets.contains(synset.synsetId) }
+                            || found.collectTargetSynsets(senseResolver).none { targetIds -> targetIds.contains(synset.synsetId) }
                 }
                 .toList()
         }

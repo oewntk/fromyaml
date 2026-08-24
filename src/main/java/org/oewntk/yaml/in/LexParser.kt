@@ -101,9 +101,9 @@ class LexParser(
                             .asSequence()
                             .filter { relation -> senseMap.containsKey(relation) }
                             .map { relation ->
-                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { target -> target[0] != 'Q' }.toSet()
+                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { targetId -> targetId[0] != 'Q' }.toSet()
                             }
-                            .filter { (_, targets) -> targets.isNotEmpty() }
+                            .filter { (_, targetIds) -> targetIds.isNotEmpty() }
                             .toMap()
                             .ifEmpty { null }
 
