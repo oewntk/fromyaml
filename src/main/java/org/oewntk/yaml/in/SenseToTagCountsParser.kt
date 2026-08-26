@@ -18,12 +18,12 @@ class SenseToTagCountsParser(
     val fileext: String = "yaml",
     throws: Boolean = true,
     verbose: Boolean = false
-) : YamlProcessor1<Pair<String, TagCount>, String, Map<String, Int>>(dir, throws = throws, verbose = verbose) {
+) : YamlProcessor1<Pair<SenseKey, TagCount>, String, Map<String, Int>>(dir, throws = throws, verbose = verbose) {
 
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToTagCounts.$fileext".toRegex()) } ?: arrayOf()
 
-    override fun processEntry(source: String?, entry: Pair<SenseKey, Map<String, Int>>): Pair<SenseKey, TagCount> {
+    override fun processEntry(source: String?, entry: Pair<String, Map<String, Int>>): Pair<SenseKey, TagCount> {
 
         try {
             val sensekey = entry.first
@@ -39,7 +39,7 @@ class SenseToTagCountsParser(
             }
             val senseNum = tagCntMap[KEY_TAGCOUNT_SENSE_NUM]!!
             val count = tagCntMap[KEY_TAGCOUNT_COUNT]!!
-            return sensekey to TagCount(senseNum, count)
+            return SenseKey(sensekey) to TagCount(senseNum, count)
         } catch (iae: IllegalArgumentException) {
             throw IllegalArgumentException("${iae.message} in $source")
         }

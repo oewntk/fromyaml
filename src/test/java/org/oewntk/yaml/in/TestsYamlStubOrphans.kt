@@ -16,7 +16,7 @@ class TestsYamlStubOrphans {
 
     @Test
     fun testZuluOrphan() {
-        val synset = model.synsetResolver("08506402-n") // Zulu community (group)
+        val synset = model.synsetResolver(SynsetId("08506402-n")) // Zulu community (group)
         val orphans = model.orphanMembers(synset)
         Tracing.psInfo.println(orphans)
         assertEquals(1, orphans.size)
@@ -37,6 +37,7 @@ class TestsYamlStubOrphans {
                 }
             }
     }
+
     @Test
     fun testFailsPlus() {
         testCases
@@ -91,7 +92,7 @@ class TestsYamlStubOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }
@@ -104,7 +105,7 @@ class TestsYamlStubOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }
@@ -117,7 +118,7 @@ class TestsYamlStubOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }

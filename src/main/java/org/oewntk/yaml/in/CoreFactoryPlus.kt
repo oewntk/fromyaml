@@ -114,10 +114,10 @@ class CoreFactoryPlus(
         fun CoreModel.orphanMembers(synset: Synset): List<Lemma> {
             return synset.members
                 .filter {
-                    val found = lexFinder(it)
-                    found == null
-                            || found.none { lex -> lex.partOfSpeech == synset.partOfSpeech }
-                            || found.collectTargetSynsets(senseResolver).none { targetIds -> targetIds.contains(synset.synsetId) }
+                    val found: Collection<Lex>? = lexFinder(it) // the lemma's lexes
+                    found == null // lemma has no lex
+                            || found.none { lex -> lex.partOfSpeech == synset.partOfSpeech } // the lemma has lexes but none with the same part-of-speech as the synset
+                            || found.collectTargetSynsets(senseResolver).none { targetId -> targetId == synset.synsetId } // the lemma has lexes, collect senses and their synset ids, none of which is the synset's id
                 }
                 .toList()
         }
@@ -159,8 +159,8 @@ class CoreFactoryPlus(
         private fun orphanToCsv(orphans: Map<Pair<Lemma, SynsetType>, List<Synset>>): String {
             return orphans
                 .map { (key, synsets) ->
-                    val synsetIds = synsets.joinToString(separator = ",") { it.synsetId }
-                    val senseKeys = synsets.withIndex().joinToString(separator = ",") { (idx, synset) -> generateSenseKey(key.first, synset, idx) }
+                    val synsetIds = synsets.joinToString(separator = ",") { it.synsetId.id }
+                    val senseKeys = synsets.withIndex().joinToString(separator = ",") { (idx, synset) -> generateSenseKey(key.first, synset, idx).id }
                     "${key.first};${key.second.value};$synsetIds;$senseKeys"
                 }
                 .sortedWith(LexicographicOrder.lowerFirst)

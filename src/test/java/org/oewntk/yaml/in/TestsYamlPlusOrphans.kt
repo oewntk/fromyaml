@@ -16,7 +16,7 @@ class TestsYamlPlusOrphans {
 
     @Test
     fun testZuluOrphans() {
-        val synset = model.synsetResolver("08506402-n") // Zulu community (group)
+        val synset = model.synsetResolver(SynsetId("08506402-n")) // Zulu community (group)
         val orphans = model.orphanMembers(synset)
         for (o in orphans) {
             Tracing.psInfo.println(o)
@@ -75,7 +75,7 @@ class TestsYamlPlusOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }
@@ -88,7 +88,7 @@ class TestsYamlPlusOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }
@@ -101,7 +101,7 @@ class TestsYamlPlusOrphans {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(","))
+                        Triple(fields[0], SynsetType.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }

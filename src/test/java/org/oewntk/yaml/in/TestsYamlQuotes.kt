@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
+import org.oewntk.model.SynsetId
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
@@ -14,7 +15,7 @@ class TestsYamlQuotes {
 
     @Test
     fun testQuote() {
-        val synset = model.synsetResolver("06853940-n")
+        val synset = model.synsetResolver(SynsetId("06853940-n"))
         synset.examples?.forEach {
             ps.println(it)
             assert(it.text.startsWith("`"))

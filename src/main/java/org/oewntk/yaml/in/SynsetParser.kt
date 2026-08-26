@@ -3,6 +3,7 @@
  */
 package org.oewntk.yaml.`in`
 
+import org.oewntk.model.*
 import org.oewntk.model.PartOfSpeech
 import org.oewntk.model.Synset
 import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
@@ -79,7 +80,9 @@ class SynsetParser(
                 .asSequence()
                 .filter { relation -> synsetMap.containsKey(relation) }
                 .map { relation ->
-                    relation to safeCast<List<String>>(synsetMap[relation]!!).filter { targetId -> targetId[0] != 'Q' }
+                    relation to safeCast<List<String>>(synsetMap[relation]!!)
+                        .filter { targetId -> targetId[0] != 'Q' }
+                        .map { SynsetId(it) }
                         .toSet() // relation, setOf(targets)
                 }
                 .filter { (_, targetIds) -> targetIds.isNotEmpty() }
@@ -89,14 +92,14 @@ class SynsetParser(
             SYNSET_RELATIONS
                 .asSequence()
                 .filter { relation -> synsetMap.containsKey(relation) }
-                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation]!!).toSet() } // relation, setOf(targets)
+                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation]!!).map { SynsetId(it) }.toSet() } // relation, setOf(targets)
                 .ifEmpty { null }
 
         // type
         val type = code!![0]
 
         return Synset(
-            id,
+            SynsetId(id),
             SynsetType.fromChar(type),
             domain,
             synsetMembers.toSet(),

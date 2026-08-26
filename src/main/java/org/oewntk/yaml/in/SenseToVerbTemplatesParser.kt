@@ -17,13 +17,13 @@ class SenseToVerbTemplatesParser(dir: File, val fileext: String = "yaml", verbos
     override val files: Array<File>
         get() = dir.listFiles { f: File -> f.name.matches("senseToVerbTemplates.$fileext".toRegex()) } ?: arrayOf()
 
-    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<String, List<VerbTemplateId>>? {
-        val sensekey = entry.first
+    override fun processEntry(source: String?, entry: Pair<String, List<VerbTemplateId>>): Pair<SenseKey, List<VerbTemplateId>>? {
+        val senseKey = SenseKey(entry.first)
         val templateIds = entry.second
         if (DUMP) {
-            Tracing.psInfo.println(sensekey)
+            Tracing.psInfo.println(senseKey)
         }
-        return if (templateIds.isEmpty()) null else sensekey to templateIds
+        return if (templateIds.isEmpty()) null else senseKey to templateIds
     }
 
     companion object {

@@ -28,7 +28,7 @@ class Factory(
         val verbFrames: List<VerbFrame>,
         val verbTemplates: List<VerbTemplate>,
         val senseToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
-        val senseToTagCounts: Collection<Pair<String, TagCount>>?,
+        val senseToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     )
 
     override fun get(): Model? {
