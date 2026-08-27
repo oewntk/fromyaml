@@ -3,6 +3,8 @@
 
 /yaml*/
 /yaml*
+!/yaml2
+!/yaml2/**
 /plusyaml*/
 /plusyaml*
 /json*/
