@@ -74,8 +74,8 @@ class LexParser(
                         dumpMap(senseMap, indent = "\t")
                     }
 
-                    val senseId = senseMap[KEY_SENSE_ID]!! as SenseKey
-                    val synsetId = senseMap[KEY_SENSE_SYNSET]!! as SynsetId
+                    val senseId = senseMap[KEY_SENSE_ID]!! as String
+                    val synsetId = senseMap[KEY_SENSE_SYNSET]!! as String
                     val examples: List<Example>? = processExamples(
                         safeNullableCast(senseMap[KEY_SENSE_EXAMPLES]),
                         KEY_EXAMPLE_TEXT,
@@ -109,9 +109,9 @@ class LexParser(
 
                     // sense
                     val lexSense = Sense(
-                        senseId,
+                        SenseKey(senseId),
                         lex.key,
-                        synsetId,
+                        SynsetId(synsetId),
                         indexInLex = it,
                         examples,
                         verbFrames?.toSet(),
