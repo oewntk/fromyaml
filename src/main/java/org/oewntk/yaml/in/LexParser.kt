@@ -91,17 +91,18 @@ class LexParser(
                     val relations = if (IGNORE_QTARGETS)
                         SENSE_RELATIONS
                             .asSequence()
-                            .filter { relation -> senseMap.containsKey(relation) }
+                            .filter { rel -> senseMap.containsKey(rel) }
+                            .map(::Relation)
                             .associateWith { relation ->
-                                safeCast<List<String>>(senseMap[relation]!!).map { SenseKey(it) }.toSet()
+                                safeCast<List<String>>(senseMap[relation.id]!!).map { SenseKey(it) }.toSet()
                             }
                             .ifEmpty { null }
                     else
                         SENSE_RELATIONS
                             .asSequence()
                             .filter { relation -> senseMap.containsKey(relation) }
-                            .map { relation ->
-                                relation to safeCast<List<String>>(senseMap[relation]!!).filter { targetId -> targetId[0] != 'Q' }.map { SenseKey(it) }.toSet()
+                            .map { rel ->
+                                Relation(rel) to safeCast<List<String>>(senseMap[rel]!!).filter { targetId -> targetId[0] != 'Q' }.map { SenseKey(it) }.toSet()
                             }
                             .filter { (_, targetIds) -> targetIds.isNotEmpty() }
                             .toMap()
