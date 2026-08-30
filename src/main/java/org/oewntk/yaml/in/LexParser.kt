@@ -141,7 +141,7 @@ class LexParser(
                         }
                         val variety = pronunciationMap[KEY_PRONUNCIATION_VARIETY] as String?
                         val value = pronunciationMap[KEY_PRONUNCIATION_VALUE] as String
-                        Pronunciation(value, variety)
+                        Pronunciation(PronunciationValue(value), variety)
                     }
                 } else null
                 lex.pronunciations = pronunciations?.toSet()
