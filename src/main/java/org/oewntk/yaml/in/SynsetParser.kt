@@ -71,8 +71,11 @@ class SynsetParser(
 
         // members
         val synsetMembers = if (DISTINCT_MEMBERS)
-            members.distinctOrDo { duplicate -> if (WARN_DUPLICATE_MEMBERS) Tracing.psErr.println("[E] duplicate $duplicate in members $members of $id") }
+            members
+                .distinctOrDo { duplicate -> if (WARN_DUPLICATE_MEMBERS) Tracing.psErr.println("[E] duplicate $duplicate in members $members of $id") }
+                .map(::Lemma)
         else members
+            .map(::Lemma)
 
         // relations
         val relations = if (IGNORE_QTARGETS)

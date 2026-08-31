@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.Category
+import org.oewntk.model.Lemma
 import org.oewntk.model.LibTestModelSenseGroups.testCISensesGroupingByLCLemma
 import org.oewntk.model.LibTestModelSenseGroups.testCISensesGroupingByLCLemmaAndPos
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
@@ -15,27 +16,27 @@ class TestsYamlModelSenseGroups {
 
     @Test
     fun testCISensesBaroque() {
-        testCISensesGroupingByLCLemma(model, "baroque", ps)
+        testCISensesGroupingByLCLemma(model, Lemma("baroque"), ps)
     }
 
     @Test
     fun testCISensesBaroqueA() {
-        testCISensesGroupingByLCLemmaAndPos(model, "baroque", Category.A, ps)
+        testCISensesGroupingByLCLemmaAndPos(model, Lemma("baroque"), Category.A, ps)
     }
 
     @Test
     fun testCISensesCriticalA() {
-        testCISensesGroupingByLCLemmaAndPos(model, "critical", Category.A, ps)
+        testCISensesGroupingByLCLemmaAndPos(model, Lemma("critical"), Category.A, ps)
     }
 
     @Test
     fun testCISensesAiN() {
-        testCISensesGroupingByLCLemmaAndPos(model, "ai", Category.N, ps)
+        testCISensesGroupingByLCLemmaAndPos(model, Lemma("ai"), Category.N, ps)
     }
 
     @Test
     fun testCISensesAbsoluteA() {
-        testCISensesGroupingByLCLemmaAndPos(model, "absolute", Category.A, ps)
+        testCISensesGroupingByLCLemmaAndPos(model, Lemma("absolute"), Category.A, ps)
     }
 
     companion object {

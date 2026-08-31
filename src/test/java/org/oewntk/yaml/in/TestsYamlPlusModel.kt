@@ -85,7 +85,7 @@ class TestsYamlPlusModel {
                     .filter { line -> line.isEmpty() }
                     .map { line ->
                         val fields = line.split(";".toRegex(), limit = 3)
-                        Triple(fields[0], PartOfSpeech.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
+                        Triple(Lemma(fields[0]), PartOfSpeech.fromChar(fields[1][0]), fields[2].split(",").map { SynsetId(it) })
                     }
                     .toList()
             }

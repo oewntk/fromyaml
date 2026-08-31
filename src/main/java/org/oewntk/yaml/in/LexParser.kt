@@ -36,7 +36,7 @@ class LexParser(
         try {
             val lexes: MutableList<Lex> = ArrayList()
 
-            val lemma = entry.first
+            val lemma = Lemma(entry.first)
             val lemmaMap = entry.second
             for ((k2, value1) in lemmaMap) {
                 val lexMap: Map<String, *> = safeCast(value1!!)
