@@ -16,7 +16,6 @@ import org.oewntk.model.LibTestModelLexGroups.testCILemmas
 import org.oewntk.model.LibTestModelLexGroups.testCILexesFor
 import org.oewntk.model.LibTestModelLexGroups.testCILexesFor3
 import org.oewntk.model.LibTestModelLexGroups.testCIMultipleAll
-import org.oewntk.model.LowerCasedLemma
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.model
 import org.oewntk.yaml.`in`.LibTestsYamlCommon.ps
 
