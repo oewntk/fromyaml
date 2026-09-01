@@ -38,7 +38,7 @@ class Factory(
 
     fun from(coreModel: CoreModel): Model? {
         return makeExtra()?.let {
-            return Model(coreModel, it.verbFrames, it.verbTemplates, Injector(it.senseToVerbTemplates, it.senseToTagCounts))
+            return Model(coreModel, it.verbFrames, it.verbTemplates, Injector(it.senseToVerbTemplates, it.senseToTagCounts), generatedInverses = coreModel.generatedInverses)
                 .apply {
                     source = inDir.absolutePath
                     source2 = inDir2?.absolutePath
