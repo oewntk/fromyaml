@@ -13,6 +13,8 @@
       <excludeFolder url="file://$MODULE_DIR$/yamlplus" />
       <excludeFolder url="file://$MODULE_DIR$/yamlplusplus" />
       <excludeFolder url="file://$MODULE_DIR$/pr" />
+      <excludeFolder url="file://$MODULE_DIR$/yaml2" />
+      <excludeFolder url="file://$MODULE_DIR$/fromyaml.iml" />
     </content>
   </component>
 </module>
