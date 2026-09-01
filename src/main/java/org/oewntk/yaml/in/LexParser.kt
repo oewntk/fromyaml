@@ -4,7 +4,7 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
-import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
+import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
 import org.oewntk.model.Sense.Companion.VALID_SENSE_RELATIONS
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples

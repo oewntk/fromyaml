@@ -5,8 +5,8 @@ package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
 import org.oewntk.model.PartOfSpeech
+import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
 import org.oewntk.model.Synset
-import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 import org.oewntk.model.Synset.Companion.VALID_SYNSET_RELATIONS
 import org.oewntk.model.SynsetType
 import org.oewntk.model.distinctOrDo
