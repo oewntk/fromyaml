@@ -4,8 +4,8 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
+import org.oewntk.model.Relation.Companion.INVERSE_SENSE_RELATIONS
 import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
-import org.oewntk.model.Sense.Companion.VALID_SENSE_RELATIONS
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -184,5 +184,7 @@ class LexParser(
 
         private const val KEY_PRONUNCIATION_VARIETY = "variety"
         private const val KEY_PRONUNCIATION_VALUE = "value"
+
+        val VALID_SENSE_RELATIONS = (SENSE_RELATIONS.toSet() - INVERSE_SENSE_RELATIONS.values.toSet()).toTypedArray()
     }
 }

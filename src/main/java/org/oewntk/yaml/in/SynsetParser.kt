@@ -4,12 +4,8 @@
 package org.oewntk.yaml.`in`
 
 import org.oewntk.model.*
-import org.oewntk.model.PartOfSpeech
+import org.oewntk.model.Relation.Companion.INVERSE_SYNSET_RELATIONS
 import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
-import org.oewntk.model.Synset
-import org.oewntk.model.Synset.Companion.VALID_SYNSET_RELATIONS
-import org.oewntk.model.SynsetType
-import org.oewntk.model.distinctOrDo
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -140,5 +136,7 @@ class SynsetParser(
 
         private const val KEY_EXAMPLE_SOURCE = "source"
         private const val KEY_EXAMPLE_TEXT = "text"
+
+        val VALID_SYNSET_RELATIONS = (SYNSET_RELATIONS.toSet() - INVERSE_SYNSET_RELATIONS.values.toSet()).toTypedArray()
     }
 }
