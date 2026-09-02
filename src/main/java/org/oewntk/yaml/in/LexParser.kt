@@ -94,7 +94,7 @@ class LexParser(
                             .filter { rel -> senseMap.containsKey(rel) }
                             .map(::Relation)
                             .associateWith { relation ->
-                                safeCast<List<String>>(senseMap[relation.id]!!).map { it2 -> SenseKey(it2) }.toSet()
+                                safeCast<List<String>>(senseMap[relation.id]!!).map { it2 -> RelationTarget(it2) }.toSet()
                             }
                             .ifEmpty { null }
                     else
@@ -102,7 +102,7 @@ class LexParser(
                             .asSequence()
                             .filter { relation -> senseMap.containsKey(relation) }
                             .map { rel ->
-                                Relation(rel) to safeCast<List<String>>(senseMap[rel]!!).filter { targetId -> targetId[0] != 'Q' }.map { it2 -> SenseKey(it2) }.toSet()
+                                Relation(rel) to safeCast<List<String>>(senseMap[rel]!!).filter { targetId -> targetId[0] != 'Q' }.map { it2 -> RelationTarget(it2) }.toSet()
                             }
                             .filter { (_, targetIds) -> targetIds.isNotEmpty() }
                             .toMap()

@@ -81,7 +81,7 @@ class SynsetParser(
                 .map { relation ->
                     Relation(relation) to safeCast<List<String>>(synsetMap[relation]!!)
                         .filter { targetId -> targetId[0] != 'Q' }
-                        .map { SynsetId(it) }
+                        .map { RelationTarget(it) }
                         .toSet() // relation, setOf(targets)
                 }
                 .filter { (_, targetIds) -> targetIds.isNotEmpty() }
@@ -92,7 +92,7 @@ class SynsetParser(
                 .asSequence()
                 .filter { rel -> synsetMap.containsKey(rel) }
                 .map { rel -> Relation(rel) }
-                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation.id]!!).map { SynsetId(it) }.toSet() } // relation, setOf(targets)
+                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation.id]!!).map { RelationTarget(it) }.toSet() } // relation, setOf(targets)
                 .ifEmpty { null }
 
         // type
