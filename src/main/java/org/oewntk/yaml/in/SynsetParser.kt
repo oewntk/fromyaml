@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.*
 import org.oewntk.model.Relation.Companion.INVERSE_SYNSET_RELATIONS
 import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
+import org.oewntk.model.SynsetId.Companion.isSynsetId
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -87,6 +88,7 @@ class SynsetParser(
                 .map { relation ->
                     Relation(relation) to safeCast<List<String>>(synsetMap[relation]!!)
                         .filter { targetId -> targetId[0] != 'Q' }
+                        .filter { targetId -> !FILTER_RELATION_TARGETS || !base || (!targetId.isSynsetId() || targetId.last() != 'e') }
                         .map { RelationTarget(it) }
                         .toSet() // relation, setOf(targets)
                 }
@@ -98,7 +100,10 @@ class SynsetParser(
                 .asSequence()
                 .filter { rel -> synsetMap.containsKey(rel) }
                 .map { rel -> Relation(rel) }
-                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation.id]!!).map { RelationTarget(it) }.toSet() } // relation, setOf(targets)
+                .associateWith { relation -> safeCast<List<String>>(synsetMap[relation.id]!!)
+                    .filter { targetId -> !FILTER_RELATION_TARGETS || !base || (!targetId.isSynsetId() || targetId.last() != 'e') }
+                    .map { RelationTarget(it) }
+                    .toSet() } // relation, setOf(targets)
                 .ifEmpty { null }
 
         // type
@@ -123,6 +128,7 @@ class SynsetParser(
     companion object {
 
         private const val IGNORE_QTARGETS = true
+        private const val FILTER_RELATION_TARGETS = false
 
         private const val WARN_DUPLICATE_MEMBERS = true
 

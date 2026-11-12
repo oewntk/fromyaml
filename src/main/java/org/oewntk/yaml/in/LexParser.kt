@@ -6,6 +6,7 @@ package org.oewntk.yaml.`in`
 import org.oewntk.model.*
 import org.oewntk.model.Relation.Companion.INVERSE_SENSE_RELATIONS
 import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
+import org.oewntk.model.SynsetId.Companion.isSynsetId
 import org.oewntk.yaml.`in`.YamlUtils.assertKeysIn
 import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
@@ -101,7 +102,9 @@ class LexParser(
                             .filter { rel -> senseMap.containsKey(rel) }
                             .map(::Relation)
                             .associateWith { relation ->
-                                safeCast<List<String>>(senseMap[relation.id]!!).map { it2 -> RelationTarget(it2) }.toSet()
+                                safeCast<List<String>>(senseMap[relation.id]!!)
+                                    .filter { targetId -> !FILTER_RELATION_TARGETS || !base || (!targetId.isSynsetId() || targetId.last() != 'e') }
+                                    .map { it2 -> RelationTarget(it2) }.toSet()
                             }
                             .ifEmpty { null }
                     else
@@ -109,7 +112,10 @@ class LexParser(
                             .asSequence()
                             .filter { relation -> senseMap.containsKey(relation) }
                             .map { rel ->
-                                Relation(rel) to safeCast<List<String>>(senseMap[rel]!!).filter { targetId -> targetId[0] != 'Q' }.map { it2 -> RelationTarget(it2) }.toSet()
+                                Relation(rel) to safeCast<List<String>>(senseMap[rel]!!)
+                                    .filter { targetId -> targetId[0] != 'Q' }
+                                    .filter { targetId -> !FILTER_RELATION_TARGETS || !base || (!targetId.isSynsetId() || targetId.last() != 'e') }
+                                    .map { it2 -> RelationTarget(it2) }.toSet()
                             }
                             .filter { (_, targetIds) -> targetIds.isNotEmpty() }
                             .toMap()
@@ -171,6 +177,7 @@ class LexParser(
     companion object {
 
         private const val IGNORE_QTARGETS = true
+        private const val FILTER_RELATION_TARGETS = false
 
         private const val DUMP = false
 
