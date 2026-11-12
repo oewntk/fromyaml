@@ -20,12 +20,18 @@ import java.io.File
 class SynsetParser(
     dir: File,
     val fileext: String = "yaml",
-    verbose: Boolean = false,
+    val base: Boolean = false,
     throws: Boolean = true,
+    verbose: Boolean = false,
 ) : YamlProcessor1<Synset, String, Map<String, *>>(dir, throws = throws, verbose = verbose) {
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}|${PartOfSpeech.E.fullName}).*\\.$fileext".toRegex()) }!!
+        get() {
+            val basename = if (base)
+                "(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}).*"
+            else "(${PartOfSpeech.N.fullName}|${PartOfSpeech.V.fullName}|${PartOfSpeech.A.fullName}|${PartOfSpeech.R.fullName}|${PartOfSpeech.E.fullName}).*"
+            return dir.listFiles { f: File -> f.name.matches("$basename\\.$fileext".toRegex()) }!!
+        }
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Synset {
         val id = entry.first

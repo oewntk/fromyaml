@@ -11,6 +11,7 @@ import org.oewntk.yaml.`in`.YamlUtils.processExamples
 import org.oewntk.yaml.`in`.YamlUtils.safeCast
 import org.oewntk.yaml.`in`.YamlUtils.safeNullableCast
 import java.io.File
+import kotlin.collections.filter
 
 /**
  * Lex YAML parser
@@ -20,8 +21,9 @@ import java.io.File
 class LexParser(
     dir: File,
     val fileext: String = "yaml",
-    verbose: Boolean = false,
+    val base: Boolean = false,
     val throws: Boolean = true,
+    verbose: Boolean = false,
 ) : YamlProcessor<Lex, String, Map<String, *>>(dir, verbose = verbose) {
 
     /**
@@ -30,7 +32,12 @@ class LexParser(
     val senses: MutableSet<Sense> = LinkedHashSet()
 
     override val files: Array<File>
-        get() = dir.listFiles { f: File -> f.name.matches("entries.*\\.$fileext".toRegex()) }!!
+        get() {
+            val basename = if (base)
+                "entries-[0a-z]"
+            else "entries-[0a-zA-Z](-name)?"
+            return dir.listFiles { f: File -> f.name.matches("$basename\\.$fileext".toRegex()) }!!
+        }
 
     override fun processEntry(source: String?, entry: Pair<String, Map<String, *>>): Collection<Lex> {
         try {
