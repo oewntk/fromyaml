@@ -19,8 +19,9 @@ class Factory(
     private val inDir2: File?,
     private val fileext: String = "yaml",
     private val fileext2: String = "yaml",
-    private val throws: Boolean = true,
+    private val base: Boolean = false,
     private val inverses: Boolean = false,
+    private val throws: Boolean = true,
     private val verbose: Boolean = false
 ) : Supplier<Model?> {
 
@@ -32,7 +33,7 @@ class Factory(
     )
 
     override fun get(): Model? {
-        val coreModel = CoreFactory(inDir, fileext = fileext, throws = throws, inverses = inverses, verbose = verbose).get() ?: return null
+        val coreModel = CoreFactory(inDir, fileext = fileext, base = base, inverses = inverses, throws = throws, verbose = verbose).get() ?: return null
         return from(coreModel)
     }
 
@@ -75,8 +76,8 @@ class Factory(
          * @param inDir2 dir containing extra YAML files
          * @return model
          */
-        private fun makeModel(inDir: File, inDir2: File?, fileext: String = "yaml", fileext2: String = "yaml", throws: Boolean = true, verbose: Boolean = false): Model? {
-            return Factory(inDir, inDir2, fileext = fileext, fileext2 = fileext2, throws = throws, verbose = verbose).get()
+        private fun makeModel(inDir: File, inDir2: File?, fileext: String = "yaml", fileext2: String = "yaml", base: Boolean = false, throws: Boolean = true, verbose: Boolean = false): Model? {
+            return Factory(inDir, inDir2, fileext = fileext, fileext2 = fileext2, base = base, throws = throws, verbose = verbose).get()
         }
 
         /**
@@ -86,10 +87,10 @@ class Factory(
          * @param dirPath2 extra WNDB dir path
          * @return core model
          */
-        private fun makeModel(dirPath1: String, dirPath2: String?, fileext: String = "yaml", fileext2: String = "yaml", throws: Boolean = true, verbose: Boolean = false): Model? {
+        private fun makeModel(dirPath1: String, dirPath2: String?, fileext: String = "yaml", fileext2: String = "yaml", base: Boolean = false, throws: Boolean = true, verbose: Boolean = false): Model? {
             val inDir = File(dirPath1)
             val inDir2 = if (dirPath2 == null) null else File(dirPath2)
-            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, throws = throws, verbose = verbose)
+            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, base = base, throws = throws, verbose = verbose)
         }
 
         /**
@@ -100,10 +101,15 @@ class Factory(
          */
         fun makeModel(args: Array<String>): Model? {
             var iArg = 0
+            var base = false
             var fileext = "yaml"
             var verbose = false
             if ("--verbose" == args[iArg]) {
                 verbose = true
+                iArg++
+            }
+            if ("--base" == args[iArg]) {
+                base = true
                 iArg++
             }
             if ("--json" == args[iArg]) {
@@ -123,7 +129,7 @@ class Factory(
             val inDir = args[iArg]
             iArg++
             val inDir2 = if (iArg < args.size) args[iArg] else null
-            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, throws = throws, verbose = verbose)
+            return makeModel(inDir, inDir2, fileext = fileext, fileext2 = fileext2, base = base, throws = throws, verbose = verbose)
         }
 
         /**

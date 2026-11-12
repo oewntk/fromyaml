@@ -18,14 +18,15 @@ import java.util.function.Supplier
 class CoreFactory(
     private val inDir: File,
     private val fileext: String = "yaml",
-    private val throws: Boolean = true,
+    private val base: Boolean = false,
     private val inverses: Boolean = false,
+    private val throws: Boolean = true,
     private val verbose: Boolean = false
 ) : Supplier<CoreModel?> {
 
     override fun get(): CoreModel? {
         try {
-            return Parser(inDir, fileext = fileext, throws = throws, verbose = verbose)
+            return Parser(inDir, fileext = fileext, base = base, throws = throws, verbose = verbose)
                 .parse()
                 .check(throws = throws, verbose = verbose)
                 .apply { if (inverses) generateInverseRelations() }
@@ -46,12 +47,17 @@ class CoreFactory(
          */
         private fun makeCoreModel(args: Array<String>): CoreModel? {
             var iArg = 0
+            var base = false
             var inverses = false
             var fileext = "yaml"
             var doNotThrow = false
             var verbose = false
             if ("--verbose" == args[iArg]) {
                 verbose = true
+                iArg++
+            }
+            if ("--base" == args[iArg]) {
+                base = true
                 iArg++
             }
             if ("--inverses" == args[iArg]) {
@@ -67,7 +73,7 @@ class CoreFactory(
                 iArg++
             }
             val inDir = File(args[iArg])
-            return CoreFactory(inDir, inverses = inverses, fileext = fileext, throws = !doNotThrow, verbose = verbose).get()
+            return CoreFactory(inDir, inverses = inverses, fileext = fileext, base = base, throws = !doNotThrow, verbose = verbose).get()
         }
 
         /**
