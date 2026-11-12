@@ -16,6 +16,7 @@ import java.io.IOException
 class Parser(
     private val inDir: File,
     private val fileext: String = "yaml",
+    private val base: Boolean = false,
     private val throws: Boolean = true,
     private val verbose: Boolean = false) {
 
@@ -32,12 +33,12 @@ class Parser(
     fun parse(): CoreModel {
 
         // lexes + senses
-        val lexParser = LexParser(inDir, fileext = fileext, throws = throws, verbose = verbose)
+        val lexParser = LexParser(inDir, fileext = fileext, base = base, throws = throws, verbose = verbose)
         val lexes = lexParser.parse().sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate lex $duplicate") }
         val senses = lexParser.senses.sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate sense $duplicate") }
 
         // synsets
-        val synsetParser = SynsetParser(inDir, fileext = fileext, throws = throws, verbose = verbose)
+        val synsetParser = SynsetParser(inDir, fileext = fileext, base = base, throws = throws, verbose = verbose)
         val synsets = synsetParser.parse().sorted().distinctOrDo { duplicate -> Tracing.psErr.println("[E] duplicate synset $duplicate") }
 
         return CoreModel(lexes, senses, synsets)
